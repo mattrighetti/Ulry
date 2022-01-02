@@ -17,9 +17,9 @@ struct HomeView: View {
     private var cancellables = Set<AnyCancellable>()
     
     let mainSection = [
-        MainFolder(name: "All", iconName: "list.bullet.circle.fill", color: .gray),
-        MainFolder(name: "Unread", iconName: "archivebox.circle.fill", color: .blue),
-        MainFolder(name: "Starred", iconName: "star.circle.fill", color: .yellow)
+        MainFolder(name: "All", iconName: "list.bullet.circle.fill", color: .gray, filter: .all),
+        MainFolder(name: "Unread", iconName: "archivebox.circle.fill", color: .blue, filter: .unread),
+        MainFolder(name: "Starred", iconName: "star.circle.fill", color: .yellow, filter: .starred)
     ]
     
     var body: some View {
@@ -29,7 +29,7 @@ struct HomeView: View {
                     Section(header: Text("General").sectionTitle()) {
                         ForEach(mainSection, id: \.self) { item in
                             NavigationLink {
-                                LinkList()
+                                LinkList(filter: item.filter)
                             } label: {
                                 Label(title: {
                                     Text(item.name)
@@ -51,7 +51,7 @@ struct HomeView: View {
                         Section(header: Text("Groups").sectionTitle()) {
                             ForEach(viewModel.groups, id: \.id) { datum in
                                 NavigationLink {
-                                    //LinkList(selection: .folder(datum))
+                                    LinkList(filter: .group(datum))
                                 } label: {
                                     Label(title: {
                                         Text(datum.name)
@@ -74,7 +74,7 @@ struct HomeView: View {
                         Section(header: Text("Tags").sectionTitle()) {
                             ForEach(viewModel.tags, id: \.id) { datum in
                                 NavigationLink {
-                                    //LinkList(selection: .tag(datum))
+                                    LinkList(filter: .tag(datum))
                                 } label: {
                                     Label(title: {
                                         Text(datum.name)

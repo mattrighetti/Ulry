@@ -8,6 +8,14 @@
 import Combine
 import SwiftUI
 
+public enum LinkFilter {
+    case all
+    case starred
+    case unread
+    case group(Group)
+    case tag(Tag)
+}
+
 public final class LinkListViewModel: ObservableObject {
     @Published public private(set) var links = [Link]()
     
@@ -22,8 +30,21 @@ public final class LinkListViewModel: ObservableObject {
         .store(in: &cancellable)
     }
     
-    public func getLinks() {
-        //let links = try! PersistenceController.shared.container.viewContext.fetch(request.rawValue)
-        self.links = []
+    public func getLinks(by filter: LinkFilter) {
+        let links: [Link]
+        switch filter {
+        case .all:
+            links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.all.rawValue)
+        case .starred:
+            links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.starred.rawValue)
+        case .unread:
+            links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.unread.rawValue)
+        case .tag(let tag):
+            links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.tag(tag).rawValue)
+        case .group(let group):
+            links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.folder(group).rawValue)
+        }
+        
+        self.links = links
     }
 }

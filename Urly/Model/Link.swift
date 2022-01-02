@@ -34,29 +34,29 @@ extension Link {
         return fetchLink
     }
     
-//    public class func fetchRequest(withTag tag: Tag) -> NSFetchRequest<Link> {
-//        let fetchLink: NSFetchRequest<Link> = self.fetchRequest()
-//        fetchLink.predicate = NSPredicate(format: "%@ IN tags", tag)
-//        return fetchLink
-//    }
-//
-//    public class func fetchRequest(withGroup group: Group) -> NSFetchRequest<Link> {
-//        let fetchLink: NSFetchRequest<Link> = self.fetchRequest()
-//        // fetchLink.predicate = NSPredicate(format: "%@ IN group", group)
-//        return fetchLink
-//    }
-//
-//    public class func fetchRequest(unread: Bool) -> NSFetchRequest<Link> {
-//        let fetchLink: NSFetchRequest<Link> = self.fetchRequest()
-//        // fetchLink.predicate = NSPredicate(format: "%K == %@", "unread", unread)
-//        return fetchLink
-//    }
-//
-//    public class func fetchRequest(starred: Bool) -> NSFetchRequest<Link> {
-//        let fetchLink: NSFetchRequest<Link> = self.fetchRequest()
-//        fetchLink.predicate = NSPredicate(format: "%K == %@", "starred", starred)
-//        return fetchLink
-//    }
+    public class func fetchRequest(withTag tag: Tag) -> NSFetchRequest<Link> {
+        let fetchLink: NSFetchRequest<Link> = self.fetchRequest()
+        fetchLink.predicate = NSPredicate(format: "%@ IN tags", tag)
+        return fetchLink
+    }
+
+    public class func fetchRequest(withGroup group: Group) -> NSFetchRequest<Link> {
+        let fetchLink = NSFetchRequest<Link>(entityName: "Link")
+        fetchLink.predicate = NSPredicate(format: "group == %@", group)
+        return fetchLink
+    }
+
+    public class func fetchRequest(unread: Bool) -> NSFetchRequest<Link> {
+        let fetchLink: NSFetchRequest<Link> = self.fetchRequest()
+        fetchLink.predicate = NSPredicate(format: "unread == %@", NSNumber(booleanLiteral: unread))
+        return fetchLink
+    }
+
+    public class func fetchRequest(starred: Bool) -> NSFetchRequest<Link> {
+        let fetchLink: NSFetchRequest<Link> = self.fetchRequest()
+        fetchLink.predicate = NSPredicate(format: "%K == %@", "starred", NSNumber(booleanLiteral: starred))
+        return fetchLink
+    }
 }
 
 extension Link {
@@ -80,30 +80,26 @@ extension Link {
                 let request: NSFetchRequest<Link> = Link.fetchRequest()
                 request.sortDescriptors = []
                 return request
-            default:
-                let request: NSFetchRequest<Link> = Link.fetchRequest()
+            case .starred:
+                let request: NSFetchRequest<Link> = Link.fetchRequest(starred: true)
                 request.sortDescriptors = []
                 return request
-//            case .starred:
-//                let request: NSFetchRequest<Link> = Link.fetchRequest(starred: true)
-//                request.sortDescriptors = []
-//                return request
-//            case .unread:
-//                let request: NSFetchRequest<Link> = Link.fetchRequest(unread: true)
-//                request.sortDescriptors = []
-//                return request
-//            case .withUuid(uuid: let uuid):
-//                let request: NSFetchRequest<Link> = Link.fetchRequest(withUUID: uuid)
-//                request.sortDescriptors = []
-//                return request
-//            case .folder(let group):
-//                let request: NSFetchRequest<Link> = Link.fetchRequest(withGroup: group)
-//                request.sortDescriptors = []
-//                return request
-//            case .tag(let tag):
-//                let request: NSFetchRequest<Link> = Link.fetchRequest(withTag: tag)
-//                request.sortDescriptors = []
-//                return request
+            case .unread:
+                let request: NSFetchRequest<Link> = Link.fetchRequest(unread: true)
+                request.sortDescriptors = []
+                return request
+            case .withUuid(uuid: let uuid):
+                let request: NSFetchRequest<Link> = Link.fetchRequest(withUUID: uuid)
+                request.sortDescriptors = []
+                return request
+            case .folder(let group):
+                let request: NSFetchRequest<Link> = Link.fetchRequest(withGroup: group)
+                request.sortDescriptors = []
+                return request
+            case .tag(let tag):
+                let request: NSFetchRequest<Link> = Link.fetchRequest(withTag: tag)
+                request.sortDescriptors = []
+                return request
             }
         }
     }
