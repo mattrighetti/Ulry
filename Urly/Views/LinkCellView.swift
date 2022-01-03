@@ -28,31 +28,38 @@ struct LinkCellView: View {
     }
     
     var body: some View {
-        VStack {
-            HStack {
-                view()
-                Spacer()
+        Button(action: {
+            if let urlString = link.url, let url = URL(string: urlString) {
+                UIApplication.shared.open(url)
             }
-            .padding(.top, 5)
-            .padding(.bottom, 3)
-            
-            HStack {
-                Image(systemName: "calendar")
-                    .font(.system(size: 12))
-                    .padding(3)
-                    .background(Color.gray.opacity(0.1))
-                    .clipShape(Circle())
-                Text(dateString)
-                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+        }, label: {
+            VStack {
+                HStack {
+                    view()
+                    Spacer()
+                }
+                .padding(.top, 5)
+                .padding(.bottom, 3)
                 
-                Spacer()
+                HStack {
+                    Image(systemName: "calendar")
+                        .font(.system(size: 12))
+                        .padding(3)
+                        .background(Color.gray.opacity(0.1))
+                        .clipShape(Circle())
+                    Text(dateString)
+                        .font(.system(size: 12, weight: .semibold, design: .rounded))
+                    
+                    Spacer()
+                }
+                .padding(.bottom, 5)
             }
-            .padding(.bottom, 5)
-        }
-        .padding(.horizontal)
-        .defaultAwareBackgroundColor()
-        .cornerRadius(10)
-        .padding(.horizontal)
+            .padding(.horizontal)
+            .defaultAwareBackgroundColor()
+            .cornerRadius(10)
+            .padding(.horizontal)
+        })
+        .buttonStyle(.plain)
     }
     
     @ViewBuilder private func view() -> some View {

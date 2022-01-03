@@ -13,11 +13,8 @@ struct AddLinkViewController: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var link: String = ""
-    @State private var notes: String = ""
-    
     @State private var selectedFolder: Group? = nil
     @State private var selectedTags: [Tag] = []
-    
     @State private var tags: [Tag] = []
     @State private var groups: [Group] = []
     
@@ -35,10 +32,6 @@ struct AddLinkViewController: View {
         Form {
             Section(header: Text("URL").sectionTitle()) {
                 TextField("Link", text: $link).keyboardType(UIKeyboardType.URL)
-            }
-            
-            Section {
-                TextField("Notes", text: $notes)
             }
             
             Section(header: Text("Groups").sectionTitle()) {
@@ -90,7 +83,7 @@ struct AddLinkViewController: View {
                 ogTitle: og["og:title"],
                 ogDescription: og["og:description"],
                 ogImageUrl: og["og:image"],
-                note: notes,
+                note: "",
                 starred: false,
                 unread: true,
                 group: selectedFolder,
