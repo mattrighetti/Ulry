@@ -86,7 +86,7 @@ struct LinkCellView: View {
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(width: UIScreen.screenWidth / 10, alignment: .center)
+                            .frame(width: UIScreen.screenWidth / 8, height: UIScreen.screenWidth / 8, alignment: .center)
                             .cornerRadius(10)
                     },
                     placeholder: {
@@ -126,7 +126,7 @@ struct LinkCellView: View {
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(width: UIScreen.screenWidth / 10, alignment: .center)
+                            .frame(width: UIScreen.screenWidth / 8, height: UIScreen.screenWidth / 8, alignment: .center)
                             .cornerRadius(10)
                     },
                     placeholder: {
