@@ -30,6 +30,6 @@ extension View {
     }
     
     func defaultAwareBackgroundColor() -> some View {
-        modifier(AwareBackgroundColor(darkColor: Color(hex: "#333333")!.opacity(0.1), lightColor: Color(hex: "#333333")!.opacity(0.1)))
+        modifier(AwareBackgroundColor(darkColor: Color(hex: "#333333")!.opacity(0.5), lightColor: Color(hex: "#111111")!.opacity(0.1)))
     }
 }

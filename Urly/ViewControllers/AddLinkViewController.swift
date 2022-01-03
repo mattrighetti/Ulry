@@ -34,7 +34,7 @@ struct AddLinkViewController: View {
     var body: some View {
         Form {
             Section(header: Text("URL").sectionTitle()) {
-                TextField("Link", text: $link)
+                TextField("Link", text: $link).keyboardType(UIKeyboardType.URL)
             }
             
             Section {
