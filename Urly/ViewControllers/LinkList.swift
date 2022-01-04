@@ -65,9 +65,6 @@ struct LinkList: View {
                     LinkCellView(link: link, infoPressAction: {
                         sheet.link = link
                     })
-                    .simultaneousGesture(LongPressGesture(minimumDuration: 0.3).onEnded{ _ in
-                        sheet.link = link
-                    })
                 }
             }
         }
