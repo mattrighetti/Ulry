@@ -9,9 +9,29 @@ import os
 import Combine
 import SwiftUI
 
+public class LinkManagerViewModel: ObservableObject {
+    @Published var tags = [Tag]()
+    @Published var groups = [Group]()
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    init() {
+        TagStorage.shared.tags.sink { tags in
+            self.tags = tags
+        }
+        .store(in: &cancellables)
+        
+        GroupStorage.shared.groups.sink { groups in
+            self.groups = groups
+        }
+        .store(in: &cancellables)
+    }
+}
+
 struct AddLinkViewController: View {
     @Environment(\.presentationMode) var presentationMode
-    
+    @StateObject private var viewModel = LinkManagerViewModel()
+    @State private var presentAlert = false
     @State private var link: String = ""
     @State private var selectedFolder: Group? = nil
     @State private var selectedTags: [Tag] = []
@@ -21,63 +41,63 @@ struct AddLinkViewController: View {
     private var cancellables = Set<AnyCancellable>()
     
     private var selectedTagsStringValue: String {
-        selectedTags.isEmpty ? "None" : "X tags"
+        guard !selectedTags.isEmpty else { return "None" }
+        return selectedTags.map { $0.name }.joined(separator: ", ")
     }
     
     private var selectedFolderStringValue: String {
-        selectedFolder == nil ? "None" : "X folder"
+        selectedFolder == nil ? "None" : selectedFolder!.name
     }
     
     var body: some View {
-        Form {
-            Section(header: Text("URL").sectionTitle()) {
-                TextField("Link", text: $link).keyboardType(UIKeyboardType.URL)
-            }
-            
-            Section(header: Text("Groups").sectionTitle()) {
-                NavigationLink(selectedFolderStringValue) {
-                    SelectionList(items: groups, selection: $selectedFolder)
+        VStack {
+            Form {
+                Section(header: Text("URL").sectionTitle()) {
+                    TextField("Link", text: $link).keyboardType(UIKeyboardType.URL)
+                }
+                
+                Section(header: Text("Groups").sectionTitle()) {
+                    NavigationLink(selectedFolderStringValue) {
+                        SelectionList(items: viewModel.groups, selection: $selectedFolder)
+                    }
+                }
+                
+                Section(header: Text("Tags").sectionTitle()) {
+                    NavigationLink(selectedTagsStringValue) {
+                        MultipleSelectionList(items: viewModel.tags, selections: $selectedTags)
+                    }
                 }
             }
             
-            Section(header: Text("Tags").sectionTitle()) {
-                NavigationLink(selectedTagsStringValue) {
-                    MultipleSelectionList(items: tags, selections: $selectedTags)
-                }
+            Button(action: self.addURL) {
+                Text("Add URL \(Image(systemName: "link.badge.plus"))")
+                    .font(.headline)
+                    .foregroundColor(.white)
             }
+            .tint(.blue)
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.automatic)
+            .controlSize(.large)
         }
+        .alert("No URL inserted", isPresented: $presentAlert, actions: {}, message: {
+            Text("Please make sure to insert a valid URL")
+        })
         
         .navigationTitle(Text("New URL"))
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .bottomBar) {
-                Button(action: self.addURL) {
-                    HStack {
-                        Text("Add URL \(Image(systemName: "link.badge.plus"))").font(.system(size: 15))
-                    }
-                    .padding(.horizontal, 100)
-                    .padding(.vertical, 5)
-                }
-                .foregroundColor(.white)
-                .background(Color.purple)
-                .clipShape(RoundedRectangle(cornerRadius: 5))
-            }
-        }
-        .onAppear {
-            // TODO move all this into view model
-            let canc1 = TagStorage.shared.tags.sink { tags in
-                self.tags = tags
-            }
-            let canc2 = GroupStorage.shared.groups.sink { groups in
-                self.groups = groups
-            }
-        }
     }
     
     private func addURL() {
-        os_log(.info, "Running AddURL task")
+        link = link.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard
+            !link.isEmpty,
+            URL(string: link) != nil
+        else {
+            presentAlert.toggle()
+            return
+        }
+        
         URLManager.shared.getURLData(url: link) { og in
-            os_log(.debug, "Got \(og) from link")
             LinkStorage.shared.add(
                 url: link,
                 ogTitle: og["og:title"],

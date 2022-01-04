@@ -48,8 +48,6 @@ class LinkStorage: NSObject, ObservableObject {
         link.setValue(tags, forKey: "tags")
         link.setValue(Int(Date.now.timeIntervalSince1970), forKey: "createdAt")
         link.setValue(Int(Date.now.timeIntervalSince1970), forKey: "updatedAt")
-        
-        os_log(.info, "Saving Tag: \(link)")
 
         saveContext()
     }

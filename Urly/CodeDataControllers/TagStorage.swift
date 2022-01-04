@@ -40,8 +40,6 @@ class TagStorage: NSObject, ObservableObject {
         tag.setValue(name, forKey: "name")
         tag.setValue(description, forKey: "description_")
         tag.setValue(color, forKey: "colorHex")
-        
-        os_log(.info, "Saving Tag: \(tag)")
 
         saveContext()
     }

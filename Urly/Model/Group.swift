@@ -20,7 +20,7 @@ public class Group: NSManagedObject, Representable {
     @NSManaged public var colorHex: String
     @NSManaged public var iconName: String
     @NSManaged public var name: String
-    @NSManaged public var links: [Link]?
+    @NSManaged public var links: Set<Link>?
 }
 
 extension Group {
