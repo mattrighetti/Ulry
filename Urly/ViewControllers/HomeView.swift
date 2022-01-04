@@ -12,6 +12,7 @@ import CoreData
 struct HomeView: View {
     @StateObject private var sheet = SheetState()
     @State private var showAddLinkPopup: Bool = false
+    @State private var showConfirmationDialog = false
     @StateObject private var viewModel = HomeViewModel()
     
     private var cancellables = Set<AnyCancellable>()
@@ -49,22 +50,44 @@ struct HomeView: View {
                     
                     if !viewModel.groups.isEmpty {
                         Section(header: Text("Groups").sectionTitle()) {
-                            ForEach(viewModel.groups, id: \.id) { datum in
+                            ForEach(viewModel.groups, id: \.id) { group in
                                 NavigationLink {
-                                    LinkList(filter: .group(datum))
+                                    LinkList(filter: .group(group))
                                 } label: {
                                     Label(title: {
-                                        Text(datum.name)
+                                        Text(group.name)
                                             .font(.system(size: 15, weight: .medium, design: .rounded))
                                     }, icon: {
                                         ZStack {
-                                            Color(hex: datum.colorHex)!
+                                            Color(hex: group.colorHex)!
                                                 .clipShape(Circle())
-                                            Image(systemName: datum.iconName)
+                                            Image(systemName: group.iconName)
                                                 .font(.system(size: 10))
                                                 .foregroundColor(.white)
                                         }.frame(width: 25, height: 25)
                                     })
+                                }
+                                .swipeActions {
+                                    Button(
+                                        role: .destructive,
+                                        action: { showConfirmationDialog.toggle() }
+                                    ) {
+                                        Image(systemName: "trash")
+                                    }
+                                    Button(
+                                        action: { showConfirmationDialog.toggle() }
+                                    ) {
+                                        Image(systemName: "square.and.pencil")
+                                    }
+                                }
+                                .confirmationDialog(
+                                    "Are you sure you want to delete foder \(group.name)?",
+                                    isPresented: $showConfirmationDialog,
+                                    titleVisibility: .visible
+                                ) {
+                                    Button("Yes", role: .destructive) {
+                                        GroupStorage.shared.delete(group)
+                                    }
                                 }
                             }
                         }
@@ -72,17 +95,39 @@ struct HomeView: View {
                     
                     if !viewModel.tags.isEmpty {
                         Section(header: Text("Tags").sectionTitle()) {
-                            ForEach(viewModel.tags, id: \.id) { datum in
+                            ForEach(viewModel.tags, id: \.id) { tag in
                                 NavigationLink {
-                                    LinkList(filter: .tag(datum))
+                                    LinkList(filter: .tag(tag))
                                 } label: {
                                     Label(title: {
-                                        Text(datum.name)
+                                        Text(tag.name)
                                             .font(.system(size: 15, weight: .medium, design: .rounded))
                                     }, icon: {
-                                        Color(hex: datum.colorHex)!
+                                        Color(hex: tag.colorHex)!
                                             .clipShape(Circle())
                                     })
+                                }
+                                .swipeActions {
+                                    Button(
+                                        role: .destructive,
+                                        action: { showConfirmationDialog.toggle() }
+                                    ) {
+                                        Image(systemName: "trash")
+                                    }
+                                    Button(
+                                        action: { showConfirmationDialog.toggle() }
+                                    ) {
+                                        Image(systemName: "square.and.pencil")
+                                    }
+                                }
+                                .confirmationDialog(
+                                    "Are you sure you want to delete tag \(tag.name)?",
+                                    isPresented: $showConfirmationDialog,
+                                    titleVisibility: .visible
+                                ) {
+                                    Button("Yes", role: .destructive) {
+                                        TagStorage.shared.delete(tag)
+                                    }
                                 }
                             }
                         }

@@ -54,6 +54,23 @@ class LinkStorage: NSObject, ObservableObject {
         saveContext()
     }
     
+    func delete(uuid: UUID) {
+        let fetchedLink = Link.fetchRequest(withUUID: uuid)
+        
+        do {
+            guard let link = try PersistenceController.shared.container.viewContext.fetch(fetchedLink).first else { return }
+            PersistenceController.shared.container.viewContext.delete(link)
+            saveContext()
+        } catch {
+            os_log(.error, "cannot delete link with UUID: \(uuid)")
+        }
+    }
+    
+    func delete(link: Link) {
+        PersistenceController.shared.container.viewContext.delete(link)
+        saveContext()
+    }
+    
     private func saveContext() {
         do {
             try PersistenceController.shared.container.viewContext.save()

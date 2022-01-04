@@ -8,9 +8,21 @@
 import SwiftUI
 import CoreData
 
+fileprivate class SheetState: ObservableObject {
+    @Published var isShowing: Bool = false
+    @Published var link: Link? = nil {
+        didSet {
+            isShowing = link != nil
+        }
+    }
+}
+
 struct LinkList: View {
-    var filter: LinkFilter?
+    var filter: LinkFilter
+    @StateObject private var sheet = SheetState()
     @StateObject private var viewModel = LinkListViewModel()
+    @State private var presentActionSheet = false
+    @State private var showConfirmationDialog = false
     
     var title: String {
         switch filter {
@@ -24,8 +36,6 @@ struct LinkList: View {
             return group.name
         case .tag(let tag):
             return tag.name
-        default:
-            return "Default"
         }
     }
     
@@ -52,19 +62,27 @@ struct LinkList: View {
                 Text("There is no link in this category")
             } else {
                 ForEach(viewModel.links, id: \.id) { link in
-                    LinkCellView(link: link)
+                    LinkCellView(link: link, infoPressAction: {
+                        sheet.link = link
+                    })
+                    .simultaneousGesture(LongPressGesture(minimumDuration: 0.3).onEnded{ _ in
+                        sheet.link = link
+                    })
                 }
             }
         }
         .navigationTitle(title)
         .onAppear {
-            viewModel.getLinks(by: filter!)
+            viewModel.getLinks(by: filter)
+        }
+        .sheet(isPresented: $sheet.isShowing, onDismiss: { sheet.link = nil }) {
+            LinkDetailView(link: sheet.link!)
         }
     }
 }
 
 struct LinkList_Previews: PreviewProvider {
     static var previews: some View {
-        LinkList()
+        LinkList(filter: .all)
     }
 }

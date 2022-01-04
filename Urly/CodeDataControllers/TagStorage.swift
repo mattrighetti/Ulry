@@ -46,6 +46,11 @@ class TagStorage: NSObject, ObservableObject {
         saveContext()
     }
     
+    func delete(_ tag: Tag) {
+        PersistenceController.shared.container.viewContext.delete(tag)
+        saveContext()
+    }
+    
     private func saveContext() {
         do {
             try PersistenceController.shared.container.viewContext.save()

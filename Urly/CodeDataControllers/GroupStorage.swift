@@ -44,6 +44,11 @@ class GroupStorage: NSObject, ObservableObject {
         saveContext()
     }
     
+    func delete(_ group: Group) {
+        PersistenceController.shared.container.viewContext.delete(group)
+        saveContext()
+    }
+    
     private func saveContext() {
         do {
             try PersistenceController.shared.container.viewContext.save()

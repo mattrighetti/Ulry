@@ -18,6 +18,7 @@ public enum LinkCellConfiguration {
 
 struct LinkCellView: View {
     var link: Link
+    var infoPressAction: (() -> Void)? = nil
     @State var configuration: LinkCellConfiguration = .medium
     
     var dateString: String {
@@ -51,6 +52,13 @@ struct LinkCellView: View {
                         .font(.system(size: 12, weight: .semibold, design: .rounded))
                     
                     Spacer()
+                    
+                    Button(action: infoPressAction ?? {}, label: {
+                        Image(systemName: "info.circle.fill")
+                            .font(.system(size: 12))
+                        Text("info")
+                            .font(.system(size: 12, weight: .semibold, design: .rounded))
+                    })
                 }
                 .padding(.bottom, 5)
             }
