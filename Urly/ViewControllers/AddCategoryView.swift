@@ -13,12 +13,12 @@ public enum PickerMode: String {
     case tag
 }
 
-struct IconColorPickerView: View {
+struct AddCategoryView: View {
     var mode: PickerMode = .folder
     
     @Environment(\.presentationMode) var presentationMode
     @State var name: String = ""
-    @State var selectedColor: Color = Color(hex: "#333333")!
+    @State var selectedColor: Color = Color.random
     @State var selectedGlyph: String? = SFSymbols.all[Int.random(in: 1..<SFSymbols.all.count)]
     @State private var pickerSelection: Int = 0
 
@@ -41,10 +41,10 @@ struct IconColorPickerView: View {
                     .padding([.top, .horizontal])
                     
                     TextField("", text: $name, prompt: Text("\(mode.rawValue.capitalized) name"))
-                    .padding()
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(15)
-                    .padding()
+                        .padding()
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(15)
+                        .padding()
                 }
                 .background(Color.gray.opacity(0.2))
                 .cornerRadius(15)
@@ -122,7 +122,7 @@ struct GradientPickerView_Previews: PreviewProvider {
     @State private static var iconName: String? = "pencil"
 
     static var previews: some View {
-        IconColorPickerView(mode: .folder)
+        AddCategoryView(mode: .folder)
             .preferredColorScheme(.dark)
     }
 }

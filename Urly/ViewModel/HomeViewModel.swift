@@ -21,13 +21,11 @@ public final class HomeViewModel: ObservableObject {
     ) {
         groupsPublisher.sink { [unowned self] groups in
             self.groups = groups
-            print(groups)
         }
         .store(in: &cancellable)
         
         tagsPublisher.sink { [unowned self] tags in
             self.tags = tags
-            print(tags)
         }
         .store(in: &cancellable)
     }

@@ -142,6 +142,16 @@ struct LinkCellView: View {
                     }
                 )
                 .padding(.trailing, 5)
+            } else if let url = URL(string: link.url!), let hostFirstLetter = url.host?.first?.uppercased() {
+                ZStack {
+                    Color.random
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        
+                    Text(hostFirstLetter)
+                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                }
+                .frame(width: UIScreen.screenWidth / 8, height: UIScreen.screenWidth / 8, alignment: .center)
+                .padding(.trailing, 5)
             }
             
             VStack(alignment: .leading) {

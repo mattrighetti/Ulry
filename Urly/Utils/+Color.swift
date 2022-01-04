@@ -94,6 +94,11 @@ extension Color {
     public static var cardBackground: Color {
         return Color("cardBackground")
     }
+    
+    public static var random: Color {
+        let randomHex = self.randomHexColorCode()
+        return Color(hex: randomHex)!
+    }
 
     // MARK: - Gradients
     public static var gradientsPalette: [Color] = [
@@ -113,6 +118,18 @@ extension Color {
         .flatBlueSmoke,
         .flatHurricane
     ]
+    
+    public static func randomHexColorCode() -> String {
+        let a = ["1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"];
+        return
+            "#"
+            .appending(a[Int(arc4random_uniform(15))])
+            .appending(a[Int(arc4random_uniform(15))])
+            .appending(a[Int(arc4random_uniform(15))])
+            .appending(a[Int(arc4random_uniform(15))])
+            .appending(a[Int(arc4random_uniform(15))])
+            .appending(a[Int(arc4random_uniform(15))])
+    }
     
     // MARK: - Initializers
     init(decimalRed red: Double, green: Double, blue: Double) {

@@ -33,18 +33,40 @@ struct HomeView: View {
                                 LinkList(filter: item.filter)
                             } label: {
                                 Label(title: {
-                                    Text(item.name)
-                                        .font(.system(size: 15, weight: .medium, design: .rounded))
+                                    HStack {
+                                        Text(item.name)
+                                            .font(.system(size: 15, weight: .medium, design: .rounded))
+                                        Spacer()
+                                        LinkCounterText(filter: item.filter)
+                                    }
                                 }, icon: {
-                                    ZStack {
-                                        Color(hex: "#333333")!
-                                            .clipShape(Circle())
-                                        Image(systemName: item.iconName)
-                                            .font(.system(size: 10))
-                                            .foregroundColor(.white)
-                                    }.frame(width: 25, height: 25)
+                                    Image(systemName: item.iconName)
+                                        .font(.system(size: 12))
+                                        .foregroundColor(.white)
+                                        .padding(5)
+                                        .background(Color(hex: "#333333").opacity(0.4))
+                                        .clipShape(Circle())
+                                        .frame(width: 25, height: 25)
                                 })
                             }
+                        }
+                        
+                        NavigationLink {
+                            AddLinkViewController()
+                        } label: {
+                            Label(title: {
+                                Text("Add link")
+                                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                            }, icon: {
+                                ZStack {
+                                    Color(hex: "#333333")!
+                                        .clipShape(Circle())
+                                    Image(systemName: "link.circle.fill")
+                                        .font(.system(size: 12))
+                                }
+                                .frame(width: 25, height: 25)
+                            })
+                            .foregroundColor(.blue)
                         }
                     }
                     
@@ -57,6 +79,8 @@ struct HomeView: View {
                                     Label(title: {
                                         Text(group.name)
                                             .font(.system(size: 15, weight: .medium, design: .rounded))
+                                        Spacer()
+                                        LinkCounterText(filter: .group(group))
                                     }, icon: {
                                         ZStack {
                                             Color(hex: group.colorHex)!
@@ -102,6 +126,8 @@ struct HomeView: View {
                                     Label(title: {
                                         Text(tag.name)
                                             .font(.system(size: 15, weight: .medium, design: .rounded))
+                                        Spacer()
+                                        LinkCounterText(filter: .tag(tag))
                                     }, icon: {
                                         Color(hex: tag.colorHex)!
                                             .clipShape(Circle())
@@ -140,47 +166,84 @@ struct HomeView: View {
                     sheet.addMode = nil
                 },
                 content: {
-                    IconColorPickerView(mode: sheet.addMode!)
+                    AddCategoryView(mode: sheet.addMode!)
                 }
             )
             
             .navigationTitle("Urly")
             .toolbar {
+                ToolbarItem {
+                    NavigationLink {
+                        AddLinkViewController()
+                    } label: {
+                        Image(systemName: "link.circle")
+                    }
+                }
                 ToolbarItem(placement: .bottomBar) {
                     HStack {
                         Button {
                             sheet.addMode = .folder
                         } label: {
-                            Image(systemName: "folder.fill.badge.plus")
-                            .bottomBarButton(
-                                darkColors: (.gray, Color(hex: "#333333")!),
-                                lightColors: (.blue, .yellow)
-                            )
+                            Text("\(Image(systemName: "folder.circle")) Add group")
+                                .font(.system(size: 15))
                         }
+                        Spacer()
                         Button {
                             sheet.addMode = .tag
                         } label: {
-                            Image(systemName: "tag.fill")
-                            .bottomBarButton(
-                                darkColors: (.gray, Color(hex: "#333333")!),
-                                lightColors: (.blue, .yellow)
-                            )
-                        }
-                        
-                        Spacer()
-                        
-                        NavigationLink {
-                            AddLinkViewController()
-                        } label: {
-                            Image(systemName: "link.badge.plus")
-                                .bottomBarButton(
-                                    darkColors: (.gray, Color(hex: "#333333")!),
-                                    lightColors: (.blue, .yellow)
-                                )
+                            Text("\(Image(systemName: "tag.circle")) Add tag")
+                                .font(.system(size: 15))
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+struct LinkCounterText: View {
+    var filter: LinkFilter
+    
+    var emptyText: String = "Empty"
+    
+    var numText: String? {
+        var count: Int? = nil
+        do {
+            switch filter {
+            case .all:
+                count = try PersistenceController.shared.container.viewContext.count(for: Link.Request.all.rawValue)
+            case .starred:
+                count = try PersistenceController.shared.container.viewContext.count(for: Link.Request.starred.rawValue)
+            case .unread:
+                count = try PersistenceController.shared.container.viewContext.count(for: Link.Request.unread.rawValue)
+            case .group(let group):
+                count = try PersistenceController.shared.container.viewContext.count(for: Link.Request.folder(group).rawValue)
+            case .tag(let tag):
+                count = try PersistenceController.shared.container.viewContext.count(for: Link.Request.tag(tag).rawValue)
+            }
+        } catch {
+            print(error)
+        }
+        
+        if let count = count {
+            if count == 0 {
+                return nil
+            } else {
+                return String(count)
+            }
+        } else {
+            return nil
+        }
+    }
+    
+    var body: some View {
+        if let numText = numText {
+            Text(numText)
+                .foregroundColor(.white)
+                .font(Font.system(size: 10, weight: .semibold, design: .rounded))
+                .padding(5)
+                .background(.gray.opacity(0.4))
+                .clipShape(Capsule())
         }
     }
 }

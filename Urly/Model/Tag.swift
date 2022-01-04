@@ -44,7 +44,7 @@ extension Tag {
             switch self {
             case .all:
                 let request: NSFetchRequest<Tag> = Tag.fetchRequest()
-                request.sortDescriptors = []
+                request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
                 return request
             case .withUuid(uuid: let uuid):
                 let request: NSFetchRequest<Tag> = Tag.fetchRequest(withUUID: uuid)

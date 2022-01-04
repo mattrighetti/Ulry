@@ -11,7 +11,7 @@
 		C90846072780D3D4005E865C /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90846062780D3D4005E865C /* DataManager.swift */; };
 		C90846092780D7E2005E865C /* URLManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90846082780D7E2005E865C /* URLManager.swift */; };
 		C908460B27811463005E865C /* MultipleSelectionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C908460A27811463005E865C /* MultipleSelectionList.swift */; };
-		C908460D278121CB005E865C /* AddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C908460C278121CB005E865C /* AddView.swift */; };
+		C908460D278121CB005E865C /* AddCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C908460C278121CB005E865C /* AddCategoryView.swift */; };
 		C908460F27812950005E865C /* SFSymbols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C908460E27812950005E865C /* SFSymbols.swift */; };
 		C963ACEA2774B9BD000D6461 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C963ACE92774B9BD000D6461 /* AppDelegate.swift */; };
 		C963ACEC2774B9BD000D6461 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C963ACEB2774B9BD000D6461 /* SceneDelegate.swift */; };
@@ -25,6 +25,7 @@
 		C984951F2781D486003C2A61 /* LinkListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C984951E2781D486003C2A61 /* LinkListViewModel.swift */; };
 		C98B0665277BCA4A00939B71 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = C98B0664277BCA4A00939B71 /* SwiftSoup */; };
 		C98B0667277BD4BA00939B71 /* AwareBackgroundColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98B0666277BD4BA00939B71 /* AwareBackgroundColor.swift */; };
+		C9A9762E27837B5000B5AC1E /* LinkDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A9762D27837B5000B5AC1E /* LinkDetailView.swift */; };
 		C9DACA462777A09E00F20A9C /* MainFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DACA452777A09E00F20A9C /* MainFolder.swift */; };
 		C9DACA482777A0C600F20A9C /* SectionTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DACA472777A0C600F20A9C /* SectionTitle.swift */; };
 		C9DACA4C2777A2CF00F20A9C /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DACA4B2777A2CF00F20A9C /* Tag.swift */; };
@@ -47,7 +48,7 @@
 		C90846062780D3D4005E865C /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		C90846082780D7E2005E865C /* URLManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLManager.swift; sourceTree = "<group>"; };
 		C908460A27811463005E865C /* MultipleSelectionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleSelectionList.swift; sourceTree = "<group>"; };
-		C908460C278121CB005E865C /* AddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddView.swift; sourceTree = "<group>"; };
+		C908460C278121CB005E865C /* AddCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCategoryView.swift; sourceTree = "<group>"; };
 		C908460E27812950005E865C /* SFSymbols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFSymbols.swift; sourceTree = "<group>"; };
 		C963ACE62774B9BD000D6461 /* Urly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Urly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C963ACE92774B9BD000D6461 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -62,6 +63,7 @@
 		C984951C2781D447003C2A61 /* LinkList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkList.swift; sourceTree = "<group>"; };
 		C984951E2781D486003C2A61 /* LinkListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkListViewModel.swift; sourceTree = "<group>"; };
 		C98B0666277BD4BA00939B71 /* AwareBackgroundColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwareBackgroundColor.swift; sourceTree = "<group>"; };
+		C9A9762D27837B5000B5AC1E /* LinkDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkDetailView.swift; sourceTree = "<group>"; };
 		C9DACA452777A09E00F20A9C /* MainFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFolder.swift; sourceTree = "<group>"; };
 		C9DACA472777A0C600F20A9C /* SectionTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionTitle.swift; sourceTree = "<group>"; };
 		C9DACA4B2777A2CF00F20A9C /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
@@ -133,9 +135,10 @@
 				C963AD002774BFD8000D6461 /* HomeView.swift */,
 				C9DACA5A2777D28000F20A9C /* AddLinkViewController.swift */,
 				C908460A27811463005E865C /* MultipleSelectionList.swift */,
-				C908460C278121CB005E865C /* AddView.swift */,
+				C908460C278121CB005E865C /* AddCategoryView.swift */,
 				C9FCEA9427815F1F00E44791 /* SelectionList.swift */,
 				C984951C2781D447003C2A61 /* LinkList.swift */,
+				C9A9762D27837B5000B5AC1E /* LinkDetailView.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -280,9 +283,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				C908460F27812950005E865C /* SFSymbols.swift in Sources */,
-				C908460D278121CB005E865C /* AddView.swift in Sources */,
+				C908460D278121CB005E865C /* AddCategoryView.swift in Sources */,
 				C963ACF42774B9BD000D6461 /* Urly.xcdatamodeld in Sources */,
 				C98B0667277BD4BA00939B71 /* AwareBackgroundColor.swift in Sources */,
+				C9A9762E27837B5000B5AC1E /* LinkDetailView.swift in Sources */,
 				C9DACA562777BABB00F20A9C /* +Color.swift in Sources */,
 				C9FCEA9527815F1F00E44791 /* SelectionList.swift in Sources */,
 				C9FCEA91278141C400E44791 /* GroupStorage.swift in Sources */,

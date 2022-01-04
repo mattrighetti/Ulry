@@ -50,7 +50,7 @@ extension Group {
             switch self {
             case .all:
                 let request: NSFetchRequest<Group> = Group.fetchRequest()
-                request.sortDescriptors = []
+                request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
                 return request
             case .withUuid(uuid: let uuid):
                 let request: NSFetchRequest<Group> = Group.fetchRequest(withUUID: uuid)
