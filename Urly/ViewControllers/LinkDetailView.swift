@@ -7,14 +7,43 @@
 
 import SwiftUI
 
+fileprivate class SheetState: ObservableObject {
+    @Published var isShowing: Bool = false
+    @Published var editLink: Link? = nil {
+        didSet {
+            isShowing = editLink != nil
+        }
+    }
+}
+
 struct LinkDetailView: View {
     @Environment(\.presentationMode) var presentationMode
+    @StateObject private var sheet = SheetState()
     
     var link: Link
     
+    var imgUrl: URL? {
+        guard
+            let imgLink = link.ogImageUrl,
+            let imgUrl = URL(string: imgLink)
+        else {
+            return nil
+        }
+        
+        return imgUrl
+    }
+    
+    var title: String {
+        link.ogTitle ?? link.url ?? "Rare bug, contact the developer to notify this"
+    }
+    
+    var description: String {
+        link.ogDescription ?? ""
+    }
+    
     var body: some View {
         VStack {
-            if let imgLink = link.ogImageUrl, let imgUrl = URL(string: imgLink) {
+            if imgUrl != nil {
                 AsyncImage(
                     url: imgUrl,
                     content: { image in
@@ -28,7 +57,8 @@ struct LinkDetailView: View {
                             .frame(width: 10, height: 10, alignment: .center)
                     }
                 )
-                .padding()
+                .padding(.horizontal)
+                .padding(.top)
             }
             
             HStack {
@@ -42,8 +72,8 @@ struct LinkDetailView: View {
                                 .frame(width: 10, height: 10, alignment: .center)
                         },
                         placeholder: {
-                            ProgressView()
-                                .frame(width: 10, height: 10, alignment: .center)
+                            Image(systemName: "link.circle")
+                                .font(.system(size: 10))
                         }
                     )
                     
@@ -55,18 +85,20 @@ struct LinkDetailView: View {
                 }
             }
             .padding(.horizontal)
+            .padding(.top, imgUrl != nil ? 0 : 15)
             
             VStack(alignment: .leading) {
-                Text(link.ogTitle ?? "")
+                Text(title)
                     .font(.system(size: 17, weight: .semibold, design: .rounded))
                     .padding(.bottom, 5)
                 
-                Text(link.ogDescription ?? "")
+                Text(description)
                     .font(.system(size: 13, weight: .regular, design: .rounded))
                     .foregroundColor(.gray.opacity(0.7))
                     .lineLimit(5)
             }
             .padding(.horizontal)
+            .padding(.vertical, 3)
             
             if let note = link.note, !note.isEmpty {
                 VStack(alignment: .leading) {
@@ -84,21 +116,19 @@ struct LinkDetailView: View {
                 .padding()
             }
             
-            Spacer()
-            
             HStack {
-                Button(action: {}, label: {
+                Button(action: { LinkStorage.shared.toggleStar(link: self.link) }, label: {
                     Spacer()
-                    Label(title: { Text("Star").font(.system(size: 13, weight: .regular, design: .rounded)) }, icon: { Image(systemName: "star") })
+                    Label(title: { Text("Star").font(.system(size: 13, weight: .regular, design: .rounded)) }, icon: { Image(systemName: self.link.starred ? "star.fill" : "star") })
                         .foregroundColor(.yellow)
                     Spacer()
                 })
-                Button(action: {}, label: {
+                Button(action: { LinkStorage.shared.toggleRead(link: self.link) }, label: {
                     Spacer()
-                    Label(title: { Text("Read").font(.system(size: 13, weight: .regular, design: .rounded)) }, icon: { Image(systemName: "shippingbox.circle") })
+                    Label(title: { Text("Read").font(.system(size: 13, weight: .regular, design: .rounded)) }, icon: { Image(systemName: self.link.unread ? "envelope" : "envelope.open") })
                     Spacer()
                 })
-                Button(action: {}, label: {
+                Button(action: { sheet.editLink = self.link }, label: {
                     Spacer()
                     Label(title: { Text("Edit").font(.system(size: 13, weight: .regular, design: .rounded)) }, icon: { Image(systemName: "square.and.pencil") })
                     Spacer()
@@ -112,7 +142,15 @@ struct LinkDetailView: View {
                         .foregroundColor(.red)
                     Spacer()
                 })
-            }.padding()
+            }
+            .padding()
+            
+            Spacer()
+        }
+        .sheet(isPresented: $sheet.isShowing, onDismiss: { sheet.editLink = nil }) {
+            NavigationView {
+                AddLinkViewController(configuration: .edit(self.link))
+            }
         }
     }
 }

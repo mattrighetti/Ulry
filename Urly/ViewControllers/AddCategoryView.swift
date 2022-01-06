@@ -8,15 +8,37 @@
 import os
 import SwiftUI
 
-public enum PickerMode: String {
-    case folder
+public enum PickerMode: Equatable, RawRepresentable {
+    case group
+    case editGroup(Group)
     case tag
+    case editTag(Tag)
+    
+    public init?(rawValue: String) {
+        return nil
+    }
+    
+    public typealias RawValue = String
+    
+    public var rawValue: RawValue {
+        switch self {
+        case .group:
+            return "group"
+        case .editGroup(_):
+            return "group"
+        case .tag:
+            return "tag"
+        case .editTag(_):
+            return "tag"
+        }
+    }
 }
 
 struct AddCategoryView: View {
-    var mode: PickerMode = .folder
-    
     @Environment(\.presentationMode) var presentationMode
+    
+    var mode: PickerMode = .group
+    
     @State var name: String = ""
     @State var selectedColor: Color = Color.random
     @State var selectedGlyph: String? = SFSymbols.all[Int.random(in: 1..<SFSymbols.all.count)]
@@ -31,7 +53,7 @@ struct AddCategoryView: View {
                             .clipShape(Circle())
                             .frame(width: 100, height: 100, alignment: .center)
 
-                        if mode == .folder {
+                        if mode == .group {
                             Image(systemName: selectedGlyph!)
                                 .font(.system(size: 35))
                                 .foregroundColor(.white)
@@ -60,12 +82,15 @@ struct AddCategoryView: View {
 
                 iconPicker()
             }
+            .onAppear {
+                configure()
+            }
             
             .navigationTitle(Text("New \(self.mode.rawValue)"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: save, label: { Text("Done") })
+                    Button(action: onDonePressed, label: { Text("Done") })
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
@@ -78,18 +103,18 @@ struct AddCategoryView: View {
     
     @ViewBuilder
     private func iconPicker() -> some View {
-        if mode == .folder {
+        if mode == .group {
             ScrollView(.vertical) {
-                LazyVGrid(columns: [GridItem](repeating: .init(.flexible()), count: 4)) {
+                LazyVGrid(columns: [GridItem](repeating: .init(.flexible()), count: 5)) {
                     ForEach(SFSymbols.all, id: \.self) { symbolName in
                         Button(action: {
                             selectedGlyph = symbolName
                         }, label: {
                             Image(systemName: symbolName)
-                                .padding()
+                                .padding(10)
                                 .background(Color.gray.opacity(0.2))
                                 .clipShape(Circle())
-                                .padding()
+                                .padding(10)
                         })
                         .foregroundColor(.gray)
                     }
@@ -104,13 +129,34 @@ struct AddCategoryView: View {
         }
     }
     
-    private func save() {
+    private func configure() {
+        switch mode {
+        case .editGroup(let group):
+            self.name = group.name
+            self.selectedColor = Color(hex: group.colorHex)!
+            self.selectedGlyph = group.iconName
+            break
+        case .editTag(let tag):
+            self.name = tag.name
+            self.selectedColor = Color(hex: tag.colorHex)!
+            break
+        case .group, .tag:
+            break
+        }
+    }
+    
+    private func onDonePressed() {
         guard !name.isEmpty else { return }
         
-        if mode == .folder {
+        switch mode {
+        case .group:
             GroupStorage.shared.add(name: name, color: selectedColor.toHex!, icon: selectedGlyph!)
-        } else {
+        case .editGroup(let group):
+            GroupStorage.shared.update(group: group, name: name, color: selectedColor.toHex!, icon: selectedGlyph!)
+        case .tag:
             TagStorage.shared.add(name: name, description: "", color: selectedColor.toHex!)
+        case .editTag(let tag):
+            TagStorage.shared.update(tag: tag, name: name, description: "", color: selectedColor.toHex!)
         }
         
         presentationMode.wrappedValue.dismiss()
@@ -122,7 +168,7 @@ struct GradientPickerView_Previews: PreviewProvider {
     @State private static var iconName: String? = "pencil"
 
     static var previews: some View {
-        AddCategoryView(mode: .folder)
+        AddCategoryView(mode: .group)
             .preferredColorScheme(.dark)
     }
 }

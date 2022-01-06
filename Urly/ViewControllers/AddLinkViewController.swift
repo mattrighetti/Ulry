@@ -9,7 +9,7 @@ import os
 import Combine
 import SwiftUI
 
-public class LinkManagerViewModel: ObservableObject {
+class LinkManagerViewModel: ObservableObject {
     @Published var tags = [Tag]()
     @Published var groups = [Group]()
     
@@ -28,9 +28,17 @@ public class LinkManagerViewModel: ObservableObject {
     }
 }
 
-struct AddLinkViewController: View {
+public struct AddLinkViewController: View {
+    public enum AddLinkConfiguration {
+        case edit(Link)
+        case new
+    }
+    
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel = LinkManagerViewModel()
+    
+    var configuration: AddLinkConfiguration
+    
     @State private var presentAlert = false
     @State private var link: String = ""
     @State private var selectedFolder: Group? = nil
@@ -38,22 +46,34 @@ struct AddLinkViewController: View {
     @State private var tags: [Tag] = []
     @State private var groups: [Group] = []
     
-    private var cancellables = Set<AnyCancellable>()
+    var cancellables = Set<AnyCancellable>()
     
-    private var selectedTagsStringValue: String {
+    var selectedTagsStringValue: String {
         guard !selectedTags.isEmpty else { return "None" }
         return selectedTags.map { $0.name }.joined(separator: ", ")
     }
     
-    private var selectedFolderStringValue: String {
+    var selectedFolderStringValue: String {
         selectedFolder == nil ? "None" : selectedFolder!.name
     }
     
-    var body: some View {
+    var buttonText: String {
+        switch configuration {
+        case .edit(_):
+            return "Update URL"
+        case .new:
+            return "Add URL"
+        }
+    }
+    
+    public var body: some View {
         VStack {
-            Form {
+            List {
                 Section(header: Text("URL").sectionTitle()) {
-                    TextField("Link", text: $link).keyboardType(UIKeyboardType.URL)
+                    TextField("", text: $link, prompt: Text("Link URL"))
+                        .keyboardType(UIKeyboardType.URL)
+                        .textInputAutocapitalization(.never)
+                        .disableAutocorrection(true)
                 }
                 
                 Section(header: Text("Groups").sectionTitle()) {
@@ -68,16 +88,9 @@ struct AddLinkViewController: View {
                     }
                 }
             }
-            
-            Button(action: self.addURL) {
-                Text("Add URL \(Image(systemName: "link.badge.plus"))")
-                    .font(.headline)
-                    .foregroundColor(.white)
-            }
-            .tint(.blue)
-            .buttonStyle(.borderedProminent)
-            .buttonBorderShape(.automatic)
-            .controlSize(.large)
+        }
+        .onAppear {
+            configure()
         }
         .alert("No URL inserted", isPresented: $presentAlert, actions: {}, message: {
             Text("Please make sure to insert a valid URL")
@@ -85,9 +98,61 @@ struct AddLinkViewController: View {
         
         .navigationTitle(Text("New URL"))
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: onDonePressed) {
+                    Text("Done").font(.system(.headline, design: .rounded))
+                }
+            }
+        }
     }
     
-    private func addURL() {
+    private func configure() {
+        switch configuration {
+        case .edit(let editLink):
+            self.link = editLink.url!
+            self.selectedFolder = editLink.group
+            self.selectedTags = editLink.tags!
+        case .new:
+            break
+        }
+    }
+    
+    private func onDonePressed() {
+        switch configuration {
+        case .edit(let editLink):
+            fetchData(completion: { og in
+                LinkStorage.shared.update(
+                    link: editLink,
+                    url: link,
+                    ogTitle: og["og:title"],
+                    ogDescription: og["og:description"],
+                    ogImageUrl: og["og:image"],
+                    note: "",
+                    starred: false,
+                    unread: true,
+                    group: selectedFolder,
+                    tags: Set<Tag>(selectedTags)
+                )
+            })
+        case .new:
+            fetchData(completion: { og in
+                LinkStorage.shared.add(
+                    url: link,
+                    ogTitle: og["og:title"],
+                    ogDescription: og["og:description"],
+                    ogImageUrl: og["og:image"],
+                    note: "",
+                    starred: false,
+                    unread: true,
+                    group: selectedFolder,
+                    tags: Set<Tag>(selectedTags)
+                )
+            })
+        }
+    }
+    
+    private func fetchData(completion: @escaping (([String:String]) -> Void)) {
         link = link.trimmingCharacters(in: .whitespacesAndNewlines)
         guard
             !link.isEmpty,
@@ -98,17 +163,7 @@ struct AddLinkViewController: View {
         }
         
         URLManager.shared.getURLData(url: link) { og in
-            LinkStorage.shared.add(
-                url: link,
-                ogTitle: og["og:title"],
-                ogDescription: og["og:description"],
-                ogImageUrl: og["og:image"],
-                note: "",
-                starred: false,
-                unread: true,
-                group: selectedFolder,
-                tags: Set<Tag>(selectedTags)
-            )
+            completion(og)
         }
         
         presentationMode.wrappedValue.dismiss()
@@ -117,8 +172,10 @@ struct AddLinkViewController: View {
 
 struct AddLinkViewController_Previews: PreviewProvider {
     static var previews: some View {
-        AddLinkViewController()
-            .preferredColorScheme(.dark)
-            .previewInterfaceOrientation(.portrait)
+        NavigationView {
+            AddLinkViewController(configuration: .new)
+                .preferredColorScheme(.dark)
+                .previewInterfaceOrientation(.portrait)
+        }
     }
 }

@@ -48,12 +48,3 @@ struct MultipleSelectionRow: View {
         }
     }
 }
-
-//struct MultiSelectList_Previews: PreviewProvider {
-//    @State private static var selection: [String] = []
-//    
-//    static var previews: some View {
-//        MultipleSelectionList(items: ["Apples", "Oranges", "Bananas", "Pears", "Mangos", "Grapefruit"], selections: $selection)
-//            .preferredColorScheme(.dark)
-//    }
-//}

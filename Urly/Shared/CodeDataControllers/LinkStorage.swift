@@ -34,7 +34,7 @@ class LinkStorage: NSObject, ObservableObject {
         }
     }
     
-    func add(url:String, ogTitle: String?, ogDescription: String?, ogImageUrl: String?, note: String, starred: Bool, unread: Bool, group: Group?, tags: Set<Tag>?) {
+    func add(url: String, ogTitle: String?, ogDescription: String?, ogImageUrl: String?, note: String, starred: Bool, unread: Bool, group: Group?, tags: Set<Tag>?) {
         let link = Link(context: PersistenceController.shared.container.viewContext)
         link.setValue(UUID(), forKey: "id")
         link.setValue(url, forKey: "url")
@@ -49,6 +49,32 @@ class LinkStorage: NSObject, ObservableObject {
         link.setValue(Int(Date.now.timeIntervalSince1970), forKey: "createdAt")
         link.setValue(Int(Date.now.timeIntervalSince1970), forKey: "updatedAt")
 
+        saveContext()
+    }
+    
+    func update(link: Link, url: String, ogTitle: String?, ogDescription: String?, ogImageUrl: String?, note: String, starred: Bool, unread: Bool, group: Group?, tags: Set<Tag>?) {
+        link.setValue(url, forKey: "url")
+        link.setValue(ogTitle, forKey: "ogTitle")
+        link.setValue(ogDescription, forKey: "ogDescription")
+        link.setValue(ogImageUrl, forKey: "ogImageUrl")
+        link.setValue(note, forKey: "note")
+        link.setValue(starred, forKey: "starred")
+        link.setValue(unread, forKey: "unread")
+        link.setValue(group, forKey: "group")
+        link.setValue(tags, forKey: "tags")
+        link.setValue(Int(Date.now.timeIntervalSince1970), forKey: "createdAt")
+        link.setValue(Int(Date.now.timeIntervalSince1970), forKey: "updatedAt")
+        
+        saveContext()
+    }
+    
+    func toggleStar(link: Link) {
+        link.setValue(!link.starred, forKey: "starred")
+        saveContext()
+    }
+    
+    func toggleRead(link: Link) {
+        link.setValue(!link.unread, forKey: "unread")
         saveContext()
     }
     

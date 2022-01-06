@@ -44,6 +44,14 @@ class GroupStorage: NSObject, ObservableObject {
         saveContext()
     }
     
+    func update(group: Group, name: String, color: String, icon: String) {
+        group.setValue(name, forKey: "name")
+        group.setValue(color, forKey: "colorHex")
+        group.setValue(icon, forKey: "iconName")
+
+        saveContext()
+    }
+    
     func delete(_ group: Group) {
         os_log(.debug, "deleting group: \(group)")
         PersistenceController.shared.container.viewContext.delete(group)

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		C90495D32782736F001C2DD3 /* +UIScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90495D22782736F001C2DD3 /* +UIScreen.swift */; };
-		C90846072780D3D4005E865C /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90846062780D3D4005E865C /* DataManager.swift */; };
 		C90846092780D7E2005E865C /* URLManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90846082780D7E2005E865C /* URLManager.swift */; };
 		C908460B27811463005E865C /* MultipleSelectionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C908460A27811463005E865C /* MultipleSelectionList.swift */; };
 		C908460D278121CB005E865C /* AddCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C908460C278121CB005E865C /* AddCategoryView.swift */; };
@@ -21,6 +20,7 @@
 		C963AD012774BFD8000D6461 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C963AD002774BFD8000D6461 /* HomeView.swift */; };
 		C963AD032774D4B3000D6461 /* LinkCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C963AD022774D4B3000D6461 /* LinkCellView.swift */; };
 		C963AD052774D9EF000D6461 /* MetaFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C963AD042774D9EF000D6461 /* MetaFetcher.swift */; };
+		C977D08A278519360015169D /* LinkCounterText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C977D089278519360015169D /* LinkCounterText.swift */; };
 		C984951D2781D447003C2A61 /* LinkList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C984951C2781D447003C2A61 /* LinkList.swift */; };
 		C984951F2781D486003C2A61 /* LinkListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C984951E2781D486003C2A61 /* LinkListViewModel.swift */; };
 		C98B0665277BCA4A00939B71 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = C98B0664277BCA4A00939B71 /* SwiftSoup */; };
@@ -45,7 +45,6 @@
 
 /* Begin PBXFileReference section */
 		C90495D22782736F001C2DD3 /* +UIScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UIScreen.swift"; sourceTree = "<group>"; };
-		C90846062780D3D4005E865C /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		C90846082780D7E2005E865C /* URLManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLManager.swift; sourceTree = "<group>"; };
 		C908460A27811463005E865C /* MultipleSelectionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleSelectionList.swift; sourceTree = "<group>"; };
 		C908460C278121CB005E865C /* AddCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCategoryView.swift; sourceTree = "<group>"; };
@@ -60,6 +59,7 @@
 		C963AD002774BFD8000D6461 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		C963AD022774D4B3000D6461 /* LinkCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkCellView.swift; sourceTree = "<group>"; };
 		C963AD042774D9EF000D6461 /* MetaFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaFetcher.swift; sourceTree = "<group>"; };
+		C977D089278519360015169D /* LinkCounterText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkCounterText.swift; sourceTree = "<group>"; };
 		C984951C2781D447003C2A61 /* LinkList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkList.swift; sourceTree = "<group>"; };
 		C984951E2781D486003C2A61 /* LinkListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkListViewModel.swift; sourceTree = "<group>"; };
 		C98B0666277BD4BA00939B71 /* AwareBackgroundColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwareBackgroundColor.swift; sourceTree = "<group>"; };
@@ -112,11 +112,9 @@
 		C963ACE82774B9BD000D6461 /* Urly */ = {
 			isa = PBXGroup;
 			children = (
-				C98495202781DD5A003C2A61 /* CodeDataControllers */,
+				C977D0882785062A0015169D /* Shared */,
 				C9DACA572777C5BD00F20A9C /* ViewModel */,
-				C9DACA4A2777A2C100F20A9C /* Model */,
 				C963AD082774DC33000D6461 /* Views */,
-				C963AD072774DC1E000D6461 /* Utils */,
 				C963AD062774DC0D000D6461 /* ViewControllers */,
 				C963ACE92774B9BD000D6461 /* AppDelegate.swift */,
 				C963ACEB2774B9BD000D6461 /* SceneDelegate.swift */,
@@ -124,7 +122,6 @@
 				C963ACF72774B9BE000D6461 /* LaunchScreen.storyboard */,
 				C963ACFA2774B9BE000D6461 /* Info.plist */,
 				C963ACF22774B9BD000D6461 /* Urly.xcdatamodeld */,
-				C9FCEA8E27813F0400E44791 /* Persistence.swift */,
 			);
 			path = Urly;
 			sourceTree = "<group>";
@@ -159,8 +156,20 @@
 			children = (
 				C9DACA492777A0D000F20A9C /* Modifiers */,
 				C963AD022774D4B3000D6461 /* LinkCellView.swift */,
+				C977D089278519360015169D /* LinkCounterText.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		C977D0882785062A0015169D /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				C9FCEA8E27813F0400E44791 /* Persistence.swift */,
+				C963AD072774DC1E000D6461 /* Utils */,
+				C9DACA4A2777A2C100F20A9C /* Model */,
+				C98495202781DD5A003C2A61 /* CodeDataControllers */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		C98495202781DD5A003C2A61 /* CodeDataControllers */ = {
@@ -199,7 +208,6 @@
 			isa = PBXGroup;
 			children = (
 				C9DACA582777C5CB00F20A9C /* HomeViewModel.swift */,
-				C90846062780D3D4005E865C /* DataManager.swift */,
 				C90846082780D7E2005E865C /* URLManager.swift */,
 				C984951E2781D486003C2A61 /* LinkListViewModel.swift */,
 			);
@@ -307,9 +315,9 @@
 				C9DACA542777B8F100F20A9C /* ListLabelImage.swift in Sources */,
 				C9FCEA8F27813F0400E44791 /* Persistence.swift in Sources */,
 				C984951F2781D486003C2A61 /* LinkListViewModel.swift in Sources */,
-				C90846072780D3D4005E865C /* DataManager.swift in Sources */,
 				C9DACA5B2777D28000F20A9C /* AddLinkViewController.swift in Sources */,
 				C963AD032774D4B3000D6461 /* LinkCellView.swift in Sources */,
+				C977D08A278519360015169D /* LinkCounterText.swift in Sources */,
 				C963AD052774D9EF000D6461 /* MetaFetcher.swift in Sources */,
 				C963ACEC2774B9BD000D6461 /* SceneDelegate.swift in Sources */,
 				C9FCEA9327815BF500E44791 /* LinkStorage.swift in Sources */,

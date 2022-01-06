@@ -54,12 +54,13 @@ struct LinkList: View {
     
     var body: some View {
         ScrollView {
-            if selectionDescription != nil {
-                Text(selectionDescription!)
+            if let selectionDescription = selectionDescription {
+                Text(selectionDescription)
             }
             
             if isListEmpty {
                 Text("There is no link in this category")
+                    .padding(.top, 20)
             } else {
                 ForEach(viewModel.links, id: \.id) { link in
                     LinkCellView(link: link, infoPressAction: {
@@ -72,9 +73,15 @@ struct LinkList: View {
         .onAppear {
             viewModel.getLinks(by: filter)
         }
-        .sheet(isPresented: $sheet.isShowing, onDismiss: { sheet.link = nil }) {
-            LinkDetailView(link: sheet.link!)
-        }
+        .sheet(
+            isPresented: $sheet.isShowing,
+            onDismiss: {
+                sheet.link = nil
+            },
+            content: {
+                LinkDetailView(link: sheet.link!)
+            }
+        )
     }
 }
 

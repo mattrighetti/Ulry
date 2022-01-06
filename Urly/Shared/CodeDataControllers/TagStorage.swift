@@ -44,6 +44,14 @@ class TagStorage: NSObject, ObservableObject {
         saveContext()
     }
     
+    func update(tag: Tag, name: String, description: String, color: String) {
+        tag.setValue(name, forKey: "name")
+        tag.setValue(description, forKey: "description_")
+        tag.setValue(color, forKey: "colorHex")
+
+        saveContext()
+    }
+    
     func delete(id: UUID) {
         os_log(.debug, "deleting tag: \(id)")
         let fetchedTag = Tag.fetchRequest(withUUID: id)
