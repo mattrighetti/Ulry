@@ -39,6 +39,7 @@ public struct AddLinkViewController: View {
     
     var configuration: AddLinkConfiguration
     
+    @State var runConfiguration = false
     @State private var presentAlert = false
     @State private var link: String = ""
     @State private var selectedFolder: Group? = nil
@@ -90,7 +91,9 @@ public struct AddLinkViewController: View {
             }
         }
         .onAppear {
-            configure()
+            if !runConfiguration {
+                configure()
+            }
         }
         .alert("No URL inserted", isPresented: $presentAlert, actions: {}, message: {
             Text("Please make sure to insert a valid URL")
@@ -108,6 +111,7 @@ public struct AddLinkViewController: View {
     }
     
     private func configure() {
+        runConfiguration = true
         switch configuration {
         case .edit(let editLink):
             self.link = editLink.url!
@@ -132,7 +136,7 @@ public struct AddLinkViewController: View {
                     starred: false,
                     unread: true,
                     group: selectedFolder,
-                    tags: Set<Tag>(selectedTags)
+                    tags: selectedTags
                 )
             })
         case .new:
@@ -146,7 +150,7 @@ public struct AddLinkViewController: View {
                     starred: false,
                     unread: true,
                     group: selectedFolder,
-                    tags: Set<Tag>(selectedTags)
+                    tags: selectedTags
                 )
             })
         }

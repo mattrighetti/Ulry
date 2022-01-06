@@ -34,7 +34,7 @@ class LinkStorage: NSObject, ObservableObject {
         }
     }
     
-    func add(url: String, ogTitle: String?, ogDescription: String?, ogImageUrl: String?, note: String, starred: Bool, unread: Bool, group: Group?, tags: Set<Tag>?) {
+    func add(url: String, ogTitle: String?, ogDescription: String?, ogImageUrl: String?, note: String, starred: Bool, unread: Bool, group: Group?, tags: [Tag]?) {
         let link = Link(context: PersistenceController.shared.container.viewContext)
         link.setValue(UUID(), forKey: "id")
         link.setValue(url, forKey: "url")
@@ -52,7 +52,7 @@ class LinkStorage: NSObject, ObservableObject {
         saveContext()
     }
     
-    func update(link: Link, url: String, ogTitle: String?, ogDescription: String?, ogImageUrl: String?, note: String, starred: Bool, unread: Bool, group: Group?, tags: Set<Tag>?) {
+    func update(link: Link, url: String, ogTitle: String?, ogDescription: String?, ogImageUrl: String?, note: String, starred: Bool, unread: Bool, group: Group?, tags: [Tag]?) {
         link.setValue(url, forKey: "url")
         link.setValue(ogTitle, forKey: "ogTitle")
         link.setValue(ogDescription, forKey: "ogDescription")
