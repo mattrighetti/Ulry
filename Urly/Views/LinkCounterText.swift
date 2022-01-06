@@ -8,27 +8,9 @@
 import SwiftUI
 
 struct LinkCounterText: View {
-    var filter: LinkFilter
+    var count: Int?
     
     var numText: String? {
-        var count: Int? = nil
-        do {
-            switch filter {
-            case .all:
-                count = try PersistenceController.shared.container.viewContext.count(for: Link.Request.all.rawValue)
-            case .starred:
-                count = try PersistenceController.shared.container.viewContext.count(for: Link.Request.starred.rawValue)
-            case .unread:
-                count = try PersistenceController.shared.container.viewContext.count(for: Link.Request.unread.rawValue)
-            case .group(let group):
-                count = try PersistenceController.shared.container.viewContext.count(for: Link.Request.folder(group).rawValue)
-            case .tag(let tag):
-                count = try PersistenceController.shared.container.viewContext.count(for: Link.Request.tag(tag).rawValue)
-            }
-        } catch {
-            print(error)
-        }
-        
         if let count = count {
             if count == 0 {
                 return nil

@@ -116,7 +116,7 @@ public struct AddLinkViewController: View {
         case .edit(let editLink):
             self.link = editLink.url!
             self.selectedFolder = editLink.group
-            self.selectedTags = editLink.tags!
+            self.selectedTags = Array(editLink.tags!)
         case .new:
             break
         }
@@ -136,7 +136,7 @@ public struct AddLinkViewController: View {
                     starred: false,
                     unread: true,
                     group: selectedFolder,
-                    tags: selectedTags
+                    tags: Set(selectedTags)
                 )
             })
         case .new:
@@ -150,7 +150,7 @@ public struct AddLinkViewController: View {
                     starred: false,
                     unread: true,
                     group: selectedFolder,
-                    tags: selectedTags
+                    tags: Set(selectedTags)
                 )
             })
         }

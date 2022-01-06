@@ -74,7 +74,7 @@ struct HomeView: View {
                             Text(item.name)
                                 .font(.system(size: 15, weight: .medium, design: .rounded))
                             Spacer()
-                            LinkCounterText(filter: item.filter)
+                            LinkCounterText(count: viewModel.countLinks(by: item.filter))
                         }
                     }, icon: {
                         Image(systemName: item.iconName)
@@ -118,7 +118,7 @@ struct HomeView: View {
                             Text(group.name)
                                 .font(.system(size: 15, weight: .medium, design: .rounded))
                             Spacer()
-                            LinkCounterText(filter: .group(group))
+                            LinkCounterText(count: group.links?.count)
                         }, icon: {
                             ZStack {
                                 Color(hex: group.colorHex)!
@@ -166,7 +166,7 @@ struct HomeView: View {
                             Text(tag.name)
                                 .font(.system(size: 15, weight: .medium, design: .rounded))
                             Spacer()
-                            LinkCounterText(filter: .tag(tag))
+                            LinkCounterText(count: tag.links?.count)
                         }, icon: {
                             Color(hex: tag.colorHex)!
                                 .clipShape(Circle())
