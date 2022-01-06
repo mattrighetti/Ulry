@@ -44,16 +44,24 @@ class TagStorage: NSObject, ObservableObject {
         saveContext()
     }
     
-    func delete(_ tag: Tag) {
-        PersistenceController.shared.container.viewContext.delete(tag)
-        saveContext()
+    func delete(id: UUID) {
+        os_log(.debug, "deleting tag: \(id)")
+        let fetchedTag = Tag.fetchRequest(withUUID: id)
+        
+        do {
+            guard let tag = try PersistenceController.shared.container.viewContext.fetch(fetchedTag).first else { return }
+            PersistenceController.shared.container.viewContext.delete(tag)
+            saveContext()
+        } catch {
+            os_log(.error, "cannot delete link with UUID: \(id)")
+        }
     }
     
     private func saveContext() {
         do {
             try PersistenceController.shared.container.viewContext.save()
         } catch {
-            os_log(.error, "\(error as NSObject)")
+            os_log(.error, "error while saving context: \(error as NSObject)")
         }
     }
 }

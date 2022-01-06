@@ -14,7 +14,7 @@ public class Tag: NSManagedObject, Representable {
     @NSManaged public var colorHex: String
     @NSManaged public var description_: String
     @NSManaged public var name: String
-    @NSManaged public var links: Set<Link>?
+    @NSManaged public var links: [Link]?
 }
 
 extension Tag {

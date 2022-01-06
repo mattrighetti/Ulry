@@ -20,7 +20,7 @@ public class Link: NSManagedObject {
     @NSManaged public var ogDescription: String?
     @NSManaged public var ogImageUrl: String?
     @NSManaged public var group: Group?
-    @NSManaged public var tags: Set<Tag>?
+    @NSManaged public var tags: [Tag]?
 }
 
 extension Link {
