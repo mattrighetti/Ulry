@@ -40,6 +40,7 @@ struct AddCategoryView: View {
     var mode: PickerMode = .group
     
     @State var name: String = ""
+    @State var searchIcon: String = ""
     @State var selectedColor: Color = Color.random
     @State var selectedGlyph: String? = SFSymbols.all[Int.random(in: 1..<SFSymbols.all.count)]
     @State private var pickerSelection: Int = 0
@@ -95,7 +96,7 @@ struct AddCategoryView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
                         presentationMode.wrappedValue.dismiss()
-                    }, label: { Text("Canel") })
+                    }, label: { Text("Cancel") })
                 }
             }
         }
@@ -106,7 +107,9 @@ struct AddCategoryView: View {
         if mode == .group {
             ScrollView(.vertical) {
                 LazyVGrid(columns: [GridItem](repeating: .init(.flexible()), count: 5)) {
-                    ForEach(SFSymbols.all, id: \.self) { symbolName in
+                    ForEach(SFSymbols.all.filter {
+                        searchIcon.isEmpty ? true : $0.lowercased().contains(searchIcon.lowercased())
+                    }, id: \.self) { symbolName in
                         Button(action: {
                             selectedGlyph = symbolName
                         }, label: {
@@ -120,6 +123,16 @@ struct AddCategoryView: View {
                     }
                 }
             }
+            .overlay(
+                VStack {
+                    Spacer()
+                    TextField("", text: $searchIcon, prompt: Text("Search icon"))
+                        .padding()
+                        .background(Color(hex: "#222222")!.opacity(0.9))
+                        .cornerRadius(15)
+                        .padding([.bottom])
+                }
+            )
             .frame(height: 300)
             .padding(.horizontal)
             .background(Color.gray.opacity(0.2))
