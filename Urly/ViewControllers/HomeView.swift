@@ -88,7 +88,7 @@ struct HomeView: View {
                 }
             }
             
-            NavigationLink(destination: AddLinkViewController(configuration: .new)) {
+            NavigationLink(destination: AddLinkView(configuration: .new)) {
                 Label(title: {
                     Text("Add link")
                         .font(.system(size: 15, weight: .medium, design: .rounded))

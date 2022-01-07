@@ -28,7 +28,7 @@ class LinkManagerViewModel: ObservableObject {
     }
 }
 
-public struct AddLinkViewController: View {
+public struct AddLinkView: View {
     public enum AddLinkConfiguration {
         case edit(Link)
         case new
@@ -177,7 +177,7 @@ public struct AddLinkViewController: View {
 struct AddLinkViewController_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            AddLinkViewController(configuration: .new)
+            AddLinkView(configuration: .new)
                 .preferredColorScheme(.dark)
                 .previewInterfaceOrientation(.portrait)
         }

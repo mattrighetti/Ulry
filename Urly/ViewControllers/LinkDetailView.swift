@@ -149,7 +149,7 @@ struct LinkDetailView: View {
         }
         .sheet(isPresented: $sheet.isShowing, onDismiss: { sheet.editLink = nil }) {
             NavigationView {
-                AddLinkViewController(configuration: .edit(self.link))
+                AddLinkView(configuration: .edit(self.link))
             }
         }
     }

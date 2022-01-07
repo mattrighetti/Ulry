@@ -37,7 +37,7 @@
 		C9DACA542777B8F100F20A9C /* ListLabelImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DACA532777B8F100F20A9C /* ListLabelImage.swift */; };
 		C9DACA562777BABB00F20A9C /* +Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DACA552777BABB00F20A9C /* +Color.swift */; };
 		C9DACA592777C5CB00F20A9C /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DACA582777C5CB00F20A9C /* HomeViewModel.swift */; };
-		C9DACA5B2777D28000F20A9C /* AddLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DACA5A2777D28000F20A9C /* AddLinkViewController.swift */; };
+		C9DACA5B2777D28000F20A9C /* AddLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DACA5A2777D28000F20A9C /* AddLinkView.swift */; };
 		C9FCEA8D27813E5700E44791 /* TagStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FCEA8C27813E5700E44791 /* TagStorage.swift */; };
 		C9FCEA8F27813F0400E44791 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FCEA8E27813F0400E44791 /* Persistence.swift */; };
 		C9FCEA91278141C400E44791 /* GroupStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FCEA90278141C400E44791 /* GroupStorage.swift */; };
@@ -76,7 +76,7 @@
 		C9DACA532777B8F100F20A9C /* ListLabelImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListLabelImage.swift; sourceTree = "<group>"; };
 		C9DACA552777BABB00F20A9C /* +Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+Color.swift"; sourceTree = "<group>"; };
 		C9DACA582777C5CB00F20A9C /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
-		C9DACA5A2777D28000F20A9C /* AddLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLinkViewController.swift; sourceTree = "<group>"; };
+		C9DACA5A2777D28000F20A9C /* AddLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLinkView.swift; sourceTree = "<group>"; };
 		C9FCEA8C27813E5700E44791 /* TagStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagStorage.swift; sourceTree = "<group>"; };
 		C9FCEA8E27813F0400E44791 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		C9FCEA90278141C400E44791 /* GroupStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupStorage.swift; sourceTree = "<group>"; };
@@ -134,7 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				C963AD002774BFD8000D6461 /* HomeView.swift */,
-				C9DACA5A2777D28000F20A9C /* AddLinkViewController.swift */,
+				C9DACA5A2777D28000F20A9C /* AddLinkView.swift */,
 				C908460A27811463005E865C /* MultipleSelectionList.swift */,
 				C908460C278121CB005E865C /* AddCategoryView.swift */,
 				C9FCEA9427815F1F00E44791 /* SelectionList.swift */,
@@ -323,7 +323,7 @@
 				C95A31F32787BFE3000F561B /* LottieView.swift in Sources */,
 				C9FCEA8F27813F0400E44791 /* Persistence.swift in Sources */,
 				C984951F2781D486003C2A61 /* LinkListViewModel.swift in Sources */,
-				C9DACA5B2777D28000F20A9C /* AddLinkViewController.swift in Sources */,
+				C9DACA5B2777D28000F20A9C /* AddLinkView.swift in Sources */,
 				C963AD032774D4B3000D6461 /* LinkCellView.swift in Sources */,
 				C977D08A278519360015169D /* LinkCounterText.swift in Sources */,
 				C963AD052774D9EF000D6461 /* MetaFetcher.swift in Sources */,
