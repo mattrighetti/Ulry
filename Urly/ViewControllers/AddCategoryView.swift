@@ -39,6 +39,7 @@ struct AddCategoryView: View {
     
     var mode: PickerMode = .group
     
+    var onDonePressedAction: (() -> Void)?
     @State var name: String = ""
     @State var searchIcon: String = ""
     @State var selectedColor: Color = Color.random
@@ -95,7 +96,11 @@ struct AddCategoryView: View {
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        presentationMode.wrappedValue.dismiss()
+                        if onDonePressedAction != nil {
+                            onDonePressedAction!()
+                        } else {
+                            presentationMode.wrappedValue.dismiss()
+                        }
                     }, label: { Text("Cancel") })
                 }
             }

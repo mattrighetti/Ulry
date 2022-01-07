@@ -8,20 +8,36 @@
 import SwiftUI
 
 struct SelectionList<T: Representable>: View {
+    @State var isSheetShown: Bool = false
     @State var items: [T] = []
     @Binding var selection: T?
 
     var body: some View {
         List {
-            ForEach(self.items, id: \.self) { item in
-                SelectionRow(title: item.name, isSelected: self.selection == item) {
-                    self.selection = item
+            Section {
+                ForEach(self.items, id: \.self) { item in
+                    SelectionRow(title: item.name, isSelected: self.selection == item) {
+                        self.selection = item
+                    }
+                }
+                
+                SelectionRow(title: "None", isSelected: false) {
+                    self.selection = nil
                 }
             }
             
-            SelectionRow(title: "None", isSelected: false) {
-                self.selection = nil
+            Section {
+                Button(action: { isSheetShown.toggle() }) {
+                    HStack {
+                        Text("Create new")
+                        Spacer()
+                        Image(systemName: "plus")
+                    }
+                }
             }
+        }
+        .sheet(isPresented: $isSheetShown) {
+            AddCategoryView(mode: .group, onDonePressedAction: { isSheetShown.toggle() })
         }
     }
 }
@@ -35,6 +51,8 @@ struct SelectionRow: View {
         Button(action: self.action) {
             HStack {
                 Text(self.title)
+                    .foregroundColor(.white)
+                
                 if self.isSelected {
                     Spacer()
                     Image(systemName: "checkmark.circle.fill")

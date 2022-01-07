@@ -27,7 +27,8 @@ struct LinkCounterText: View {
             Text(numText)
                 .foregroundColor(.white)
                 .font(Font.system(size: 10, weight: .semibold, design: .rounded))
-                .padding(5)
+                .padding(.vertical, 5)
+                .padding(.horizontal, 10)
                 .background(.gray.opacity(0.4))
                 .clipShape(Capsule())
         } else {

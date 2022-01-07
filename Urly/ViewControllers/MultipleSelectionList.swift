@@ -12,20 +12,36 @@ public protocol Representable: Identifiable, Hashable {
 }
 
 struct MultipleSelectionList<T: Representable>: View {
+    @State var isSheetShown: Bool = false
     @State var items: [T] = []
     @Binding var selections: [T]
 
     var body: some View {
         List {
-            ForEach(self.items, id: \.self) { item in
-                MultipleSelectionRow(title: item.name, isSelected: self.selections.contains(item)) {
-                    if self.selections.contains(item) {
-                        self.selections.removeAll(where: { $0 == item })
-                    } else {
-                        self.selections.append(item)
+            Section {
+                ForEach(self.items, id: \.self) { item in
+                    MultipleSelectionRow(title: item.name, isSelected: self.selections.contains(item)) {
+                        if self.selections.contains(item) {
+                            self.selections.removeAll(where: { $0 == item })
+                        } else {
+                            self.selections.append(item)
+                        }
                     }
                 }
             }
+            
+            Section {
+                Button(action: { isSheetShown.toggle() }) {
+                    HStack {
+                        Text("Create new")
+                        Spacer()
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $isSheetShown) {
+            AddCategoryView(mode: .tag, onDonePressedAction: { isSheetShown.toggle() })
         }
     }
 }
@@ -38,7 +54,8 @@ struct MultipleSelectionRow: View {
     var body: some View {
         Button(action: self.action) {
             HStack {
-                Text(self.title)
+                Text(self.title).foregroundColor(.white)
+                
                 if self.isSelected {
                     Spacer()
                     Image(systemName: "checkmark.circle.fill")
