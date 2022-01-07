@@ -59,8 +59,13 @@ struct LinkList: View {
             }
             
             if isListEmpty {
-                Text("There is no link in this category")
-                    .padding(.top, 20)
+                VStack {
+                    LottieView(animationName: "empty-box", loopMode: .playOnce, animationSpeed: 1.0)
+                        .frame(width: 150, height: 150)
+                    
+                    Text("Empty")
+                        .font(.system(.headline, design: .rounded))
+                }
             } else {
                 ForEach(viewModel.links, id: \.id) { link in
                     LinkCellView(link: link, infoPressAction: {
