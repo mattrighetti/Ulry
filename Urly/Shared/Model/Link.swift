@@ -9,53 +9,33 @@ import SwiftUI
 import CoreData
 
 public class Link: NSManagedObject {
-    @NSManaged public var id: UUID?
-    @NSManaged public var createdAt: Int32
-    @NSManaged public var updatedAt: Int32
-    @NSManaged public var note: String?
-    @NSManaged public var starred: Bool
-    @NSManaged public var unread: Bool
-    @NSManaged public var url: String?
-    @NSManaged public var ogTitle: String?
-    @NSManaged public var ogDescription: String?
-    @NSManaged public var ogImageUrl: String?
-    @NSManaged public var group: Group?
-    @NSManaged public var tags: Set<Tag>?
-}
-
-extension Link {
-    public class func fetchRequest() -> NSFetchRequest<Link> {
-        NSFetchRequest<Link>(entityName: "Link")
+    var hostname: String {
+        guard
+            let url = URL(string: self.url),
+            var hostname = url.host
+        else { return "invalid URL" }
+        
+        if hostname.starts(with: "www.") {
+            hostname = hostname.replacingOccurrences(of: "www.", with: "")
+        }
+        
+        return hostname
     }
     
-    public class func fetchRequest(withUUID id: UUID) -> NSFetchRequest<Link> {
-        let fetchLink: NSFetchRequest<Link> = self.fetchRequest()
-        fetchLink.predicate = NSPredicate(format: "%K == %@", "id", id as CVarArg)
-        return fetchLink
+    var color: Color {
+        guard let color = Color(hex: self.colorHex) else { return Color(hex: "#333333")! }
+        return color
     }
     
-    public class func fetchRequest(withTag tag: Tag) -> NSFetchRequest<Link> {
-        let fetchLink: NSFetchRequest<Link> = self.fetchRequest()
-        fetchLink.predicate = NSPredicate(format: "%@ IN tags", tag)
-        return fetchLink
+    var dateString: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMM yy"
+        let date = Date(timeIntervalSince1970: Double(self.createdAt))
+        return formatter.string(from: date)
     }
-
-    public class func fetchRequest(withGroup group: Group) -> NSFetchRequest<Link> {
-        let fetchLink = NSFetchRequest<Link>(entityName: "Link")
-        fetchLink.predicate = NSPredicate(format: "group == %@", group)
-        return fetchLink
-    }
-
-    public class func fetchRequest(unread: Bool) -> NSFetchRequest<Link> {
-        let fetchLink: NSFetchRequest<Link> = self.fetchRequest()
-        fetchLink.predicate = NSPredicate(format: "unread == %@", NSNumber(booleanLiteral: unread))
-        return fetchLink
-    }
-
-    public class func fetchRequest(starred: Bool) -> NSFetchRequest<Link> {
-        let fetchLink: NSFetchRequest<Link> = self.fetchRequest()
-        fetchLink.predicate = NSPredicate(format: "%K == %@", "starred", NSNumber(booleanLiteral: starred))
-        return fetchLink
+    
+    convenience init() {
+        self.init(context: PersistenceController.shared.container.viewContext)
     }
 }
 

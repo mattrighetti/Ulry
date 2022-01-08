@@ -114,7 +114,7 @@ public struct AddLinkView: View {
         runConfiguration = true
         switch configuration {
         case .edit(let editLink):
-            self.link = editLink.url!
+            self.link = editLink.url
             self.selectedFolder = editLink.group
             self.selectedTags = Array(editLink.tags!)
         case .new:
@@ -132,9 +132,11 @@ public struct AddLinkView: View {
                     ogTitle: og["og:title"],
                     ogDescription: og["og:description"],
                     ogImageUrl: og["og:image"],
+                    colorHex: Color.random.toHex ?? "#333333",
                     note: "",
                     starred: false,
                     unread: true,
+                    imageData: nil,
                     group: selectedFolder,
                     tags: Set(selectedTags)
                 )
@@ -146,9 +148,11 @@ public struct AddLinkView: View {
                     ogTitle: og["og:title"],
                     ogDescription: og["og:description"],
                     ogImageUrl: og["og:image"],
+                    colorHex: Color.random.toHex ?? "#333333",
                     note: "",
                     starred: false,
                     unread: true,
+                    imageData: nil,
                     group: selectedFolder,
                     tags: Set(selectedTags)
                 )

@@ -33,6 +33,9 @@
 		C98B0665277BCA4A00939B71 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = C98B0664277BCA4A00939B71 /* SwiftSoup */; };
 		C98B0667277BD4BA00939B71 /* AwareBackgroundColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98B0666277BD4BA00939B71 /* AwareBackgroundColor.swift */; };
 		C9A9762E27837B5000B5AC1E /* LinkDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A9762D27837B5000B5AC1E /* LinkDetailView.swift */; };
+		C9CCF2EB27892F6B00AA62E3 /* Link+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CCF2EA27892F6B00AA62E3 /* Link+CoreDataProperties.swift */; };
+		C9CCF2ED2789354D00AA62E3 /* Tag+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CCF2EC2789354D00AA62E3 /* Tag+CoreDataProperties.swift */; };
+		C9CCF2EF2789355C00AA62E3 /* Group+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CCF2EE2789355C00AA62E3 /* Group+CoreDataProperties.swift */; };
 		C9DACA462777A09E00F20A9C /* MainFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DACA452777A09E00F20A9C /* MainFolder.swift */; };
 		C9DACA482777A0C600F20A9C /* SectionTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DACA472777A0C600F20A9C /* SectionTitle.swift */; };
 		C9DACA4C2777A2CF00F20A9C /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DACA4B2777A2CF00F20A9C /* Tag.swift */; };
@@ -102,6 +105,9 @@
 		C984951E2781D486003C2A61 /* LinkListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkListViewModel.swift; sourceTree = "<group>"; };
 		C98B0666277BD4BA00939B71 /* AwareBackgroundColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwareBackgroundColor.swift; sourceTree = "<group>"; };
 		C9A9762D27837B5000B5AC1E /* LinkDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkDetailView.swift; sourceTree = "<group>"; };
+		C9CCF2EA27892F6B00AA62E3 /* Link+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Link+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		C9CCF2EC2789354D00AA62E3 /* Tag+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tag+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		C9CCF2EE2789355C00AA62E3 /* Group+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Group+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		C9DACA452777A09E00F20A9C /* MainFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFolder.swift; sourceTree = "<group>"; };
 		C9DACA472777A0C600F20A9C /* SectionTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionTitle.swift; sourceTree = "<group>"; };
 		C9DACA4B2777A2CF00F20A9C /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
@@ -270,6 +276,9 @@
 				C9DACA4B2777A2CF00F20A9C /* Tag.swift */,
 				C9DACA4D2777AD5000F20A9C /* Link.swift */,
 				C9DACA4F2777AD5800F20A9C /* Group.swift */,
+				C9CCF2EA27892F6B00AA62E3 /* Link+CoreDataProperties.swift */,
+				C9CCF2EC2789354D00AA62E3 /* Tag+CoreDataProperties.swift */,
+				C9CCF2EE2789355C00AA62E3 /* Group+CoreDataProperties.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -420,6 +429,7 @@
 				C963AD012774BFD8000D6461 /* HomeView.swift in Sources */,
 				C9DACA522777B63600F20A9C /* BottomBarButtonConfig.swift in Sources */,
 				C9FCEA8D27813E5700E44791 /* TagStorage.swift in Sources */,
+				C9CCF2ED2789354D00AA62E3 /* Tag+CoreDataProperties.swift in Sources */,
 				C9DACA462777A09E00F20A9C /* MainFolder.swift in Sources */,
 				C908460B27811463005E865C /* MultipleSelectionList.swift in Sources */,
 				C9DACA482777A0C600F20A9C /* SectionTitle.swift in Sources */,
@@ -428,8 +438,10 @@
 				C95A31F32787BFE3000F561B /* LottieView.swift in Sources */,
 				C9FCEA8F27813F0400E44791 /* Persistence.swift in Sources */,
 				C984951F2781D486003C2A61 /* LinkListViewModel.swift in Sources */,
+				C9CCF2EF2789355C00AA62E3 /* Group+CoreDataProperties.swift in Sources */,
 				C9DACA5B2777D28000F20A9C /* AddLinkView.swift in Sources */,
 				C963AD032774D4B3000D6461 /* LinkCellView.swift in Sources */,
+				C9CCF2EB27892F6B00AA62E3 /* Link+CoreDataProperties.swift in Sources */,
 				C977D08A278519360015169D /* LinkCounterText.swift in Sources */,
 				C963AD052774D9EF000D6461 /* MetaFetcher.swift in Sources */,
 				C963ACEC2774B9BD000D6461 /* SceneDelegate.swift in Sources */,
@@ -655,7 +667,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Urly;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -684,7 +696,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Urly;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

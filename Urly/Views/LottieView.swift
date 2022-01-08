@@ -43,6 +43,6 @@ struct LottieView: UIViewRepresentable {
 
 struct LottieView_Previews: PreviewProvider {
     static var previews: some View {
-        LottieView()
+        LottieView(animationName: "empty-box", loopMode: .loop, animationSpeed: 1.0)
     }
 }
