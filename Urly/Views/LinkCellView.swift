@@ -37,10 +37,13 @@ struct LinkCellView: View {
                     Spacer()
                     
                     Button(action: infoPressAction ?? {}, label: {
-                        Image(systemName: "info.circle.fill")
-                            .font(.system(size: 12))
-                        Text("info")
-                            .font(.system(size: 12, weight: .semibold, design: .rounded))
+                        Label(title: {
+                            Text("info")
+                                .font(.system(size: 12, weight: .bold, design: .rounded))
+                        }, icon: {
+                            Image(systemName: "info.circle.fill")
+                                .font(.system(size: 12))
+                        })
                     })
                 }
                 .padding(.bottom, 5)
@@ -67,32 +70,34 @@ struct LinkCellView: View {
                     .cornerRadius(10)
                     .padding(.trailing, 5)
                 
-            } else if let url = URL(string: link.url), let hostFirstLetter = url.host?.first?.uppercased() {
+            } else {
                 ZStack {
-                    link.color.clipShape(RoundedRectangle(cornerRadius: 10))
+                    link.color
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
                         
-                    Text(hostFirstLetter)
+                    Text(link.hostname.first!.uppercased())
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                 }
                 .frame(width: UIScreen.screenWidth / 8, height: UIScreen.screenWidth / 8, alignment: .center)
                 .padding(.trailing, 5)
+                .padding(.top, 10)
             }
             
             VStack(alignment: .leading) {
-                if link.ogTitle != nil {
-                    Text(link.ogTitle!)
+                if let title = link.ogTitle {
+                    Text(title)
                         .padding(.vertical, 3)
                         .font(.system(size: 17, weight: .bold, design: .rounded))
                         .lineLimit(2)
                 } else {
                     Text(link.url)
                         .padding(.vertical, 3)
-                        .font(.system(size: 13, weight: .semibold, design: .default))
+                        .font(.system(size: 12, weight: .semibold, design: .monospaced))
                         .lineLimit(2)
                 }
                 
-                if link.ogDescription != nil {
-                    Text(link.ogDescription!)
+                if let description = link.ogDescription {
+                    Text(description)
                         .font(.system(size: 12, weight: .regular, design: .default))
                         .lineLimit(2)
                 }
