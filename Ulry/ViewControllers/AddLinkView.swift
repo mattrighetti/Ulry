@@ -72,7 +72,7 @@ public struct AddLinkView: View {
     
     var backgroundColor: Color {
         if colorScheme == .dark {
-            return Color(hex: "#333333")!.opacity(0.1)
+            return Color(hex: "#333333")!.opacity(0.6)
         } else {
             return Color.white
         }

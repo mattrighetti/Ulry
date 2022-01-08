@@ -39,7 +39,7 @@ struct HomeView: View {
                 content: { AddCategoryView(mode: sheet.addMode!) }
             )
             
-            .navigationTitle("Urly")
+            .navigationTitle("Ulry")
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
                     HStack {
