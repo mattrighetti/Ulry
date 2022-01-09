@@ -13,7 +13,7 @@ public protocol Representable: Identifiable, Hashable {
 
 struct MultipleSelectionList<T: Representable>: View {
     @State var isSheetShown: Bool = false
-    @State var items: [T] = []
+    @Binding var items: [T]
     @Binding var selections: [T]
 
     var body: some View {

@@ -55,7 +55,7 @@ struct LinkDetailView: View {
                 .foregroundColor(.white)
                 .frame(height: 100)
                 .background(link.color)
-                .cornerRadius(10)
+                .cornerRadius(20)
                 .padding([.horizontal, .top])
             }
             

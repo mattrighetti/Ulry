@@ -17,11 +17,13 @@ class LinkManagerViewModel: ObservableObject {
     
     init() {
         TagStorage.shared.tags.sink { tags in
+            print("Updating tags")
             self.tags = tags
         }
         .store(in: &cancellables)
         
         GroupStorage.shared.groups.sink { groups in
+            print("Updating groups")
             self.groups = groups
         }
         .store(in: &cancellables)
@@ -182,7 +184,7 @@ public struct AddLinkView: View {
                         .font(.system(size: 17, weight: .semibold, design: .rounded))
                         .padding(.leading, 30)
                     NavigationLink(destination: {
-                        SelectionList(items: viewModel.groups, selection: $selectedFolder)
+                        SelectionList(items: $viewModel.groups, selection: $selectedFolder)
                     }, label: {
                         HStack {
                             Text(selectedFolderStringValue)
@@ -204,7 +206,7 @@ public struct AddLinkView: View {
                         .font(.system(size: 17, weight: .semibold, design: .rounded))
                         .padding(.leading, 30)
                     NavigationLink(destination: {
-                        MultipleSelectionList(items: viewModel.tags, selections: $selectedTags)
+                        MultipleSelectionList(items: $viewModel.tags, selections: $selectedTags)
                     }, label: {
                         HStack {
                             Text(selectedTagsStringValue)

@@ -10,7 +10,7 @@ import SwiftUI
 struct SelectionList<T: Representable>: View {
     @Environment(\.presentationMode) var presentationMode
     @State var isSheetShown: Bool = false
-    @State var items: [T] = []
+    @Binding var items: [T]
     @Binding var selection: T?
 
     var body: some View {
@@ -40,7 +40,9 @@ struct SelectionList<T: Representable>: View {
             }
         }
         .sheet(isPresented: $isSheetShown) {
-            AddCategoryView(mode: .group, onDonePressedAction: { isSheetShown.toggle() })
+            AddCategoryView(mode: .group, onDonePressedAction: {
+                isSheetShown.toggle()
+            })
         }
     }
 }

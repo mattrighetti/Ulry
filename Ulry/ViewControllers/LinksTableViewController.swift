@@ -27,7 +27,7 @@ class LinksTableViewController: UIViewController {
                 let vc = UIHostingController(rootView: LinkDetailView(link: link))
                 if let sheet = vc.sheetPresentationController {
                     sheet.detents = [.medium(), .large()]
-                    sheet.preferredCornerRadius = 35.0
+                    sheet.preferredCornerRadius = 25.0
                     sheet.largestUndimmedDetentIdentifier = .medium
                     sheet.prefersScrollingExpandsWhenScrolledToEdge = false
                     sheet.prefersGrabberVisible = true

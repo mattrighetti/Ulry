@@ -47,6 +47,7 @@ class UILinkTableViewCell: UITableViewCell {
         imageView.layer.cornerRadius = 10
         imageView.layer.masksToBounds = true
         imageView.contentMode = .scaleAspectFill
+        imageView.isUserInteractionEnabled = true
         imageView.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(onInfoButtonPressed)))
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -129,6 +130,7 @@ class UILinkTableViewCell: UITableViewCell {
     }
     
     private func setupCellWithLink(link: Link) {
+        urlHostnameLabel.text = link.hostname
         hostLabel.text = link.hostname.first!.uppercased()
         dateLabel.text = link.dateString
         backgroundLabelImage.backgroundColor = UIColor(hex: link.colorHex)
@@ -145,7 +147,6 @@ class UILinkTableViewCell: UITableViewCell {
         }
         
         if let title = link.ogTitle {
-            urlHostnameLabel.text = link.hostname
             titleLabel.text = title
         } else {
             titleLabel.font = UIFont.monospacedSystemFont(ofSize: 12, weight: .regular)
