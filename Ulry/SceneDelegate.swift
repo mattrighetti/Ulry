@@ -16,13 +16,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        UITextView.appearance().backgroundColor = .clear
-        
         let window = UIWindow(windowScene: windowScene)
         
-        let vc = UIHostingController(rootView: HomeView().environment(\.colorScheme, .dark))
+        UITextView.appearance().backgroundColor = .clear
+        let navigationController = UINavigationController(rootViewController: HomeViewController())
+        window.rootViewController = navigationController
         
-        window.rootViewController = vc
         window.makeKeyAndVisible()
         
         self.window = window

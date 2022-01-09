@@ -137,6 +137,39 @@ class LinkStorage: NSObject, ObservableObject {
         saveContext()
     }
     
+    func getLinks(by filter: Category) -> [Link] {
+        let links: [Link]
+        switch filter {
+        case .all:
+            links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.all.rawValue)
+        case .starred:
+            links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.starred.rawValue)
+        case .unread:
+            links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.unread.rawValue)
+        case .tag(let tag):
+            links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.tag(tag).rawValue)
+        case .group(let group):
+            links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.folder(group).rawValue)
+        }
+        
+        return links
+    }
+    
+    func getLinksCount(by filter: Category) -> Int {
+        switch filter {
+        case .all:
+            return try! PersistenceController.shared.container.viewContext.fetch(Link.Request.all.rawValue).count
+        case .starred:
+            return try! PersistenceController.shared.container.viewContext.fetch(Link.Request.starred.rawValue).count
+        case .unread:
+            return try! PersistenceController.shared.container.viewContext.fetch(Link.Request.unread.rawValue).count
+        case .tag(let tag):
+            return try! PersistenceController.shared.container.viewContext.fetch(Link.Request.tag(tag).rawValue).count
+        case .group(let group):
+            return try! PersistenceController.shared.container.viewContext.fetch(Link.Request.folder(group).rawValue).count
+        }
+    }
+    
     private func saveContext() {
         do {
             try PersistenceController.shared.container.viewContext.save()

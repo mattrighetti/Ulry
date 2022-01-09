@@ -45,6 +45,19 @@ struct AddCategoryView: View {
     @State var selectedColor: Color = Color.random
     @State var selectedGlyph: String? = SFSymbols.all[Int.random(in: 1..<SFSymbols.all.count)]
     @State private var pickerSelection: Int = 0
+    
+    var navigationTitle: String {
+        switch mode {
+        case .group:
+            return "New group"
+        case .editGroup(_):
+            return "Edit group"
+        case .tag:
+            return "New tag"
+        case .editTag(_):
+            return "Edit tag"
+        }
+    }
 
     var body: some View {
         NavigationView {
@@ -88,7 +101,7 @@ struct AddCategoryView: View {
                 configure()
             }
             
-            .navigationTitle(Text("New \(self.mode.rawValue)"))
+            .navigationTitle(navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

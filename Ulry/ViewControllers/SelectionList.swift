@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SelectionList<T: Representable>: View {
+    @Environment(\.presentationMode) var presentationMode
     @State var isSheetShown: Bool = false
     @State var items: [T] = []
     @Binding var selection: T?
@@ -17,12 +18,14 @@ struct SelectionList<T: Representable>: View {
             Section {
                 ForEach(self.items, id: \.self) { item in
                     SelectionRow(title: item.name, isSelected: self.selection == item) {
-                        self.selection = item
+                        selection = item
+                        presentationMode.wrappedValue.dismiss()
                     }
                 }
                 
                 SelectionRow(title: "None", isSelected: false) {
-                    self.selection = nil
+                    selection = nil
+                    presentationMode.wrappedValue.dismiss()
                 }
             }
             

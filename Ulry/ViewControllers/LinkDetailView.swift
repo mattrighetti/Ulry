@@ -17,54 +17,6 @@ fileprivate class SheetState: ObservableObject {
     }
 }
 
-struct FaviconHostnameView: View {
-    @State private var favicon: UIImage? = nil
-    
-    var hostname: String
-    
-    var body: some View {
-        HStack {
-            if let favicon = favicon {
-                Image(uiImage: favicon)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 10, height: 10, alignment: .center)
-            } else {
-                Image(systemName: "link.circle")
-                    .font(.system(size: 10))
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 10, height: 10, alignment: .center)
-            }
-            
-            Text(hostname)
-                .font(.system(size: 10, weight: .semibold, design: .monospaced))
-                .foregroundColor(.blue)
-            
-            Spacer()
-        }
-        .padding(.horizontal)
-        .onAppear {
-            os_log(.info, "fetching favicon for hostname: \(hostname)")
-            fetchFavicon(of: hostname) { data in
-                DispatchQueue.main.async {
-                    os_log(.info, "fetched image")
-                    guard let data = data else { return }
-                    self.favicon = UIImage(data: data)
-                }
-            }
-        }
-    }
-    
-    private func fetchFavicon(of hostname: String, completion: ((Data?) -> Void)?) {
-        if let faviconUrl = URL(string: "https://" + hostname + "/favicon.ico") {
-            let task = URLSession.shared.dataTask(with: faviconUrl) { data, _, _ in
-                completion?(data)
-            }
-            task.resume()
-        }
-    }
-}
-
 struct LinkDetailView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var sheet = SheetState()
@@ -132,35 +84,6 @@ struct LinkDetailView: View {
                 .padding()
             }
             
-            HStack {
-                Button(action: { LinkStorage.shared.toggleStar(link: self.link) }, label: {
-                    Spacer()
-                    Label(title: { Text("Star").font(.system(size: 13, weight: .regular, design: .rounded)) }, icon: { Image(systemName: self.link.starred ? "star.fill" : "star") })
-                        .foregroundColor(.yellow)
-                    Spacer()
-                })
-                Button(action: { LinkStorage.shared.toggleRead(link: self.link) }, label: {
-                    Spacer()
-                    Label(title: { Text("Read").font(.system(size: 13, weight: .regular, design: .rounded)) }, icon: { Image(systemName: self.link.unread ? "envelope" : "envelope.open") })
-                    Spacer()
-                })
-                Button(action: { sheet.editLink = self.link }, label: {
-                    Spacer()
-                    Label(title: { Text("Edit").font(.system(size: 13, weight: .regular, design: .rounded)) }, icon: { Image(systemName: "square.and.pencil") })
-                    Spacer()
-                })
-                Button(action: {
-                    LinkStorage.shared.delete(link: link)
-                    presentationMode.wrappedValue.dismiss()
-                }, label: {
-                    Spacer()
-                    Label(title: { Text("Delete").font(.system(size: 13, weight: .regular, design: .rounded)) }, icon: { Image(systemName: "trash") })
-                        .foregroundColor(.red)
-                    Spacer()
-                })
-            }
-            .padding()
-            
             Spacer()
         }
         .sheet(isPresented: $sheet.isShowing, onDismiss: { sheet.editLink = nil }) {
@@ -195,8 +118,7 @@ struct LinkDetailView: View {
 
 struct LinkDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        let context = PersistenceController.shared.container.viewContext
-        let link = Link(context: context)
+        let link = Link()
         link.id = UUID()
         link.url = "https://brennancolberg.com"
         link.colorHex = "#023047"
