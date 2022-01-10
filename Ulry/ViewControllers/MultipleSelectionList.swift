@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-public protocol Representable: Identifiable, Hashable {
-    var name: String { get }
-}
-
 struct MultipleSelectionList<T: Representable>: View {
     @State var isSheetShown: Bool = false
     @Binding var items: [T]
