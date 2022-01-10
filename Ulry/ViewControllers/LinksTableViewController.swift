@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 import SwiftUI
 
 class LinksTableViewController: UIViewController {
@@ -13,11 +14,24 @@ class LinksTableViewController: UIViewController {
     
     var category: Category? {
         didSet {
-            if let _ = category {
-                addLinks()
+            guard let category = category else { return }
+            switch category {
+            case .all:
+                links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.all.rawValue)
+            case .starred:
+                links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.starred.rawValue)
+            case .unread:
+                links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.unread.rawValue)
+            case .tag(let tag):
+                links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.tag(tag).rawValue)
+            case .group(let group):
+                links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.folder(group).rawValue)
             }
         }
     }
+    
+    var links: [Link]?
+    var cancellables = Set<AnyCancellable>()
     
     lazy var datasource: UITableViewDiffableDataSource<Int, Link> = {
         let datasource = UITableViewDiffableDataSource<Int, Link>(tableView: tableview) { tableview, indexPath, link in
@@ -47,39 +61,59 @@ class LinksTableViewController: UIViewController {
         
         tableview.delegate = self
         tableview.register(UILinkTableViewCell.self, forCellReuseIdentifier: "LinkCell")
-        
         view.addSubview(tableview)
         
-        addLinks()
+        populateLinks()
+        subscribeToLinkChanges()
+    }
+    
+    private func subscribeToLinkChanges() {
+        LinkStorage.shared.links.sink { [unowned self] _ in
+            // LinkAre updated
+            guard let category = self.category else { return }
+            switch category {
+            case .all:
+                self.links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.all.rawValue)
+            case .starred:
+                self.links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.starred.rawValue)
+            case .unread:
+                self.links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.unread.rawValue)
+            case .tag(let tag):
+                self.links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.tag(tag).rawValue)
+            case .group(let group):
+                self.links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.folder(group).rawValue)
+            }
+            
+            populateLinks()
+        }.store(in: &cancellables)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableview.frame = view.bounds
+        
+        if links!.isEmpty {
+            pushEmptyLottieView()
+        }
     }
     
-    private func addLinks() {
-        guard let category = category else { return }
-        
+    private func pushEmptyLottieView() {
+        let messageLabel = UILabel()
+        messageLabel.text = "Empty"
+        messageLabel.numberOfLines = 0
+        messageLabel.textAlignment = .center
+        messageLabel.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        messageLabel.sizeToFit()
+
+        tableview.backgroundView = messageLabel
+        tableview.separatorStyle = .none
+    }
+    
+    private func populateLinks() {
+        guard let links = links else { return }
         var snapshot = NSDiffableDataSourceSnapshot<Int, Link>()
         snapshot.appendSections([0])
-        
-        var links: [Link]!
-        switch category {
-        case .all:
-            links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.all.rawValue)
-        case .starred:
-            links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.starred.rawValue)
-        case .unread:
-            links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.unread.rawValue)
-        case .tag(let tag):
-            links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.tag(tag).rawValue)
-        case .group(let group):
-            links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.folder(group).rawValue)
-        }
-        
         snapshot.appendItems(links, toSection: 0)
-        
         datasource.apply(snapshot)
     }
     
@@ -138,6 +172,7 @@ extension LinksTableViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         
         if let url = URL(string: link.url) {
+            LinkStorage.shared.toggleRead(link: link)
             UIApplication.shared.open(url)
         }
     }
@@ -172,7 +207,7 @@ extension LinksTableViewController: UITableViewDelegate {
         
         let readActionTitle = link.unread ? "Read" : "Unread"
         let read = UIContextualAction(style: .destructive, title: readActionTitle) { [weak self] (action, view, completionHandler) in
-            self?.onDeletePressed(link: link)
+            self?.onReadPressed(link: link)
             completionHandler(true)
         }
         read.backgroundColor = .systemBlue

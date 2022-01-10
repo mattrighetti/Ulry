@@ -121,7 +121,7 @@ public struct AddLinkView: View {
                             
                             if UIPasteboard.general.hasStrings {
                                 Button(action: {
-                                    link += UIPasteboard.general.string!
+                                    link += UIPasteboard.general.string ?? ""
                                 }, label: {
                                     Image(systemName: "doc.on.clipboard")
                                         .font(.system(size: 14))

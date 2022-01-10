@@ -32,28 +32,19 @@ class HomeViewController: UIViewController {
     
     lazy var datasource: HomeDiffableDataSource = {
         let datasource = HomeDiffableDataSource(tableView: tableView) { tableView, indexPath, category in
-            if indexPath.section == 0 {
-                // Always present categories
-                let cell = tableView.dequeueReusableCell(withIdentifier: categoryImageCell, for: indexPath) as! UIImageCircleTableViewCell
+            if indexPath.section == 2 {
+                // Tags category
+                let cell = tableView.dequeueReusableCell(withIdentifier: categoryColorCell, for: indexPath) as! UIColorCircleTableViewCell
                 cell.text = category.rawValue.0
-                cell.icon = category.rawValue.2!
-                cell.color = category.rawValue.1
-                cell.count = category.rawValue.3
-                cell.accessoryType = .disclosureIndicator
-                return cell
-            } else if indexPath.section == 1 {
-                // Groups category
-                let cell = tableView.dequeueReusableCell(withIdentifier: categoryImageCell, for: indexPath) as! UIImageCircleTableViewCell
-                cell.text = category.rawValue.0
-                cell.icon = category.rawValue.2!
                 cell.color = category.rawValue.1
                 cell.count = category.rawValue.3
                 cell.accessoryType = .disclosureIndicator
                 return cell
             } else {
-                // Tags category
-                let cell = tableView.dequeueReusableCell(withIdentifier: categoryColorCell, for: indexPath) as! UIColorCircleTableViewCell
+                // Always present/Groups categories
+                let cell = tableView.dequeueReusableCell(withIdentifier: categoryImageCell, for: indexPath) as! UIImageCircleTableViewCell
                 cell.text = category.rawValue.0
+                cell.icon = category.rawValue.2!
                 cell.color = category.rawValue.1
                 cell.count = category.rawValue.3
                 cell.accessoryType = .disclosureIndicator
@@ -127,22 +118,49 @@ class HomeViewController: UIViewController {
         snapshot.appendSections([2])
         snapshot.appendItems(TagStorage.shared.tags.value.map { .tag($0) }, toSection: 2)
         
-        datasource.apply(snapshot)
+        datasource.apply(snapshot, animatingDifferences: false)
+    }
+    
+    private func updateCounts() {
+        var newSnapshot = datasource.snapshot()
+        let groups: [Category] = GroupStorage.shared.groups.value.map { .group($0) }
+        let tags: [Category] = TagStorage.shared.tags.value.map { .tag($0) }
+        
+        var items: [Category] = [.all, .starred, .unread]
+        items.append(contentsOf: groups)
+        items.append(contentsOf: tags)
+        
+        newSnapshot.reloadItems(items)
+        datasource.apply(newSnapshot, animatingDifferences: false)
+    }
+    
+    private func updateTags() {
+        var newSnapshot = datasource.snapshot()
+        let tags: [Category] = TagStorage.shared.tags.value.map { .tag($0) }
+        newSnapshot.reloadItems(tags)
+        datasource.apply(newSnapshot, animatingDifferences: false)
+    }
+    
+    private func updateGroups() {
+        var newSnapshot = datasource.snapshot()
+        let groups: [Category] = GroupStorage.shared.groups.value.map { .group($0) }
+        newSnapshot.reloadItems(groups)
+        datasource.apply(newSnapshot, animatingDifferences: false)
     }
     
     private func setupSubscriptions() {
         LinkStorage.shared.links.eraseToAnyPublisher().sink { [unowned self] _ in
-            self.addCategories()
+            self.updateCounts()
         }
         .store(in: &cancellables)
         
         GroupStorage.shared.groups.eraseToAnyPublisher().sink { [unowned self] _ in
-            self.addCategories()
+            self.updateGroups()
         }
         .store(in: &cancellables)
         
         TagStorage.shared.tags.eraseToAnyPublisher().sink { [unowned self] _ in
-            self.addCategories()
+            self.updateTags()
         }
         .store(in: &cancellables)
     }
@@ -210,7 +228,7 @@ extension HomeViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50.0
+        return 43.0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

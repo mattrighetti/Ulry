@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C94A2DD0278B710A007F6FFA /* +UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A2DCF278B710A007F6FFA /* +UIFont.swift */; };
+		C94A2DD2278BB3D3007F6FFA /* +UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */; };
 		C9A142C7278A4E8600B627BF /* LinksTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A142C6278A4E8600B627BF /* LinksTableViewController.swift */; };
 		C9A142C9278A6B9200B627BF /* UILinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A142C8278A6B9200B627BF /* UILinkTableViewCell.swift */; };
 		C9D7FE7C278AF66D00016B04 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D7FE7B278AF66D00016B04 /* Category.swift */; };
@@ -36,7 +37,6 @@
 		C9F4F93A2789C2DE00887A3E /* URLManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9262789C2DE00887A3E /* URLManager.swift */; };
 		C9F4F93B2789C2DE00887A3E /* LinkDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9282789C2DE00887A3E /* LinkDetailView.swift */; };
 		C9F4F93C2789C2DE00887A3E /* AddCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9292789C2DE00887A3E /* AddCategoryView.swift */; };
-		C9F4F93D2789C2DE00887A3E /* LinkList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F92A2789C2DE00887A3E /* LinkList.swift */; };
 		C9F4F93E2789C2DE00887A3E /* AddLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F92B2789C2DE00887A3E /* AddLinkView.swift */; };
 		C9F4F9402789C2DE00887A3E /* MultipleSelectionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F92D2789C2DE00887A3E /* MultipleSelectionList.swift */; };
 		C9F4F9412789C2DE00887A3E /* SelectionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F92E2789C2DE00887A3E /* SelectionList.swift */; };
@@ -46,9 +46,7 @@
 		C9F4F9452789C2DE00887A3E /* ListLabelImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9342789C2DE00887A3E /* ListLabelImage.swift */; };
 		C9F4F9462789C2DE00887A3E /* AwareBackgroundColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9352789C2DE00887A3E /* AwareBackgroundColor.swift */; };
 		C9F4F9472789C2DE00887A3E /* LinkCounterText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9362789C2DE00887A3E /* LinkCounterText.swift */; };
-		C9F4F9482789C2DE00887A3E /* LottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9372789C2DE00887A3E /* LottieView.swift */; };
 		C9F4F94B2789C35200887A3E /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = C9F4F94A2789C35200887A3E /* SwiftSoup */; };
-		C9F4F94E2789C36200887A3E /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = C9F4F94D2789C36200887A3E /* Lottie */; };
 		C9F4F9512789C4F600887A3E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9F4F9502789C4F600887A3E /* Assets.xcassets */; };
 		C9F4F953278A07A100887A3E /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F952278A07A100887A3E /* HomeViewController.swift */; };
 		C9F4F955278A0FAD00887A3E /* UIColorCircleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F954278A0FAD00887A3E /* UIColorCircleTableViewCell.swift */; };
@@ -69,6 +67,7 @@
 
 /* Begin PBXFileReference section */
 		C94A2DCF278B710A007F6FFA /* +UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UIFont.swift"; sourceTree = "<group>"; };
+		C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UIViewController.swift"; sourceTree = "<group>"; };
 		C9A142C6278A4E8600B627BF /* LinksTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinksTableViewController.swift; sourceTree = "<group>"; };
 		C9A142C8278A6B9200B627BF /* UILinkTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILinkTableViewCell.swift; sourceTree = "<group>"; };
 		C9D7FE7B278AF66D00016B04 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
@@ -100,7 +99,6 @@
 		C9F4F9262789C2DE00887A3E /* URLManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLManager.swift; sourceTree = "<group>"; };
 		C9F4F9282789C2DE00887A3E /* LinkDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkDetailView.swift; sourceTree = "<group>"; };
 		C9F4F9292789C2DE00887A3E /* AddCategoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddCategoryView.swift; sourceTree = "<group>"; };
-		C9F4F92A2789C2DE00887A3E /* LinkList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkList.swift; sourceTree = "<group>"; };
 		C9F4F92B2789C2DE00887A3E /* AddLinkView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddLinkView.swift; sourceTree = "<group>"; };
 		C9F4F92D2789C2DE00887A3E /* MultipleSelectionList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipleSelectionList.swift; sourceTree = "<group>"; };
 		C9F4F92E2789C2DE00887A3E /* SelectionList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionList.swift; sourceTree = "<group>"; };
@@ -110,7 +108,6 @@
 		C9F4F9342789C2DE00887A3E /* ListLabelImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListLabelImage.swift; sourceTree = "<group>"; };
 		C9F4F9352789C2DE00887A3E /* AwareBackgroundColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AwareBackgroundColor.swift; sourceTree = "<group>"; };
 		C9F4F9362789C2DE00887A3E /* LinkCounterText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkCounterText.swift; sourceTree = "<group>"; };
-		C9F4F9372789C2DE00887A3E /* LottieView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LottieView.swift; sourceTree = "<group>"; };
 		C9F4F9502789C4F600887A3E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C9F4F952278A07A100887A3E /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		C9F4F954278A0FAD00887A3E /* UIColorCircleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorCircleTableViewCell.swift; sourceTree = "<group>"; };
@@ -132,7 +129,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9F4F94B2789C35200887A3E /* SwiftSoup in Frameworks */,
-				C9F4F94E2789C36200887A3E /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -213,6 +209,7 @@
 				C9F4F956278A17FA00887A3E /* +UIImage.swift */,
 				C9F4F958278A187D00887A3E /* +UIColor.swift */,
 				C94A2DCF278B710A007F6FFA /* +UIFont.swift */,
+				C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -246,7 +243,6 @@
 			children = (
 				C9F4F9282789C2DE00887A3E /* LinkDetailView.swift */,
 				C9F4F9292789C2DE00887A3E /* AddCategoryView.swift */,
-				C9F4F92A2789C2DE00887A3E /* LinkList.swift */,
 				C9F4F92B2789C2DE00887A3E /* AddLinkView.swift */,
 				C9F4F92D2789C2DE00887A3E /* MultipleSelectionList.swift */,
 				C9F4F92E2789C2DE00887A3E /* SelectionList.swift */,
@@ -262,7 +258,6 @@
 				C9F4F9302789C2DE00887A3E /* LinkCellView.swift */,
 				C9F4F9312789C2DE00887A3E /* Modifiers */,
 				C9F4F9362789C2DE00887A3E /* LinkCounterText.swift */,
-				C9F4F9372789C2DE00887A3E /* LottieView.swift */,
 				C9F4F954278A0FAD00887A3E /* UIColorCircleTableViewCell.swift */,
 				C9F4F95A278A40F200887A3E /* UIImageCircleTableViewCell.swift */,
 				C9A142C8278A6B9200B627BF /* UILinkTableViewCell.swift */,
@@ -318,7 +313,6 @@
 			name = Ulry;
 			packageProductDependencies = (
 				C9F4F94A2789C35200887A3E /* SwiftSoup */,
-				C9F4F94D2789C36200887A3E /* Lottie */,
 			);
 			productName = Ulry;
 			productReference = C9F4F8DE2789C28A00887A3E /* Ulry.app */;
@@ -432,13 +426,12 @@
 				C9F4F9132789C2BD00887A3E /* GroupStorage.swift in Sources */,
 				C9F4F9172789C2BD00887A3E /* +Color.swift in Sources */,
 				C9F4F8F92789C2AB00887A3E /* AppDelegate.swift in Sources */,
-				C9F4F93D2789C2DE00887A3E /* LinkList.swift in Sources */,
 				C9F4F8FC2789C2B400887A3E /* Urly.xcdatamodeld in Sources */,
 				C9F4F9182789C2BD00887A3E /* Group+CoreDataProperties.swift in Sources */,
 				C9F4F93A2789C2DE00887A3E /* URLManager.swift in Sources */,
+				C94A2DD2278BB3D3007F6FFA /* +UIViewController.swift in Sources */,
 				C9F4F957278A17FA00887A3E /* +UIImage.swift in Sources */,
 				C9F4F9402789C2DE00887A3E /* MultipleSelectionList.swift in Sources */,
-				C9F4F9482789C2DE00887A3E /* LottieView.swift in Sources */,
 				C9F4F93E2789C2DE00887A3E /* AddLinkView.swift in Sources */,
 				C9F4F93B2789C2DE00887A3E /* LinkDetailView.swift in Sources */,
 				C9D7FE7C278AF66D00016B04 /* Category.swift in Sources */,
@@ -734,11 +727,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C9F4F9492789C35200887A3E /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
-		};
-		C9F4F94D2789C36200887A3E /* Lottie */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9F4F94C2789C36200887A3E /* XCRemoteSwiftPackageReference "lottie-ios" */;
-			productName = Lottie;
 		};
 /* End XCSwiftPackageProductDependency section */
 
