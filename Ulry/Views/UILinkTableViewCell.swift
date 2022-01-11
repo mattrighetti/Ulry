@@ -80,15 +80,8 @@ class UILinkTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
         separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
         
         contentView.addSubview(backgroundLabelImage)
         contentView.addSubview(urlHostnameLabel)
@@ -112,21 +105,27 @@ class UILinkTableViewCell: UITableViewCell {
             hostLabel.centerYAnchor.constraint(equalTo: backgroundLabelImage.centerYAnchor),
             hostLabel.centerXAnchor.constraint(equalTo: backgroundLabelImage.centerXAnchor),
             
-            urlHostnameLabel.topAnchor.constraint(equalTo: backgroundLabelImage.topAnchor),
+            urlHostnameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             urlHostnameLabel.leadingAnchor.constraint(equalTo: backgroundLabelImage.trailingAnchor, constant: 10),
+            urlHostnameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
             
-            titleLabel.leadingAnchor.constraint(equalTo: backgroundLabelImage.trailingAnchor, constant: 10),
             titleLabel.topAnchor.constraint(equalTo: urlHostnameLabel.bottomAnchor, constant: 3),
+            titleLabel.leadingAnchor.constraint(equalTo: backgroundLabelImage.trailingAnchor, constant: 10),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
             
+            descriptionLabel.topAnchor.constraint(greaterThanOrEqualTo: titleLabel.bottomAnchor, constant: 3),
             descriptionLabel.leadingAnchor.constraint(equalTo: backgroundLabelImage.trailingAnchor, constant: 10),
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
             descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
+            descriptionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
             
-            dateLabel.topAnchor.constraint(equalTo: backgroundLabelImage.bottomAnchor, constant: 10),
-            dateLabel.leadingAnchor.constraint(equalTo: backgroundLabelImage.leadingAnchor),
-            dateLabel.heightAnchor.constraint(equalToConstant: 10)
+            dateLabel.topAnchor.constraint(greaterThanOrEqualTo: backgroundLabelImage.bottomAnchor, constant: 5),
+            dateLabel.centerXAnchor.constraint(equalTo: backgroundLabelImage.centerXAnchor),
+            dateLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
         ])
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     private func setupCellWithLink(link: Link) {

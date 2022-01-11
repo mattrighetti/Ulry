@@ -48,6 +48,8 @@ class LinksTableViewController: UIViewController {
                 }
                 self?.present(vc, animated: true)
             }
+            cell.contentView.setNeedsLayout()
+            cell.contentView.layoutIfNeeded()
             return cell
         }
         
@@ -61,6 +63,9 @@ class LinksTableViewController: UIViewController {
         
         tableview.delegate = self
         tableview.register(UILinkTableViewCell.self, forCellReuseIdentifier: "LinkCell")
+        tableview.estimatedRowHeight = 200
+        tableview.rowHeight = UITableView.automaticDimension
+        
         view.addSubview(tableview)
         
         populateLinks()
@@ -139,34 +144,6 @@ class LinksTableViewController: UIViewController {
 }
 
 extension LinksTableViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let link = datasource.itemIdentifier(for: indexPath)!
-        
-        let base = 100.0
-        let titleLarge = 15.0
-        let titleSmall = 5.0
-        let descriptionLarge = 10.0
-        let descriptionSmall = 0.0
-        
-        var sum: CGFloat = base
-        if let title = link.ogTitle {
-            if title.count > 30 {
-                sum += titleLarge
-            } else {
-                sum += titleSmall
-            }
-        }
-        if let description = link.ogDescription {
-            if description.count > 50 {
-                sum += descriptionLarge
-            } else {
-                sum += descriptionSmall
-            }
-        }
-        
-        return sum
-    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let link = datasource.itemIdentifier(for: indexPath) else { return }
         tableView.deselectRow(at: indexPath, animated: true)
