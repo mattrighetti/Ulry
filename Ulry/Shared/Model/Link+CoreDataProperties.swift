@@ -23,6 +23,19 @@ extension Link {
     @NSManaged public var group: Group?
     @NSManaged public var tags: Set<Tag>?
     
+    public override func awakeFromInsert() {
+        super.awakeFromInsert()
+        setPrimitiveValue(Int(Date.now.timeIntervalSince1970), forKey: #keyPath(Link.createdAt))
+        setPrimitiveValue(Int(Date.now.timeIntervalSince1970), forKey: #keyPath(Link.updatedAt))
+    }
+    
+    public override func willSave() {
+        super.willSave()
+        setPrimitiveValue(Int(Date.now.timeIntervalSince1970), forKey: #keyPath(Link.updatedAt))
+    }
+    
+    // MARK: - Requests
+    
     public class func fetchRequest() -> NSFetchRequest<Link> {
         NSFetchRequest<Link>(entityName: "Link")
     }

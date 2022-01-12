@@ -88,8 +88,6 @@ class LinkStorage: NSObject, ObservableObject {
         link.setValue(colorHex, forKey: "colorHex")
         link.setValue(group, forKey: "group")
         link.setValue(tags, forKey: "tags")
-        link.setValue(Int(Date.now.timeIntervalSince1970), forKey: "createdAt")
-        link.setValue(Int(Date.now.timeIntervalSince1970), forKey: "updatedAt")
         
         saveContext()
         
