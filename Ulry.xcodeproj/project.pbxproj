@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C91053B3278E4659005AC807 /* +URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91053B2278E4659005AC807 /* +URL.swift */; };
+		C91053B4278E465D005AC807 /* +URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91053B2278E4659005AC807 /* +URL.swift */; };
 		C9437013278CAFF2009143A7 /* GetURL.js in Resources */ = {isa = PBXBuildFile; fileRef = C9437012278CAFF2009143A7 /* GetURL.js */; };
 		C94A2DD0278B710A007F6FFA /* +UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A2DCF278B710A007F6FFA /* +UIFont.swift */; };
 		C94A2DD2278BB3D3007F6FFA /* +UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */; };
@@ -116,6 +118,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C91053B2278E4659005AC807 /* +URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+URL.swift"; sourceTree = "<group>"; };
 		C9437012278CAFF2009143A7 /* GetURL.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = GetURL.js; sourceTree = "<group>"; };
 		C94A2DCF278B710A007F6FFA /* +UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UIFont.swift"; sourceTree = "<group>"; };
 		C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UIViewController.swift"; sourceTree = "<group>"; };
@@ -305,6 +308,7 @@
 				C94A2DCF278B710A007F6FFA /* +UIFont.swift */,
 				C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */,
 				C99C14D5278C678200936D27 /* Representable.swift */,
+				C91053B2278E4659005AC807 /* +URL.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -536,6 +540,7 @@
 				C99C14D7278C678500936D27 /* Representable.swift in Sources */,
 				C99C14D2278C675E00936D27 /* +UIViewController.swift in Sources */,
 				C99C14CF278C675E00936D27 /* +UIColor.swift in Sources */,
+				C91053B4278E465D005AC807 /* +URL.swift in Sources */,
 				C99C14C5278C675000936D27 /* TagStorage.swift in Sources */,
 				C99C14C7278C675700936D27 /* Group+CoreDataProperties.swift in Sources */,
 			);
@@ -596,6 +601,7 @@
 				C9F4F93E2789C2DE00887A3E /* AddLinkView.swift in Sources */,
 				C9F4F93B2789C2DE00887A3E /* LinkDetailView.swift in Sources */,
 				C9D7FE7C278AF66D00016B04 /* Category.swift in Sources */,
+				C91053B3278E4659005AC807 /* +URL.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -648,6 +654,7 @@
 				INFOPLIST_FILE = AddToUlryAction/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Save to Ulry";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -677,6 +684,7 @@
 				INFOPLIST_FILE = AddToUlryAction/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Save to Ulry";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

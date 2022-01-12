@@ -6,36 +6,37 @@
 //
 
 import UIKit
+import CoreData
 import Combine
 import SwiftUI
 
 class LinksTableViewController: UIViewController {
+    let context = PersistenceController.shared.container.viewContext
+    var coreDataController: NSFetchedResultsController<Link>!
     let tableview = UITableView()
     
     var category: Category? {
         didSet {
-            guard let category = category else { return }
-            switch category {
-            case .all:
-                links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.all.rawValue)
-            case .starred:
-                links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.starred.rawValue)
-            case .unread:
-                links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.unread.rawValue)
-            case .tag(let tag):
-                links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.tag(tag).rawValue)
-            case .group(let group):
-                links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.folder(group).rawValue)
-            }
+            coreDataController =
+            NSFetchedResultsController(
+                fetchRequest: Link.Request.all.rawValue,
+                managedObjectContext: context,
+                sectionNameKeyPath: nil,
+                cacheName: nil
+            )
         }
     }
     
-    var links: [Link]?
-    var cancellables = Set<AnyCancellable>()
-    
-    lazy var datasource: UITableViewDiffableDataSource<Int, Link> = {
-        let datasource = UITableViewDiffableDataSource<Int, Link>(tableView: tableview) { tableview, indexPath, link in
-            let cell = tableview.dequeueReusableCell(withIdentifier: "LinkCell") as! UILinkTableViewCell
+    lazy var datasource: UITableViewDiffableDataSource<Int, NSManagedObjectID> = {
+        let datasource = UITableViewDiffableDataSource<Int, NSManagedObjectID>(tableView: tableview) { tableview, indexPath, managedObjectId in
+            guard
+                let object = try? self.context.existingObject(with: managedObjectId),
+                let link = object as? Link
+            else {
+                fatalError("Managed object does not exist")
+            }
+            
+            let cell = tableview.dequeueReusableCell(withIdentifier: "LinkCell", for: indexPath) as! UILinkTableViewCell
             cell.link = link
             cell.action = { [weak self] in
                 let vc = UIHostingController(rootView: LinkDetailView(link: link))
@@ -61,45 +62,22 @@ class LinksTableViewController: UIViewController {
         
         navigationController?.navigationBar.prefersLargeTitles = true
         
+        coreDataController.delegate = self
+        
         tableview.delegate = self
+        tableview.dataSource = datasource
         tableview.register(UILinkTableViewCell.self, forCellReuseIdentifier: "LinkCell")
         tableview.estimatedRowHeight = 200
         tableview.rowHeight = UITableView.automaticDimension
         
         view.addSubview(tableview)
-        
-        populateLinks()
-        subscribeToLinkChanges()
-    }
-    
-    private func subscribeToLinkChanges() {
-        LinkStorage.shared.links.sink { [unowned self] _ in
-            // LinkAre updated
-            guard let category = self.category else { return }
-            switch category {
-            case .all:
-                self.links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.all.rawValue)
-            case .starred:
-                self.links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.starred.rawValue)
-            case .unread:
-                self.links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.unread.rawValue)
-            case .tag(let tag):
-                self.links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.tag(tag).rawValue)
-            case .group(let group):
-                self.links = try! PersistenceController.shared.container.viewContext.fetch(Link.Request.folder(group).rawValue)
-            }
-            
-            populateLinks()
-        }.store(in: &cancellables)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableview.frame = view.bounds
         
-        if links!.isEmpty {
-            pushEmptyLottieView()
-        }
+        try! coreDataController.performFetch()
     }
     
     private func pushEmptyLottieView() {
@@ -114,14 +92,6 @@ class LinksTableViewController: UIViewController {
         tableview.separatorStyle = .none
     }
     
-    private func populateLinks() {
-        guard let links = links else { return }
-        var snapshot = NSDiffableDataSourceSnapshot<Int, Link>()
-        snapshot.appendSections([0])
-        snapshot.appendItems(links, toSection: 0)
-        datasource.apply(snapshot)
-    }
-    
     private func onEditPressed(link: Link) {
         let vc = UIHostingController(rootView: AddLinkView(configuration: .edit(link)))
         if let sheet = vc.sheetPresentationController {
@@ -131,21 +101,25 @@ class LinksTableViewController: UIViewController {
     }
     
     private func onDeletePressed(link: Link) {
-        LinkStorage.shared.delete(link: link)
+        context.delete(link)
     }
     
     private func onStarPressed(link: Link) {
-        LinkStorage.shared.toggleStar(link: link)
+        link.starred = !link.starred
     }
     
     private func onReadPressed(link: Link) {
-        LinkStorage.shared.toggleRead(link: link)
+        link.unread = !link.unread
     }
 }
 
 extension LinksTableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let link = datasource.itemIdentifier(for: indexPath) else { return }
+        guard
+            let id = datasource.itemIdentifier(for: indexPath),
+            let link = try? self.context.existingObject(with: id) as? Link
+        else { return }
+        
         tableView.deselectRow(at: indexPath, animated: true)
         
         if let url = URL(string: link.url) {
@@ -155,7 +129,10 @@ extension LinksTableViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        guard let link = datasource.itemIdentifier(for: indexPath) else { return nil }
+        guard
+            let id = datasource.itemIdentifier(for: indexPath),
+            let link = try? self.context.existingObject(with: id) as? Link
+        else { return nil }
         
         let edit = UIContextualAction(style: .normal, title: "Edit") { [weak self] action, view, completionHandler in
             self?.onEditPressed(link: link)
@@ -173,7 +150,10 @@ extension LinksTableViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        guard let link = datasource.itemIdentifier(for: indexPath) else { return nil }
+        guard
+            let id = datasource.itemIdentifier(for: indexPath),
+            let link = try? self.context.existingObject(with: id) as? Link
+        else { return nil }
         
         let starActionTitle = link.starred ? "Unstar" : "Star"
         let star = UIContextualAction(style: .normal, title: starActionTitle) { [weak self] action, view, completionHandler in
@@ -190,5 +170,28 @@ extension LinksTableViewController: UITableViewDelegate {
         read.backgroundColor = .systemBlue
         
         return UISwipeActionsConfiguration(actions: [star, read])
+    }
+}
+
+extension LinksTableViewController: NSFetchedResultsControllerDelegate {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
+        guard let datasource = tableview.dataSource as? UITableViewDiffableDataSource<Int, NSManagedObjectID> else {
+            assertionFailure("The data source has not implemented snapshot support while it should")
+            return
+        }
+        
+        var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
+        let currentSnapshot = datasource.snapshot() as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
+        
+        let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
+            guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
+                return nil
+            }
+            guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
+            return itemIdentifier
+        }
+        snapshot.reloadItems(reloadIdentifiers)
+        
+        datasource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: true)
     }
 }
