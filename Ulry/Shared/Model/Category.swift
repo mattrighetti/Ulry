@@ -5,6 +5,7 @@
 //  Created by Mattia Righetti on 1/9/22.
 //
 
+import CoreData
 import UIKit
 
 public enum Category: Hashable, RawRepresentable {
