@@ -12,12 +12,23 @@ import MobileCoreServices
 import UniformTypeIdentifiers
 
 class ActionViewController: UIViewController {
+    let context = CoreDataStack.shared.managedContext
     
     lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.rounded(ofSize: 10, weight: .bold)
+        label.font = UIFont.rounded(ofSize: 18, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    lazy var image: UIImageView = {
+        let imageview = UIImageView()
+        imageview.image = UIImage(named: "AppIcon")
+        imageview.layer.cornerRadius = 15
+        imageview.clipsToBounds = true
+        imageview.contentMode = .scaleToFill
+        imageview.translatesAutoresizingMaskIntoConstraints = false
+        return imageview
     }()
 
     override func viewDidLoad() {
@@ -43,10 +54,15 @@ class ActionViewController: UIViewController {
         }
         
         view.addSubview(titleLabel)
+        view.addSubview(image)
         
         NSLayoutConstraint.activate([
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            image.centerXAnchor.constraint(equalTo: titleLabel.centerXAnchor),
+            image.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: -20),
+            image.widthAnchor.constraint(equalToConstant: 150),
+            image.heightAnchor.constraint(equalToConstant: 150)
         ])
     }
     
@@ -57,67 +73,30 @@ class ActionViewController: UIViewController {
         
         let urlString = dict["url"] as! String
         title = dict["title"] as? String ?? ""
+        
         let dictData = dict["dictData"] as? [String:String]
         
         if title.isEmpty {
-            if let ogTitle = dictData?["og:title"] {
-                title = ogTitle
-            } else if let titleNorm = dictData?["title"] {
-                title = titleNorm
-            } else if let twitterTitle = dictData?["twitter:card:title"] {
-                title = twitterTitle
-            }
+            title = dictData?.findFirstValue(keys: URL.titleMeta) ?? ""
         }
+        description = dictData?.findFirstValue(keys: URL.descriptionMeta)
+        imageUrl = dictData?.findFirstValue(keys: URL.imageMeta)
         
-        if let ogDescription = dictData?["og:descripition"] {
-            description = ogDescription
-        } else if let normDescription = dictData?["description"] {
-            description = normDescription
-        } else if let twitterDescription = dictData?["tiwtter:card:description"] {
-            description = twitterDescription
-        }
+        let newLink = Link(context: self.context)
+        newLink.setValue(urlString, forKey: "url")
+        newLink.setValue(title, forKey: #keyPath(Link.ogTitle))
+        newLink.setValue(description, forKey: #keyPath(Link.ogDescription))
+        newLink.setValue(imageUrl, forKey: #keyPath(Link.ogImageUrl))
+        newLink.setValue(nil, forKey: "note")
+        newLink.setValue(nil, forKey: "imageData")
+        newLink.setValue(nil, forKey: "group")
+        newLink.setValue(nil, forKey: "tags")
         
-        if let ogImgUrl = dictData?["og:image"] {
-            imageUrl = ogImgUrl
-        } else if let twitterImage = dictData?["twitter:image:src"] {
-            imageUrl = twitterImage
-        }
+        CoreDataStack.shared.saveContext()
         
-        if let imageUrl = imageUrl {
-            let task = URLSession.shared.dataTask(with: URL(string: imageUrl)!) { data, response, error in
-                DispatchQueue.main.async {
-                    LinkStorage.shared.add(
-                        url: urlString,
-                        ogTitle: title,
-                        ogDescription: description,
-                        ogImageUrl: imageUrl,
-                        colorHex: Color.random.toHex ?? "#333333",
-                        note: "",
-                        starred: false,
-                        unread: true,
-                        imageData: data,
-                        group: nil,
-                        tags: nil
-                    )
-                }
-            }
-            
-            task.resume()
-        } else {
-            LinkStorage.shared.add(
-                url: urlString,
-                ogTitle: title,
-                ogDescription: description,
-                ogImageUrl: imageUrl,
-                colorHex: Color.random.toHex ?? "#333333",
-                note: "",
-                starred: false,
-                unread: true,
-                imageData: nil,
-                group: nil,
-                tags: nil
-            )
-        }
+        newLink.fetchImage()
+        
+        CoreDataStack.shared.saveContext()
         
         self.titleLabel.text = "Saved correctly"
         

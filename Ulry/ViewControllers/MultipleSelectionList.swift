@@ -7,10 +7,14 @@
 
 import SwiftUI
 
-struct MultipleSelectionList<T: Representable>: View {
+struct MultipleSelectionList: View {
+    @Environment(\.managedObjectContext) private var managedObjectContext
+    
     @State var isSheetShown: Bool = false
-    @Binding var items: [T]
-    @Binding var selections: [T]
+    @Binding var selections: [Tag]
+    
+    @FetchRequest(entity: Tag.entity(), sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)])
+    var items: FetchedResults<Tag>
 
     var body: some View {
         List {
@@ -37,7 +41,7 @@ struct MultipleSelectionList<T: Representable>: View {
             }
         }
         .sheet(isPresented: $isSheetShown) {
-            AddCategoryView(mode: .tag, onDonePressedAction: { isSheetShown.toggle() })
+            AddCategoryView(mode: .tag)
         }
     }
 }

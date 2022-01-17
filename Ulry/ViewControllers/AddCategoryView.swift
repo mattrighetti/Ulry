@@ -6,6 +6,7 @@
 //
 
 import os
+import CoreData
 import SwiftUI
 
 public enum PickerMode: Equatable, RawRepresentable {
@@ -36,10 +37,10 @@ public enum PickerMode: Equatable, RawRepresentable {
 
 struct AddCategoryView: View {
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.managedObjectContext) var managedObjectContext
     
     var mode: PickerMode = .group
     
-    var onDonePressedAction: (() -> Void)?
     @State var name: String = ""
     @State var searchIcon: String = ""
     @State var selectedColor: Color = Color.random
@@ -109,11 +110,7 @@ struct AddCategoryView: View {
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        if onDonePressedAction != nil {
-                            onDonePressedAction!()
-                        } else {
-                            presentationMode.wrappedValue.dismiss()
-                        }
+                        presentationMode.wrappedValue.dismiss()
                     }, label: { Text("Cancel") })
                 }
             }
@@ -181,14 +178,31 @@ struct AddCategoryView: View {
         
         switch mode {
         case .group:
-            GroupStorage.shared.add(name: name, color: selectedColor.toHex!, icon: selectedGlyph!)
+            let group = Group(context: managedObjectContext)
+            group.setValue(UUID(), forKey: "id")
+            group.setValue(name, forKey: "name")
+            group.setValue(selectedColor.toHex!, forKey: "colorHex")
+            group.setValue(selectedGlyph, forKey: "iconName")
+            
         case .editGroup(let group):
-            GroupStorage.shared.update(group: group, name: name, color: selectedColor.toHex!, icon: selectedGlyph!)
+            group.setValue(name, forKey: "name")
+            group.setValue(selectedColor.toHex!, forKey: "colorHex")
+            group.setValue(selectedGlyph, forKey: "iconName")
+            
         case .tag:
-            TagStorage.shared.add(name: name, description: "", color: selectedColor.toHex!)
+            let tag = Tag(context: managedObjectContext)
+            tag.setValue(UUID(), forKey: "id")
+            tag.setValue(name, forKey: "name")
+            tag.setValue(nil, forKey: "description_")
+            tag.setValue(selectedColor.toHex!, forKey: "colorHex")
+            
         case .editTag(let tag):
-            TagStorage.shared.update(tag: tag, name: name, description: "", color: selectedColor.toHex!)
+            tag.setValue(name, forKey: "name")
+            tag.setValue(nil, forKey: "description_")
+            tag.setValue(selectedColor.toHex!, forKey: "colorHex")
         }
+        
+        CoreDataStack.shared.saveContext()
         
         presentationMode.wrappedValue.dismiss()
     }

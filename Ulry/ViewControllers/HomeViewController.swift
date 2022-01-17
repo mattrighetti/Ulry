@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 import Combine
 import SwiftUI
 
@@ -28,7 +29,35 @@ fileprivate var categoryColorCell = "CategoryColorCell"
 fileprivate var categoryImageCell = "CategoryImageCell"
 
 class HomeViewController: UIViewController {
+    let context = CoreDataStack.shared.managedContext
     let tableView = UITableView(frame: .zero, style: .insetGrouped)
+    
+    lazy var tagsFRC: NSFetchedResultsController<Tag> = {
+        NSFetchedResultsController(
+            fetchRequest: Tag.Request.all.rawValue,
+            managedObjectContext: CoreDataStack.shared.managedContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+    }()
+    
+    lazy var groupsFRC: NSFetchedResultsController<Group> = {
+        NSFetchedResultsController(
+            fetchRequest: Group.Request.all.rawValue,
+            managedObjectContext: CoreDataStack.shared.managedContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+    }()
+    
+    lazy var linksFRC: NSFetchedResultsController<Link> = {
+        NSFetchedResultsController(
+            fetchRequest: Link.Request.all.rawValue,
+            managedObjectContext: CoreDataStack.shared.managedContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+    }()
     
     lazy var datasource: HomeDiffableDataSource = {
         let datasource = HomeDiffableDataSource(tableView: tableView) { tableView, indexPath, category in
@@ -55,8 +84,6 @@ class HomeViewController: UIViewController {
         return datasource
     }()
     
-    var cancellables = Set<AnyCancellable>()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -74,6 +101,10 @@ class HomeViewController: UIViewController {
             UIBarButtonItem(image: UIImage(systemName: "plus.circle"), style: .plain, target: self, action: #selector(addLinkPressed))
         ]
         
+        tagsFRC.delegate = self
+        groupsFRC.delegate = self
+        linksFRC.delegate = self
+        
         tableView.delegate = self
         tableView.register(UIColorCircleTableViewCell.self, forCellReuseIdentifier: categoryColorCell)
         tableView.register(UIImageCircleTableViewCell.self, forCellReuseIdentifier: categoryImageCell)
@@ -81,9 +112,15 @@ class HomeViewController: UIViewController {
         
         view.addSubview(tableView)
         
-        addCategories()
+        do {
+            try tagsFRC.performFetch()
+            try groupsFRC.performFetch()
+            try linksFRC.performFetch()
+        } catch let error as NSError {
+            print("Unresolved error \(error), \(error.userInfo)")
+        }
         
-        setupSubscriptions()
+        addCategories()
     }
     
     override func viewDidLayoutSubviews() {
@@ -113,61 +150,19 @@ class HomeViewController: UIViewController {
         snapshot.appendItems([.all, .unread, .starred], toSection: 0)
         
         snapshot.appendSections([1])
-        snapshot.appendItems(GroupStorage.shared.groups.value.map { .group($0) }, toSection: 1)
+        snapshot.appendItems(groupsFRC.fetchedObjects!.map { .group($0) }, toSection: 1)
         
         snapshot.appendSections([2])
-        snapshot.appendItems(TagStorage.shared.tags.value.map { .tag($0) }, toSection: 2)
+        snapshot.appendItems(tagsFRC.fetchedObjects!.map { .tag($0) }, toSection: 2)
         
-        datasource.apply(snapshot, animatingDifferences: false)
-    }
-    
-    private func updateCounts() {
-        var newSnapshot = datasource.snapshot()
-        let groups: [Category] = GroupStorage.shared.groups.value.map { .group($0) }
-        let tags: [Category] = TagStorage.shared.tags.value.map { .tag($0) }
-        
-        var items: [Category] = [.all, .starred, .unread]
-        items.append(contentsOf: groups)
-        items.append(contentsOf: tags)
-        
-        newSnapshot.reloadItems(items)
-        datasource.apply(newSnapshot, animatingDifferences: false)
-    }
-    
-    private func updateTags() {
-        var newSnapshot = datasource.snapshot()
-        let tags: [Category] = TagStorage.shared.tags.value.map { .tag($0) }
-        newSnapshot.reloadItems(tags)
-        datasource.apply(newSnapshot, animatingDifferences: false)
-    }
-    
-    private func updateGroups() {
-        var newSnapshot = datasource.snapshot()
-        let groups: [Category] = GroupStorage.shared.groups.value.map { .group($0) }
-        newSnapshot.reloadItems(groups)
-        datasource.apply(newSnapshot, animatingDifferences: false)
-    }
-    
-    private func setupSubscriptions() {
-        LinkStorage.shared.links.eraseToAnyPublisher().sink { [unowned self] _ in
-            self.updateCounts()
-        }
-        .store(in: &cancellables)
-        
-        GroupStorage.shared.groups.eraseToAnyPublisher().sink { [unowned self] _ in
-            self.updateGroups()
-        }
-        .store(in: &cancellables)
-        
-        TagStorage.shared.tags.eraseToAnyPublisher().sink { [unowned self] _ in
-            self.updateTags()
-        }
-        .store(in: &cancellables)
+        datasource.apply(snapshot, animatingDifferences: true)
     }
     
     @objc private func addLinkPressed() {
         UITextView.appearance().backgroundColor = .clear
-        let vc = UIHostingController(rootView: AddLinkView(configuration: .new))
+        
+        let view = AddLinkView(configuration: .new).environment(\.managedObjectContext, context)
+        let vc = UIHostingController(rootView: view)
         if let sheet = vc.sheetPresentationController {
             sheet.detents = [.large()]
         }
@@ -175,7 +170,8 @@ class HomeViewController: UIViewController {
     }
     
     @objc private func addGroupPressed() {
-        let vc = UIHostingController(rootView: AddCategoryView(mode: .group))
+        let view = AddCategoryView(mode: .group).environment(\.managedObjectContext, context)
+        let vc = UIHostingController(rootView: view)
         if let sheet = vc.sheetPresentationController {
             sheet.detents = [.large()]
         }
@@ -183,7 +179,9 @@ class HomeViewController: UIViewController {
     }
     
     @objc private func addTagPressed() {
-        let vc = UIHostingController(rootView: AddCategoryView(mode: .tag))
+        let view = AddCategoryView(mode: .tag).environment(\.managedObjectContext, context)
+        
+        let vc = UIHostingController(rootView: view)
         if let sheet = vc.sheetPresentationController {
             sheet.detents = [.large()]
         }
@@ -193,33 +191,59 @@ class HomeViewController: UIViewController {
     private func handleMoveToTrash(category: Category) {
         switch category {
         case .group(let group):
-            GroupStorage.shared.delete(group)
+            context.delete(group)
+            do {
+                try context.save()
+            } catch {
+                print(error)
+            }
+            
         case .tag(let tag):
-            TagStorage.shared.delete(tag: tag)
+            context.delete(tag)
+            do {
+                try context.save()
+            } catch {
+                print(error)
+            }
         default:
             return
         }
         
-        addCategories()
+        var snapshot = datasource.snapshot()
+        snapshot.deleteItems([category])
+        datasource.apply(snapshot, animatingDifferences: true)
     }
     
     private func onEditPressed(category: Category) {
-        let vc: UIHostingController<AddCategoryView>
         switch category {
         case .group(let group):
-            vc = UIHostingController(rootView: AddCategoryView(mode: .editGroup(group)))
+            let view = AddCategoryView(mode: .editGroup(group)).environment(\.managedObjectContext, context)
+            let vc = UIHostingController(rootView: view)
+            
+            if let sheet = vc.sheetPresentationController {
+                sheet.detents = [.large()]
+            }
+            present(vc, animated: true)
+            
         case .tag(let tag):
-            vc = UIHostingController(rootView: AddCategoryView(mode: .editTag(tag)))
+            let view = AddCategoryView(mode: .editTag(tag)).environment(\.managedObjectContext, context)
+            
+            let vc = UIHostingController(rootView: view)
+            
+            if let sheet = vc.sheetPresentationController {
+                sheet.detents = [.large()]
+            }
+            present(vc, animated: true)
+            
         default:
             return
         }
         
-        if let sheet = vc.sheetPresentationController {
-            sheet.detents = [.large()]
-        }
-        present(vc, animated: true)
+        
     }
 }
+
+// MARK: - UITableViewDelegate
 
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -236,7 +260,6 @@ extension HomeViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         guard let category = datasource.itemIdentifier(for: indexPath) else { return }
         
-        // let vc = UIHostingController(rootView: LinkList(filter: category, navigationController: navigationController))
         let vc = LinksTableViewController()
         vc.category = category
         vc.navigationItem.title = category.rawValue.0
@@ -267,5 +290,55 @@ extension HomeViewController: UITableViewDelegate {
         trash.backgroundColor = .systemRed
         
         return UISwipeActionsConfiguration(actions: [trash, edit])
+    }
+}
+
+extension HomeViewController: NSFetchedResultsControllerDelegate {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        var snapshot = datasource.snapshot()
+        var shouldAnimate = false
+        
+        switch type {
+        case .insert:
+            shouldAnimate = true
+            if let group = anObject as? Group {
+                snapshot.appendItems([.group(group)], toSection: 1)
+            } else if let tag = anObject as? Tag {
+                snapshot.appendItems([.tag(tag)], toSection: 2)
+            } else if let link = anObject as? Link {
+                var reconfigureItemsCategories: [Category] = [.all, .unread, .starred]
+                reconfigureItemsCategories.append(contentsOf: link.tags?.map { .tag($0) } ?? [])
+                if let group = link.group {
+                    reconfigureItemsCategories.append(.group(group))
+                }
+                snapshot.reconfigureItems(reconfigureItemsCategories)
+            }
+        case .delete:
+            shouldAnimate = true
+            if let group = anObject as? Group {
+                snapshot.deleteItems([.group(group)])
+            } else if let tag = anObject as? Tag {
+                snapshot.deleteItems([.tag(tag)])
+            } else if let link = anObject as? Link {
+                var reconfigureItemsCategories: [Category] = [.all, .unread, .starred]
+                reconfigureItemsCategories.append(contentsOf: link.tags?.map { .tag($0) } ?? [])
+                if let group = link.group {
+                    reconfigureItemsCategories.append(.group(group))
+                }
+                snapshot.reconfigureItems(reconfigureItemsCategories)
+            }
+        case .update:
+            if let group = anObject as? Group {
+                snapshot.reconfigureItems([.group(group)])
+            } else if let tag = anObject as? Tag {
+                snapshot.reconfigureItems([.tag(tag)])
+            }
+        case .move:
+            return
+        @unknown default:
+            fatalError()
+        }
+        
+        datasource.apply(snapshot, animatingDifferences: shouldAnimate)
     }
 }

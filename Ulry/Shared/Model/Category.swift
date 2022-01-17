@@ -5,6 +5,7 @@
 //  Created by Mattia Righetti on 1/9/22.
 //
 
+import CoreData
 import UIKit
 
 public enum Category: Hashable, RawRepresentable {
@@ -26,35 +27,35 @@ public enum Category: Hashable, RawRepresentable {
                 "All",
                 UIColor.orange,
                 "list.bullet",
-                LinkStorage.shared.getLinksCount(by: self)
+                try! CoreDataStack.shared.managedContext.count(for: Link.Request.all.rawValue)
             )
         case .unread:
             return (
                 "Unread",
                 UIColor.systemGray,
                 "archivebox",
-                LinkStorage.shared.getLinksCount(by: self)
+                try! CoreDataStack.shared.managedContext.count(for: Link.Request.unread.rawValue)
             )
         case .starred:
             return (
                 "Starred",
                 UIColor.systemYellow,
                 "star",
-                LinkStorage.shared.getLinksCount(by: self)
+                try! CoreDataStack.shared.managedContext.count(for: Link.Request.starred.rawValue)
             )
         case .group(let group):
             return (
                 group.name,
                 UIColor(hex: group.colorHex)!,
                 group.iconName,
-                LinkStorage.shared.getLinksCount(by: self)
+                try! CoreDataStack.shared.managedContext.count(for: Link.Request.folder(group).rawValue)
             )
         case .tag(let tag):
             return (
                 tag.name,
                 UIColor(hex: tag.colorHex)!,
                 nil,
-                LinkStorage.shared.getLinksCount(by: self)
+                try! CoreDataStack.shared.managedContext.count(for: Link.Request.tag(tag).rawValue)
             )
         }
     }

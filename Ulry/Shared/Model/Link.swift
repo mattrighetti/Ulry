@@ -5,6 +5,7 @@
 //  Created by Mattia Righetti on 12/25/21.
 //
 
+import os
 import SwiftUI
 import CoreData
 
@@ -34,8 +35,40 @@ public class Link: NSManagedObject {
         return formatter.string(from: date)
     }
     
+    var needsUpdate: Bool = false
+    
+    func loadMetaData(completion: (() -> Void)?) {
+        needsUpdate = false
+        
+        let link = url.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !link.isEmpty, URL(string: link) != nil else { return }
+        
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            do {
+                let og = try MetaRod().build(link).og()
+                let imgUrl = og.findFirstValue(keys: URL.imageMeta)
+                self?.setPrimitiveValue(og.findFirstValue(keys: URL.titleMeta), forKey: #keyPath(Link.ogTitle))
+                self?.setPrimitiveValue(og.findFirstValue(keys: URL.descriptionMeta), forKey: #keyPath(Link.ogDescription))
+                self?.setPrimitiveValue(imgUrl, forKey: #keyPath(Link.ogImageUrl))
+                
+                self?.fetchImage()
+            } catch {
+                os_log(.error, "encountered error while fetching URL data")
+            }
+        }
+    }
+    
+    func fetchImage() {
+        guard let ogImageUrl = self.ogImageUrl, let url = URL(string: ogImageUrl) else { return }
+        
+        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            self?.setPrimitiveValue(data, forKey: #keyPath(Link.imageData))
+        }
+        task.resume()
+    }
+    
     convenience init() {
-        self.init(context: PersistenceController.shared.container.viewContext)
+        self.init(context: CoreDataStack.shared.managedContext)
     }
 }
 
@@ -55,32 +88,26 @@ extension Link {
         }
         
         var rawValue: NSFetchRequest<Link> {
+            let sort = [NSSortDescriptor(key: "createdAt", ascending: false)]
+            let request: NSFetchRequest<Link>
+            
             switch self {
             case .all:
-                let request: NSFetchRequest<Link> = Link.fetchRequest()
-                request.sortDescriptors = []
-                return request
+                request = Link.fetchRequest()
             case .starred:
-                let request: NSFetchRequest<Link> = Link.fetchRequest(starred: true)
-                request.sortDescriptors = []
-                return request
+                request = Link.fetchRequest(starred: true)
             case .unread:
-                let request: NSFetchRequest<Link> = Link.fetchRequest(unread: true)
-                request.sortDescriptors = []
-                return request
+                request = Link.fetchRequest(unread: true)
             case .withUuid(uuid: let uuid):
-                let request: NSFetchRequest<Link> = Link.fetchRequest(withUUID: uuid)
-                request.sortDescriptors = []
-                return request
+                request = Link.fetchRequest(withUUID: uuid)
             case .folder(let group):
-                let request: NSFetchRequest<Link> = Link.fetchRequest(withGroup: group)
-                request.sortDescriptors = []
-                return request
+                request = Link.fetchRequest(withGroup: group)
             case .tag(let tag):
-                let request: NSFetchRequest<Link> = Link.fetchRequest(withTag: tag)
-                request.sortDescriptors = []
-                return request
+                request = Link.fetchRequest(withTag: tag)
             }
+            
+            request.sortDescriptors = sort
+            return request
         }
     }
 }

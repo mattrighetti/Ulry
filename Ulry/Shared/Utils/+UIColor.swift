@@ -69,4 +69,21 @@ extension UIColor {
 
         return hex
     }
+    
+    public static var random: UIColor {
+        let randomHex = self.randomHexColorCode()
+        return UIColor(hex: randomHex)!
+    }
+    
+    public static func randomHexColorCode() -> String {
+        let a = ["1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"];
+        return
+            "#"
+            .appending(a[Int(arc4random_uniform(15))])
+            .appending(a[Int(arc4random_uniform(15))])
+            .appending(a[Int(arc4random_uniform(15))])
+            .appending(a[Int(arc4random_uniform(15))])
+            .appending(a[Int(arc4random_uniform(15))])
+            .appending(a[Int(arc4random_uniform(15))])
+    }
 }

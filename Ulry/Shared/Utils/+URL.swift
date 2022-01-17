@@ -16,4 +16,8 @@ public extension URL {
 
         return fileContainer.appendingPathComponent("\(databaseName).sqlite")
     }
+    
+    static let titleMeta = ["og:title", "title", "twitter:title"]
+    static let descriptionMeta = ["og:description", "description", "twitter:description"]
+    static let imageMeta = ["og:image", "image", "image:src", "twitter:image:src"]
 }

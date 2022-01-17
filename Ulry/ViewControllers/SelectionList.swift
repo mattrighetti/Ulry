@@ -7,11 +7,13 @@
 
 import SwiftUI
 
-struct SelectionList<T: Representable>: View {
+struct SelectionList: View {
     @Environment(\.presentationMode) var presentationMode
     @State var isSheetShown: Bool = false
-    @Binding var items: [T]
-    @Binding var selection: T?
+    @Binding var selection: Group?
+    
+    @FetchRequest(entity: Group.entity(), sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)])
+    var items: FetchedResults<Group>
 
     var body: some View {
         List {
@@ -40,9 +42,7 @@ struct SelectionList<T: Representable>: View {
             }
         }
         .sheet(isPresented: $isSheetShown) {
-            AddCategoryView(mode: .group, onDonePressedAction: {
-                isSheetShown.toggle()
-            })
+            AddCategoryView(mode: .group)
         }
     }
 }

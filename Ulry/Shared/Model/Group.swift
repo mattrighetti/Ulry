@@ -10,7 +10,7 @@ import CoreData
 
 public class Group: NSManagedObject, Representable {
     convenience init() {
-        self.init(context: PersistenceController.shared.container.viewContext)
+        self.init(context: CoreDataStack.shared.managedContext)
     }
 }
 
@@ -26,16 +26,18 @@ extension Group {
         }
         
         var rawValue: NSFetchRequest<Group> {
+            let request: NSFetchRequest<Group>
+            let sort = [NSSortDescriptor(key: "name", ascending: true)]
+            
             switch self {
             case .all:
-                let request: NSFetchRequest<Group> = Group.fetchRequest()
-                request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-                return request
+                request = Group.fetchRequest()
             case .withUuid(uuid: let uuid):
-                let request: NSFetchRequest<Group> = Group.fetchRequest(withUUID: uuid)
-                request.sortDescriptors = []
-                return request
+                request = Group.fetchRequest(withUUID: uuid)
             }
+            
+            request.sortDescriptors = sort
+            return request
         }
     }
 }

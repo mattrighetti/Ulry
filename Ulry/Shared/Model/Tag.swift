@@ -11,7 +11,7 @@ import SwiftUI
 
 public class Tag: NSManagedObject, Representable {
     convenience init() {
-        self.init(context: PersistenceController.shared.container.viewContext)
+        self.init(context: CoreDataStack.shared.managedContext)
     }
 }
 
@@ -27,16 +27,18 @@ extension Tag {
         }
         
         var rawValue: NSFetchRequest<Tag> {
+            let request: NSFetchRequest<Tag>
+            let sort = [NSSortDescriptor(key: "name", ascending: true)]
+            
             switch self {
             case .all:
-                let request: NSFetchRequest<Tag> = Tag.fetchRequest()
-                request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-                return request
+                request = Tag.fetchRequest()
             case .withUuid(uuid: let uuid):
-                let request: NSFetchRequest<Tag> = Tag.fetchRequest(withUUID: uuid)
-                request.sortDescriptors = []
-                return request
+                request = Tag.fetchRequest(withUUID: uuid)
             }
+            
+            request.sortDescriptors = sort
+            return request
         }
     }
 }

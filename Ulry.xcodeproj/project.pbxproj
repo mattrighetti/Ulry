@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C90AA80D2794D6BC000113BA /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90AA80C2794D6BC000113BA /* CoreDataStack.swift */; };
+		C90AA80E2794E047000113BA /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90AA80C2794D6BC000113BA /* CoreDataStack.swift */; };
 		C91053B3278E4659005AC807 /* +URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91053B2278E4659005AC807 /* +URL.swift */; };
 		C91053B4278E465D005AC807 /* +URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91053B2278E4659005AC807 /* +URL.swift */; };
 		C9437013278CAFF2009143A7 /* GetURL.js in Resources */ = {isa = PBXBuildFile; fileRef = C9437012278CAFF2009143A7 /* GetURL.js */; };
@@ -17,11 +19,8 @@
 		C99C14B6278C66FC00936D27 /* ActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99C14B5278C66FC00936D27 /* ActionViewController.swift */; };
 		C99C14B9278C66FC00936D27 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C99C14B7278C66FC00936D27 /* MainInterface.storyboard */; };
 		C99C14BD278C66FC00936D27 /* AddToUlryAction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C99C14AE278C66FC00936D27 /* AddToUlryAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C99C14C2278C670200936D27 /* LinkStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9012789C2BD00887A3E /* LinkStorage.swift */; };
 		C99C14C3278C672C00936D27 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F90E2789C2BD00887A3E /* Group.swift */; };
 		C99C14C4278C672C00936D27 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F90F2789C2BD00887A3E /* Tag.swift */; };
-		C99C14C5278C675000936D27 /* TagStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9002789C2BD00887A3E /* TagStorage.swift */; };
-		C99C14C6278C675000936D27 /* GroupStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9022789C2BD00887A3E /* GroupStorage.swift */; };
 		C99C14C7278C675700936D27 /* Group+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9092789C2BD00887A3E /* Group+CoreDataProperties.swift */; };
 		C99C14C8278C675700936D27 /* Link+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F90A2789C2BD00887A3E /* Link+CoreDataProperties.swift */; };
 		C99C14C9278C675700936D27 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D7FE7B278AF66D00016B04 /* Category.swift */; };
@@ -35,23 +34,20 @@
 		C99C14D1278C675E00936D27 /* SFSymbols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9042789C2BD00887A3E /* SFSymbols.swift */; };
 		C99C14D2278C675E00936D27 /* +UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */; };
 		C99C14D3278C675E00936D27 /* +UIScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9052789C2BD00887A3E /* +UIScreen.swift */; };
-		C99C14D4278C676400936D27 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F8FE2789C2BD00887A3E /* Persistence.swift */; };
 		C99C14D6278C678200936D27 /* Representable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99C14D5278C678200936D27 /* Representable.swift */; };
 		C99C14D7278C678500936D27 /* Representable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99C14D5278C678200936D27 /* Representable.swift */; };
 		C99C14D9278C679200936D27 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = C99C14D8278C679200936D27 /* SwiftSoup */; };
 		C99C14DA278C6A4800936D27 /* Urly.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F8FA2789C2B400887A3E /* Urly.xcdatamodeld */; };
 		C9A142C7278A4E8600B627BF /* LinksTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A142C6278A4E8600B627BF /* LinksTableViewController.swift */; };
 		C9A142C9278A6B9200B627BF /* UILinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A142C8278A6B9200B627BF /* UILinkTableViewCell.swift */; };
+		C9ABF9E52794451700F1B1F1 /* +Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ABF9E42794451700F1B1F1 /* +Dictionary.swift */; };
+		C9ABF9E627944A6900F1B1F1 /* +Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ABF9E42794451700F1B1F1 /* +Dictionary.swift */; };
 		C9D7FE7C278AF66D00016B04 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D7FE7B278AF66D00016B04 /* Category.swift */; };
 		C9D7FE7E278AFA1300016B04 /* FaviconHostnameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D7FE7D278AFA1300016B04 /* FaviconHostnameView.swift */; };
 		C9D7FE86278AFFA100016B04 /* UlryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D7FE85278AFFA100016B04 /* UlryTests.swift */; };
 		C9F4F8F12789C28B00887A3E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9F4F8EF2789C28B00887A3E /* LaunchScreen.storyboard */; };
 		C9F4F8F92789C2AB00887A3E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F8F82789C2AB00887A3E /* AppDelegate.swift */; };
 		C9F4F8FC2789C2B400887A3E /* Urly.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F8FA2789C2B400887A3E /* Urly.xcdatamodeld */; };
-		C9F4F9102789C2BD00887A3E /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F8FE2789C2BD00887A3E /* Persistence.swift */; };
-		C9F4F9112789C2BD00887A3E /* TagStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9002789C2BD00887A3E /* TagStorage.swift */; };
-		C9F4F9122789C2BD00887A3E /* LinkStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9012789C2BD00887A3E /* LinkStorage.swift */; };
-		C9F4F9132789C2BD00887A3E /* GroupStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9022789C2BD00887A3E /* GroupStorage.swift */; };
 		C9F4F9142789C2BD00887A3E /* SFSymbols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9042789C2BD00887A3E /* SFSymbols.swift */; };
 		C9F4F9152789C2BD00887A3E /* +UIScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9052789C2BD00887A3E /* +UIScreen.swift */; };
 		C9F4F9162789C2BD00887A3E /* MetaFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9062789C2BD00887A3E /* MetaFetcher.swift */; };
@@ -65,7 +61,6 @@
 		C9F4F9222789C2D600887A3E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9212789C2D600887A3E /* SceneDelegate.swift */; };
 		C9F4F9382789C2DE00887A3E /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9242789C2DE00887A3E /* HomeViewModel.swift */; };
 		C9F4F9392789C2DE00887A3E /* LinkListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9252789C2DE00887A3E /* LinkListViewModel.swift */; };
-		C9F4F93A2789C2DE00887A3E /* URLManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9262789C2DE00887A3E /* URLManager.swift */; };
 		C9F4F93B2789C2DE00887A3E /* LinkDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9282789C2DE00887A3E /* LinkDetailView.swift */; };
 		C9F4F93C2789C2DE00887A3E /* AddCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9292789C2DE00887A3E /* AddCategoryView.swift */; };
 		C9F4F93E2789C2DE00887A3E /* AddLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F92B2789C2DE00887A3E /* AddLinkView.swift */; };
@@ -118,6 +113,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C90AA80C2794D6BC000113BA /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		C91053B2278E4659005AC807 /* +URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+URL.swift"; sourceTree = "<group>"; };
 		C9437012278CAFF2009143A7 /* GetURL.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = GetURL.js; sourceTree = "<group>"; };
 		C94A2DCF278B710A007F6FFA /* +UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UIFont.swift"; sourceTree = "<group>"; };
@@ -133,6 +129,7 @@
 		C99C14DC278C6C0000936D27 /* Ulry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Ulry.entitlements; sourceTree = "<group>"; };
 		C9A142C6278A4E8600B627BF /* LinksTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinksTableViewController.swift; sourceTree = "<group>"; };
 		C9A142C8278A6B9200B627BF /* UILinkTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILinkTableViewCell.swift; sourceTree = "<group>"; };
+		C9ABF9E42794451700F1B1F1 /* +Dictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+Dictionary.swift"; sourceTree = "<group>"; };
 		C9D7FE7B278AF66D00016B04 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		C9D7FE7D278AFA1300016B04 /* FaviconHostnameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaviconHostnameView.swift; sourceTree = "<group>"; };
 		C9D7FE83278AFFA100016B04 /* UlryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UlryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -142,10 +139,6 @@
 		C9F4F8F22789C28B00887A3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C9F4F8F82789C2AB00887A3E /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C9F4F8FB2789C2B400887A3E /* Urly.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Urly.xcdatamodel; sourceTree = "<group>"; };
-		C9F4F8FE2789C2BD00887A3E /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
-		C9F4F9002789C2BD00887A3E /* TagStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagStorage.swift; sourceTree = "<group>"; };
-		C9F4F9012789C2BD00887A3E /* LinkStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkStorage.swift; sourceTree = "<group>"; };
-		C9F4F9022789C2BD00887A3E /* GroupStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupStorage.swift; sourceTree = "<group>"; };
 		C9F4F9042789C2BD00887A3E /* SFSymbols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SFSymbols.swift; sourceTree = "<group>"; };
 		C9F4F9052789C2BD00887A3E /* +UIScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "+UIScreen.swift"; sourceTree = "<group>"; };
 		C9F4F9062789C2BD00887A3E /* MetaFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetaFetcher.swift; sourceTree = "<group>"; };
@@ -159,7 +152,6 @@
 		C9F4F9212789C2D600887A3E /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		C9F4F9242789C2DE00887A3E /* HomeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		C9F4F9252789C2DE00887A3E /* LinkListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkListViewModel.swift; sourceTree = "<group>"; };
-		C9F4F9262789C2DE00887A3E /* URLManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLManager.swift; sourceTree = "<group>"; };
 		C9F4F9282789C2DE00887A3E /* LinkDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkDetailView.swift; sourceTree = "<group>"; };
 		C9F4F9292789C2DE00887A3E /* AddCategoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddCategoryView.swift; sourceTree = "<group>"; };
 		C9F4F92B2789C2DE00887A3E /* AddLinkView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddLinkView.swift; sourceTree = "<group>"; };
@@ -278,22 +270,11 @@
 		C9F4F8FD2789C2BD00887A3E /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				C9F4F8FE2789C2BD00887A3E /* Persistence.swift */,
-				C9F4F8FF2789C2BD00887A3E /* CodeDataControllers */,
+				C90AA80C2794D6BC000113BA /* CoreDataStack.swift */,
 				C9F4F9032789C2BD00887A3E /* Utils */,
 				C9F4F9082789C2BD00887A3E /* Model */,
 			);
 			path = Shared;
-			sourceTree = "<group>";
-		};
-		C9F4F8FF2789C2BD00887A3E /* CodeDataControllers */ = {
-			isa = PBXGroup;
-			children = (
-				C9F4F9002789C2BD00887A3E /* TagStorage.swift */,
-				C9F4F9012789C2BD00887A3E /* LinkStorage.swift */,
-				C9F4F9022789C2BD00887A3E /* GroupStorage.swift */,
-			);
-			path = CodeDataControllers;
 			sourceTree = "<group>";
 		};
 		C9F4F9032789C2BD00887A3E /* Utils */ = {
@@ -309,6 +290,7 @@
 				C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */,
 				C99C14D5278C678200936D27 /* Representable.swift */,
 				C91053B2278E4659005AC807 /* +URL.swift */,
+				C9ABF9E42794451700F1B1F1 /* +Dictionary.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -332,7 +314,6 @@
 			children = (
 				C9F4F9242789C2DE00887A3E /* HomeViewModel.swift */,
 				C9F4F9252789C2DE00887A3E /* LinkListViewModel.swift */,
-				C9F4F9262789C2DE00887A3E /* URLManager.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -525,23 +506,21 @@
 				C99C14C8278C675700936D27 /* Link+CoreDataProperties.swift in Sources */,
 				C99C14C3278C672C00936D27 /* Group.swift in Sources */,
 				C99C14B6278C66FC00936D27 /* ActionViewController.swift in Sources */,
+				C9ABF9E627944A6900F1B1F1 /* +Dictionary.swift in Sources */,
 				C99C14CE278C675E00936D27 /* +Color.swift in Sources */,
 				C99C14CB278C675700936D27 /* Link.swift in Sources */,
-				C99C14C6278C675000936D27 /* GroupStorage.swift in Sources */,
 				C99C14D0278C675E00936D27 /* +UIFont.swift in Sources */,
-				C99C14D4278C676400936D27 /* Persistence.swift in Sources */,
 				C99C14D1278C675E00936D27 /* SFSymbols.swift in Sources */,
 				C99C14C9278C675700936D27 /* Category.swift in Sources */,
 				C99C14CA278C675700936D27 /* Tag+CoreDataProperties.swift in Sources */,
 				C99C14DA278C6A4800936D27 /* Urly.xcdatamodeld in Sources */,
 				C99C14D3278C675E00936D27 /* +UIScreen.swift in Sources */,
-				C99C14C2278C670200936D27 /* LinkStorage.swift in Sources */,
+				C90AA80E2794E047000113BA /* CoreDataStack.swift in Sources */,
 				C99C14CD278C675E00936D27 /* +UIImage.swift in Sources */,
 				C99C14D7278C678500936D27 /* Representable.swift in Sources */,
 				C99C14D2278C675E00936D27 /* +UIViewController.swift in Sources */,
 				C99C14CF278C675E00936D27 /* +UIColor.swift in Sources */,
 				C91053B4278E465D005AC807 /* +URL.swift in Sources */,
-				C99C14C5278C675000936D27 /* TagStorage.swift in Sources */,
 				C99C14C7278C675700936D27 /* Group+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -559,6 +538,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C94A2DD0278B710A007F6FFA /* +UIFont.swift in Sources */,
+				C90AA80D2794D6BC000113BA /* CoreDataStack.swift in Sources */,
 				C9F4F9432789C2DE00887A3E /* BottomBarButtonConfig.swift in Sources */,
 				C9F4F9412789C2DE00887A3E /* SelectionList.swift in Sources */,
 				C9F4F9392789C2DE00887A3E /* LinkListViewModel.swift in Sources */,
@@ -571,30 +551,26 @@
 				C9A142C7278A4E8600B627BF /* LinksTableViewController.swift in Sources */,
 				C9F4F91A2789C2BD00887A3E /* Tag+CoreDataProperties.swift in Sources */,
 				C9A142C9278A6B9200B627BF /* UILinkTableViewCell.swift in Sources */,
-				C9F4F9112789C2BD00887A3E /* TagStorage.swift in Sources */,
 				C99C14D6278C678200936D27 /* Representable.swift in Sources */,
 				C9F4F95B278A40F200887A3E /* UIImageCircleTableViewCell.swift in Sources */,
 				C9F4F9192789C2BD00887A3E /* Link+CoreDataProperties.swift in Sources */,
 				C9F4F91D2789C2BD00887A3E /* Group.swift in Sources */,
+				C9ABF9E52794451700F1B1F1 /* +Dictionary.swift in Sources */,
 				C9F4F9142789C2BD00887A3E /* SFSymbols.swift in Sources */,
-				C9F4F9122789C2BD00887A3E /* LinkStorage.swift in Sources */,
 				C9F4F9162789C2BD00887A3E /* MetaFetcher.swift in Sources */,
 				C9F4F9452789C2DE00887A3E /* ListLabelImage.swift in Sources */,
 				C9F4F9152789C2BD00887A3E /* +UIScreen.swift in Sources */,
 				C9F4F959278A187D00887A3E /* +UIColor.swift in Sources */,
-				C9F4F9102789C2BD00887A3E /* Persistence.swift in Sources */,
 				C9F4F93C2789C2DE00887A3E /* AddCategoryView.swift in Sources */,
 				C9F4F9472789C2DE00887A3E /* LinkCounterText.swift in Sources */,
 				C9F4F9222789C2D600887A3E /* SceneDelegate.swift in Sources */,
 				C9F4F91C2789C2BD00887A3E /* Link.swift in Sources */,
 				C9F4F953278A07A100887A3E /* HomeViewController.swift in Sources */,
 				C9F4F9422789C2DE00887A3E /* LinkCellView.swift in Sources */,
-				C9F4F9132789C2BD00887A3E /* GroupStorage.swift in Sources */,
 				C9F4F9172789C2BD00887A3E /* +Color.swift in Sources */,
 				C9F4F8F92789C2AB00887A3E /* AppDelegate.swift in Sources */,
 				C9F4F8FC2789C2B400887A3E /* Urly.xcdatamodeld in Sources */,
 				C9F4F9182789C2BD00887A3E /* Group+CoreDataProperties.swift in Sources */,
-				C9F4F93A2789C2DE00887A3E /* URLManager.swift in Sources */,
 				C94A2DD2278BB3D3007F6FFA /* +UIViewController.swift in Sources */,
 				C9F4F957278A17FA00887A3E /* +UIImage.swift in Sources */,
 				C9F4F9402789C2DE00887A3E /* MultipleSelectionList.swift in Sources */,
@@ -647,7 +623,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = ExtensionAppIcon;
 				CODE_SIGN_ENTITLEMENTS = AddToUlryAction/AddToUlryAction.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -660,7 +636,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Ulry.AddToUlryAction;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -677,7 +653,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = ExtensionAppIcon;
 				CODE_SIGN_ENTITLEMENTS = AddToUlryAction/AddToUlryAction.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -690,7 +666,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Ulry.AddToUlryAction;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -861,7 +837,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Ulry/Ulry.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Ulry/Info.plist;
@@ -874,7 +850,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Ulry;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -893,7 +869,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Ulry/Ulry.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Ulry/Info.plist;
@@ -906,7 +882,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Ulry;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
