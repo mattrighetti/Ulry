@@ -11,15 +11,30 @@ import Combine
 import SwiftUI
 
 class LinksTableViewController: UIViewController {
-    let context = PersistenceController.shared.container.viewContext
+    let context = CoreDataStack.shared.managedContext
     var coreDataController: NSFetchedResultsController<Link>!
     let tableview = UITableView()
     
     var category: Category? {
         didSet {
-            coreDataController =
-            NSFetchedResultsController(
-                fetchRequest: Link.Request.all.rawValue,
+            guard let category = category else { return }
+
+            let request: NSFetchRequest<Link>
+            switch category {
+            case .all:
+                request = Link.Request.all.rawValue
+            case .unread:
+                request = Link.Request.unread.rawValue
+            case .starred:
+                request = Link.Request.starred.rawValue
+            case .group(let group):
+                request = Link.Request.folder(group).rawValue
+            case .tag(let tag):
+                request = Link.Request.tag(tag).rawValue
+            }
+            
+            coreDataController = NSFetchedResultsController(
+                fetchRequest: request,
                 managedObjectContext: context,
                 sectionNameKeyPath: nil,
                 cacheName: nil
@@ -93,7 +108,7 @@ class LinksTableViewController: UIViewController {
     }
     
     private func onEditPressed(link: Link) {
-        let vc = UIHostingController(rootView: AddLinkView(configuration: .edit(link)))
+        let vc = UIHostingController(rootView: AddLinkView(configuration: .edit(link)).environment(\.managedObjectContext, context))
         if let sheet = vc.sheetPresentationController {
             sheet.detents = [.large()]
         }
@@ -102,6 +117,7 @@ class LinksTableViewController: UIViewController {
     
     private func onDeletePressed(link: Link) {
         context.delete(link)
+        CoreDataStack.shared.saveContext()
     }
     
     private func onStarPressed(link: Link) {
@@ -123,8 +139,9 @@ extension LinksTableViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         
         if let url = URL(string: link.url) {
-            LinkStorage.shared.toggleRead(link: link)
+            link.unread.toggle()
             UIApplication.shared.open(url)
+            CoreDataStack.shared.saveContext()
         }
     }
     

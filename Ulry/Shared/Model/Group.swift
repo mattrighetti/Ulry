@@ -10,7 +10,7 @@ import CoreData
 
 public class Group: NSManagedObject, Representable {
     convenience init() {
-        self.init(context: PersistenceController.shared.container.viewContext)
+        self.init(context: CoreDataStack.shared.managedContext)
     }
 }
 

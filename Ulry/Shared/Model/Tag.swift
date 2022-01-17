@@ -11,7 +11,7 @@ import SwiftUI
 
 public class Tag: NSManagedObject, Representable {
     convenience init() {
-        self.init(context: PersistenceController.shared.container.viewContext)
+        self.init(context: CoreDataStack.shared.managedContext)
     }
 }
 

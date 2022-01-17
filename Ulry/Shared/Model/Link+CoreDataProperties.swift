@@ -5,10 +5,12 @@
 //  Created by Mattia Righetti on 1/8/22.
 //
 
+import os
 import CoreData
+import UIKit
 
 extension Link {
-    @NSManaged public var id: UUID?
+    @NSManaged public var id: UUID
     @NSManaged public var createdAt: Int32
     @NSManaged public var updatedAt: Int32
     @NSManaged public var note: String?
@@ -25,8 +27,19 @@ extension Link {
     
     public override func awakeFromInsert() {
         super.awakeFromInsert()
+        setPrimitiveValue(UUID(), forKey: #keyPath(Link.id))
+        setPrimitiveValue(UIColor.randomHexColorCode(), forKey: #keyPath(Link.colorHex))
+        setPrimitiveValue(false, forKey: #keyPath(Link.starred))
+        setPrimitiveValue(true, forKey: #keyPath(Link.unread))
         setPrimitiveValue(Int(Date.now.timeIntervalSince1970), forKey: #keyPath(Link.createdAt))
         setPrimitiveValue(Int(Date.now.timeIntervalSince1970), forKey: #keyPath(Link.updatedAt))
+    }
+    
+    public override func willChangeValue(forKey key: String) {
+        super.willChangeValue(forKey: key)
+        if key == #keyPath(Link.url) {
+            needsUpdate = true
+        }
     }
     
     public override func willSave() {

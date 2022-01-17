@@ -5,6 +5,7 @@
 //  Created by Mattia Righetti on 12/25/21.
 //
 
+import os
 import SwiftUI
 import CoreData
 
@@ -34,8 +35,40 @@ public class Link: NSManagedObject {
         return formatter.string(from: date)
     }
     
+    var needsUpdate: Bool = false
+    
+    func loadMetaData(completion: (() -> Void)?) {
+        needsUpdate = false
+        
+        let link = url.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !link.isEmpty, URL(string: link) != nil else { return }
+        
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            do {
+                let og = try MetaRod().build(link).og()
+                let imgUrl = og.findFirstValue(keys: URL.imageMeta)
+                self?.setPrimitiveValue(og.findFirstValue(keys: URL.titleMeta), forKey: #keyPath(Link.ogTitle))
+                self?.setPrimitiveValue(og.findFirstValue(keys: URL.descriptionMeta), forKey: #keyPath(Link.ogDescription))
+                self?.setPrimitiveValue(imgUrl, forKey: #keyPath(Link.ogImageUrl))
+                
+                self?.fetchImage()
+            } catch {
+                os_log(.error, "encountered error while fetching URL data")
+            }
+        }
+    }
+    
+    func fetchImage() {
+        guard let ogImageUrl = self.ogImageUrl, let url = URL(string: ogImageUrl) else { return }
+        
+        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            self?.setPrimitiveValue(data, forKey: #keyPath(Link.imageData))
+        }
+        task.resume()
+    }
+    
     convenience init() {
-        self.init(context: PersistenceController.shared.container.viewContext)
+        self.init(context: CoreDataStack.shared.managedContext)
     }
 }
 

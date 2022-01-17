@@ -7,41 +7,20 @@
 
 import os
 import Combine
+import CoreData
 import SwiftUI
 
-class LinkManagerViewModel: ObservableObject {
-    @Published var tags = [Tag]()
-    @Published var groups = [Group]()
-    
-    private var cancellables = Set<AnyCancellable>()
-    
-    init() {
-        TagStorage.shared.tags.sink { tags in
-            print("Updating tags")
-            self.tags = tags
-        }
-        .store(in: &cancellables)
-        
-        GroupStorage.shared.groups.sink { groups in
-            print("Updating groups")
-            self.groups = groups
-        }
-        .store(in: &cancellables)
-    }
-}
-
 public struct AddLinkView: View {
-    public enum AddLinkConfiguration {
+    public enum Configuration {
         case edit(Link)
         case new
     }
     
+    @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.colorScheme) var colorScheme
     
-    @StateObject private var viewModel = LinkManagerViewModel()
-    
-    var configuration: AddLinkConfiguration
+    var configuration: Configuration
     
     @State var runConfiguration = false
     @State private var presentAlert = false
@@ -49,8 +28,12 @@ public struct AddLinkView: View {
     @State private var note: String = ""
     @State private var selectedFolder: Group? = nil
     @State private var selectedTags: [Tag] = []
-    @State private var tags: [Tag] = []
-    @State private var groups: [Group] = []
+    
+    @FetchRequest(entity: Group.entity(), sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)])
+    var groups: FetchedResults<Group>
+    
+    @FetchRequest(entity: Tag.entity(), sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)])
+    var tags: FetchedResults<Tag>
     
     var cancellables = Set<AnyCancellable>()
     
@@ -184,7 +167,7 @@ public struct AddLinkView: View {
                         .font(.system(size: 17, weight: .semibold, design: .rounded))
                         .padding(.leading, 30)
                     NavigationLink(destination: {
-                        SelectionList(items: $viewModel.groups, selection: $selectedFolder)
+                        SelectionList(selection: $selectedFolder)
                     }, label: {
                         HStack {
                             Text(selectedFolderStringValue)
@@ -206,7 +189,7 @@ public struct AddLinkView: View {
                         .font(.system(size: 17, weight: .semibold, design: .rounded))
                         .padding(.leading, 30)
                     NavigationLink(destination: {
-                        MultipleSelectionList(items: $viewModel.tags, selections: $selectedTags)
+                        MultipleSelectionList(selections: $selectedTags)
                     }, label: {
                         HStack {
                             Text(selectedTagsStringValue)
@@ -257,54 +240,31 @@ public struct AddLinkView: View {
     
     private func onDonePressed() {
         switch configuration {
-        case .edit(let editLink):
-            fetchData(completion: { og in
-                LinkStorage.shared.update(
-                    link: editLink,
-                    url: link,
-                    ogTitle: og["og:title"],
-                    ogDescription: og["og:description"],
-                    ogImageUrl: og["og:image"],
-                    colorHex: Color.random.toHex ?? "#333333",
-                    note: note,
-                    starred: false,
-                    unread: true,
-                    imageData: nil,
-                    group: selectedFolder,
-                    tags: Set(selectedTags)
-                )
+        case .edit(let editedLink):
+            editedLink.setValue(link, forKey: "url")
+            editedLink.setValue(note, forKey: "note")
+            editedLink.setValue(true, forKey: "unread")
+            editedLink.setValue(selectedFolder, forKey: "group")
+            editedLink.setValue(Set(selectedTags), forKey: "tags")
+            
+            // TODO this should only run when url is changed
+            editedLink.loadMetaData(completion: {
+                CoreDataStack.shared.saveContext()
             })
+            
         case .new:
-            fetchData(completion: { og in
-                LinkStorage.shared.add(
-                    url: link,
-                    ogTitle: og["og:title"],
-                    ogDescription: og["og:description"],
-                    ogImageUrl: og["og:image"],
-                    colorHex: Color.random.toHex ?? "#333333",
-                    note: note,
-                    starred: false,
-                    unread: true,
-                    imageData: nil,
-                    group: selectedFolder,
-                    tags: Set(selectedTags)
-                )
+            let newLink = Link(context: managedObjectContext)
+            newLink.setValue(link, forKey: "url")
+            newLink.setValue(note, forKey: "note")
+            newLink.setValue(nil, forKey: "imageData")
+            newLink.setValue(selectedFolder, forKey: "group")
+            newLink.setValue(Set(selectedTags), forKey: "tags")
+            
+            CoreDataStack.shared.saveContext()
+            
+            newLink.loadMetaData(completion: {
+                CoreDataStack.shared.saveContext()
             })
-        }
-    }
-    
-    private func fetchData(completion: @escaping (([String:String]) -> Void)) {
-        link = link.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard
-            !link.isEmpty,
-            URL(string: link) != nil
-        else {
-            presentAlert.toggle()
-            return
-        }
-        
-        URLManager.shared.getURLData(url: link) { og in
-            completion(og)
         }
         
         presentationMode.wrappedValue.dismiss()
