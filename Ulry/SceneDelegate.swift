@@ -17,9 +17,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        
-        UITextView.appearance().backgroundColor = .clear
         let navigationController = UINavigationController(rootViewController: HomeViewController())
+        //let navigationController = UINavigationController(rootViewController: AddLinkViewController())
         window.rootViewController = navigationController
         
         window.makeKeyAndVisible()

@@ -79,6 +79,8 @@ class LinksTableViewController: UIViewController {
         
         coreDataController.delegate = self
         
+        view.backgroundColor = .systemBackground
+        tableview.backgroundColor = .clear
         tableview.delegate = self
         tableview.dataSource = datasource
         tableview.register(UILinkTableViewCell.self, forCellReuseIdentifier: "LinkCell")
@@ -108,10 +110,10 @@ class LinksTableViewController: UIViewController {
     }
     
     private func onEditPressed(link: Link) {
-        let vc = UIHostingController(rootView: AddLinkView(configuration: .edit(link)).environment(\.managedObjectContext, context))
-        if let sheet = vc.sheetPresentationController {
-            sheet.detents = [.large()]
-        }
+        let view = AddLinkViewController()
+        view.configuration = .edit(link)
+        
+        let vc = UINavigationController(rootViewController: view)
         present(vc, animated: true)
     }
     

@@ -40,9 +40,9 @@ struct LinkDetailView: View {
             {
                 Image(uiImage: uiImage)
                     .resizable()
+                    .cornerRadius(10)
                     .aspectRatio(contentMode: .fit)
                     .frame(maxHeight: 200)
-                    .cornerRadius(10)
                     .padding([.horizontal, .top])
                 
             } else {
@@ -85,11 +85,6 @@ struct LinkDetailView: View {
             }
             
             Spacer()
-        }
-        .sheet(isPresented: $sheet.isShowing, onDismiss: { sheet.editLink = nil }) {
-            NavigationView {
-                AddLinkView(configuration: .edit(self.link))
-            }
         }
     }
     

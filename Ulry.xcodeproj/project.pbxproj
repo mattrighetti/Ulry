@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		C90AA80D2794D6BC000113BA /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90AA80C2794D6BC000113BA /* CoreDataStack.swift */; };
 		C90AA80E2794E047000113BA /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90AA80C2794D6BC000113BA /* CoreDataStack.swift */; };
+		C90C0A212795E36C004FABDD /* AddLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90C0A202795E36C004FABDD /* AddLinkViewController.swift */; };
 		C91053B3278E4659005AC807 /* +URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91053B2278E4659005AC807 /* +URL.swift */; };
 		C91053B4278E465D005AC807 /* +URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91053B2278E4659005AC807 /* +URL.swift */; };
 		C9437013278CAFF2009143A7 /* GetURL.js in Resources */ = {isa = PBXBuildFile; fileRef = C9437012278CAFF2009143A7 /* GetURL.js */; };
@@ -63,7 +64,6 @@
 		C9F4F9392789C2DE00887A3E /* LinkListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9252789C2DE00887A3E /* LinkListViewModel.swift */; };
 		C9F4F93B2789C2DE00887A3E /* LinkDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9282789C2DE00887A3E /* LinkDetailView.swift */; };
 		C9F4F93C2789C2DE00887A3E /* AddCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9292789C2DE00887A3E /* AddCategoryView.swift */; };
-		C9F4F93E2789C2DE00887A3E /* AddLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F92B2789C2DE00887A3E /* AddLinkView.swift */; };
 		C9F4F9402789C2DE00887A3E /* MultipleSelectionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F92D2789C2DE00887A3E /* MultipleSelectionList.swift */; };
 		C9F4F9412789C2DE00887A3E /* SelectionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F92E2789C2DE00887A3E /* SelectionList.swift */; };
 		C9F4F9422789C2DE00887A3E /* LinkCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9302789C2DE00887A3E /* LinkCellView.swift */; };
@@ -114,6 +114,7 @@
 
 /* Begin PBXFileReference section */
 		C90AA80C2794D6BC000113BA /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		C90C0A202795E36C004FABDD /* AddLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLinkViewController.swift; sourceTree = "<group>"; };
 		C91053B2278E4659005AC807 /* +URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+URL.swift"; sourceTree = "<group>"; };
 		C9437012278CAFF2009143A7 /* GetURL.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = GetURL.js; sourceTree = "<group>"; };
 		C94A2DCF278B710A007F6FFA /* +UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UIFont.swift"; sourceTree = "<group>"; };
@@ -154,7 +155,6 @@
 		C9F4F9252789C2DE00887A3E /* LinkListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkListViewModel.swift; sourceTree = "<group>"; };
 		C9F4F9282789C2DE00887A3E /* LinkDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkDetailView.swift; sourceTree = "<group>"; };
 		C9F4F9292789C2DE00887A3E /* AddCategoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddCategoryView.swift; sourceTree = "<group>"; };
-		C9F4F92B2789C2DE00887A3E /* AddLinkView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddLinkView.swift; sourceTree = "<group>"; };
 		C9F4F92D2789C2DE00887A3E /* MultipleSelectionList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipleSelectionList.swift; sourceTree = "<group>"; };
 		C9F4F92E2789C2DE00887A3E /* SelectionList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionList.swift; sourceTree = "<group>"; };
 		C9F4F9302789C2DE00887A3E /* LinkCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkCellView.swift; sourceTree = "<group>"; };
@@ -323,11 +323,11 @@
 			children = (
 				C9F4F9282789C2DE00887A3E /* LinkDetailView.swift */,
 				C9F4F9292789C2DE00887A3E /* AddCategoryView.swift */,
-				C9F4F92B2789C2DE00887A3E /* AddLinkView.swift */,
 				C9F4F92D2789C2DE00887A3E /* MultipleSelectionList.swift */,
 				C9F4F92E2789C2DE00887A3E /* SelectionList.swift */,
 				C9F4F952278A07A100887A3E /* HomeViewController.swift */,
 				C9A142C6278A4E8600B627BF /* LinksTableViewController.swift */,
+				C90C0A202795E36C004FABDD /* AddLinkViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -573,8 +573,8 @@
 				C9F4F9182789C2BD00887A3E /* Group+CoreDataProperties.swift in Sources */,
 				C94A2DD2278BB3D3007F6FFA /* +UIViewController.swift in Sources */,
 				C9F4F957278A17FA00887A3E /* +UIImage.swift in Sources */,
+				C90C0A212795E36C004FABDD /* AddLinkViewController.swift in Sources */,
 				C9F4F9402789C2DE00887A3E /* MultipleSelectionList.swift in Sources */,
-				C9F4F93E2789C2DE00887A3E /* AddLinkView.swift in Sources */,
 				C9F4F93B2789C2DE00887A3E /* LinkDetailView.swift in Sources */,
 				C9D7FE7C278AF66D00016B04 /* Category.swift in Sources */,
 				C91053B3278E4659005AC807 /* +URL.swift in Sources */,

@@ -97,9 +97,12 @@ class HomeViewController: UIViewController {
             UIBarButtonItem(title: "Add tag", style: .plain, target: self, action: #selector(addTagPressed))
         ], animated: false)
         
-        navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(image: UIImage(systemName: "plus.circle"), style: .plain, target: self, action: #selector(addLinkPressed))
-        ]
+        let addLinkButton = UIBarButtonItem(title: nil, image: UIImage(systemName: "plus.circle"), primaryAction: UIAction { _ in
+            let view = UINavigationController(rootViewController: AddLinkViewController())
+            self.present(view, animated: true)
+        }, menu: nil)
+        
+        navigationItem.rightBarButtonItems = [addLinkButton]
         
         tagsFRC.delegate = self
         groupsFRC.delegate = self
@@ -159,14 +162,16 @@ class HomeViewController: UIViewController {
     }
     
     @objc private func addLinkPressed() {
-        UITextView.appearance().backgroundColor = .clear
-        
-        let view = AddLinkView(configuration: .new).environment(\.managedObjectContext, context)
-        let vc = UIHostingController(rootView: view)
-        if let sheet = vc.sheetPresentationController {
-            sheet.detents = [.large()]
-        }
+        // let view = AddLinkView(configuration: .new).environment(\.managedObjectContext, context)
+        let vc = AddLinkViewController()
+        vc.modalPresentationStyle = .fullScreen
+        vc.modalTransitionStyle = .crossDissolve
         present(vc, animated: true)
+        // let vc = UIHostingController(rootView: view)
+//        if let sheet = vc.sheetPresentationController {
+//            sheet.detents = [.large()]
+//        }
+//        present(vc, animated: true)
     }
     
     @objc private func addGroupPressed() {
