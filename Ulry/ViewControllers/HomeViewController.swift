@@ -162,34 +162,23 @@ class HomeViewController: UIViewController {
     }
     
     @objc private func addLinkPressed() {
-        // let view = AddLinkView(configuration: .new).environment(\.managedObjectContext, context)
         let vc = AddLinkViewController()
-        vc.modalPresentationStyle = .fullScreen
-        vc.modalTransitionStyle = .crossDissolve
         present(vc, animated: true)
-        // let vc = UIHostingController(rootView: view)
-//        if let sheet = vc.sheetPresentationController {
-//            sheet.detents = [.large()]
-//        }
-//        present(vc, animated: true)
     }
     
     @objc private func addGroupPressed() {
-        let view = AddCategoryView(mode: .group).environment(\.managedObjectContext, context)
-        let vc = UIHostingController(rootView: view)
-        if let sheet = vc.sheetPresentationController {
-            sheet.detents = [.large()]
-        }
+        // let view = AddCategoryView(mode: .group).environment(\.managedObjectContext, context)
+        let view = AddCategoryViewController()
+        view.configuration = .group
+        let vc = UINavigationController(rootViewController: view)
         present(vc, animated: true)
     }
     
     @objc private func addTagPressed() {
-        let view = AddCategoryView(mode: .tag).environment(\.managedObjectContext, context)
-        
-        let vc = UIHostingController(rootView: view)
-        if let sheet = vc.sheetPresentationController {
-            sheet.detents = [.large()]
-        }
+        // let view = AddCategoryView(mode: .tag).environment(\.managedObjectContext, context)
+        let view = AddCategoryViewController()
+        view.configuration = .tag
+        let vc = UINavigationController(rootViewController: view)
         present(vc, animated: true)
     }
     
@@ -222,29 +211,20 @@ class HomeViewController: UIViewController {
     private func onEditPressed(category: Category) {
         switch category {
         case .group(let group):
-            let view = AddCategoryView(mode: .editGroup(group)).environment(\.managedObjectContext, context)
-            let vc = UIHostingController(rootView: view)
-            
-            if let sheet = vc.sheetPresentationController {
-                sheet.detents = [.large()]
-            }
+            let view = AddCategoryViewController()
+            view.configuration = .editGroup(group)
+            let vc = UINavigationController(rootViewController: view)
             present(vc, animated: true)
             
         case .tag(let tag):
-            let view = AddCategoryView(mode: .editTag(tag)).environment(\.managedObjectContext, context)
-            
-            let vc = UIHostingController(rootView: view)
-            
-            if let sheet = vc.sheetPresentationController {
-                sheet.detents = [.large()]
-            }
+            let view = AddCategoryViewController()
+            view.configuration = .editTag(tag)
+            let vc = UINavigationController(rootViewController: view)
             present(vc, animated: true)
             
         default:
             return
         }
-        
-        
     }
 }
 

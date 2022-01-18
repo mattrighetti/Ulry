@@ -37,7 +37,7 @@ public class Link: NSManagedObject {
     
     var needsUpdate: Bool = false
     
-    func loadMetaData(completion: (() -> Void)?) {
+    func loadMetaData() {
         needsUpdate = false
         
         let link = url.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -47,10 +47,9 @@ public class Link: NSManagedObject {
             do {
                 let og = try MetaRod().build(link).og()
                 let imgUrl = og.findFirstValue(keys: URL.imageMeta)
-                self?.setPrimitiveValue(og.findFirstValue(keys: URL.titleMeta), forKey: #keyPath(Link.ogTitle))
-                self?.setPrimitiveValue(og.findFirstValue(keys: URL.descriptionMeta), forKey: #keyPath(Link.ogDescription))
-                self?.setPrimitiveValue(imgUrl, forKey: #keyPath(Link.ogImageUrl))
-                
+                self?.ogTitle = og.findFirstValue(keys: URL.titleMeta)
+                self?.ogDescription = og.findFirstValue(keys: URL.descriptionMeta)
+                self?.ogImageUrl = imgUrl
                 self?.fetchImage()
             } catch {
                 os_log(.error, "encountered error while fetching URL data")
@@ -58,11 +57,12 @@ public class Link: NSManagedObject {
         }
     }
     
-    func fetchImage() {
+    func fetchImage(completion: (() -> Void)? = nil) {
         guard let ogImageUrl = self.ogImageUrl, let url = URL(string: ogImageUrl) else { return }
-        
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            self?.setPrimitiveValue(data, forKey: #keyPath(Link.imageData))
+            self?.imageData = data
+            CoreDataStack.shared.saveContext()
+            completion?()
         }
         task.resume()
     }

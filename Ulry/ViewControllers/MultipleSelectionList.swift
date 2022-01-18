@@ -34,7 +34,9 @@ struct MultipleSelectionList: View {
             }
             
             Section {
-                Button(action: { isSheetShown.toggle() }) {
+                Button(action: {
+                    isSheetShown.toggle()
+                }) {
                     HStack {
                         Text("Create new")
                         Spacer()
@@ -42,9 +44,8 @@ struct MultipleSelectionList: View {
                     }
                 }
             }
-        }
-        .sheet(isPresented: $isSheetShown) {
-            AddCategoryView(mode: .tag)
+        }.sheet(isPresented: $isSheetShown) {
+            AddCategoryViewControlleRepresentable(mode: .tag)
         }
     }
 }

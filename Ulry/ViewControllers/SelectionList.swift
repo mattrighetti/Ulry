@@ -32,7 +32,9 @@ struct SelectionList: View {
             }
             
             Section {
-                Button(action: { isSheetShown.toggle() }) {
+                Button(action: {
+                    isSheetShown.toggle()
+                }) {
                     HStack {
                         Text("Create new")
                         Spacer()
@@ -42,7 +44,7 @@ struct SelectionList: View {
             }
         }
         .sheet(isPresented: $isSheetShown) {
-            AddCategoryView(mode: .group)
+            AddCategoryViewControlleRepresentable(mode: .group)
         }
     }
 }

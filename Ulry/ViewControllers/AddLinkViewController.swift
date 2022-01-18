@@ -154,18 +154,18 @@ class AddLinkViewController: UIViewController {
             self.urlTextField.text?.append(contentsOf: "https://")
         }, for: .touchUpInside)
         
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: textField.frame.size.height))
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textField.frame.size.height))
         paddingView.backgroundColor = .black.withAlphaComponent(0.2)
         
-        textField.leftView = paddingView
-        textField.leftViewMode = .always
+        textField.layer.cornerRadius = 15
         textField.layer.borderColor = UIColor.clear.cgColor
         textField.keyboardType = .URL
         textField.clearButtonMode = .whileEditing
         textField.placeholder = "Link"
         textField.backgroundColor = .black.withAlphaComponent(0.2)
-        textField.borderStyle = .roundedRect
         textField.rightViewMode = .whileEditing
+        textField.leftView = paddingView
+        textField.leftViewMode = .always
         textField.delegate = self
         textField.inputAccessoryView = accessoryView
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -353,6 +353,7 @@ class AddLinkViewController: UIViewController {
             
             self.dismiss(animated: true)
         })
+        
         navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .close, primaryAction: UIAction { _ in
           self.dismiss(animated: true)
         })
@@ -405,10 +406,6 @@ class AddLinkViewController: UIViewController {
             .environment(\.managedObjectContext, CoreDataStack.shared.managedContext)
         
         navigationController?.pushViewController(UIHostingController(rootView: view), animated: true)
-    }
-    
-    @objc private func onDonePressed() {
-        
     }
 }
 
