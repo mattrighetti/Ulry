@@ -16,6 +16,7 @@ class ActionViewController: UIViewController {
     
     lazy var titleLabel: UILabel = {
         let label = UILabel()
+        label.text = "Fetching data..."
         label.font = UIFont.rounded(ofSize: 18, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -83,23 +84,38 @@ class ActionViewController: UIViewController {
         imageUrl = dictData?.findFirstValue(keys: URL.imageMeta)
         
         let newLink = Link(context: self.context)
-        newLink.setValue(urlString, forKey: "url")
-        newLink.setValue(title, forKey: #keyPath(Link.ogTitle))
-        newLink.setValue(description, forKey: #keyPath(Link.ogDescription))
-        newLink.setValue(imageUrl, forKey: #keyPath(Link.ogImageUrl))
-        newLink.setValue(nil, forKey: "note")
-        newLink.setValue(nil, forKey: "imageData")
-        newLink.setValue(nil, forKey: "group")
-        newLink.setValue(nil, forKey: "tags")
+        newLink.url = urlString
+        newLink.ogTitle = title
+        newLink.ogDescription = description
+        newLink.ogImageUrl = imageUrl
+        newLink.group = nil
+        newLink.tags = nil
         
         CoreDataStack.shared.saveContext()
         
-        newLink.fetchImage()
-        
-        self.titleLabel.text = "Saved correctly"
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
-            self.extensionContext!.completeRequest(returningItems: nil, completionHandler: nil)
-        })
+        if imageUrl != nil {
+            let task = URLSession.shared.dataTask(with: URL(string: newLink.ogImageUrl!)!) { data, response, error in
+                guard let data = data else {
+                    return
+                }
+
+                newLink.imageData = data
+                CoreDataStack.shared.saveContext()
+                DispatchQueue.main.async {
+                    self.titleLabel.text = "Saved correctly"
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+                        self.extensionContext!.completeRequest(returningItems: nil, completionHandler: nil)
+                    })
+                }
+            }
+            task.resume()
+        } else {
+            self.titleLabel.text = "Saved correctly"
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+                self.extensionContext!.completeRequest(returningItems: nil, completionHandler: nil)
+            })
+        }
     }
 }

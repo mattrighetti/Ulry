@@ -16,7 +16,7 @@ GetURL.prototype = {
             var dict = {};
             
             for (var i = 0; i < meta.length; i++) {
-                let key = meta[i].name;
+                let key = meta[i].name === "" ? meta[i].getAttribute('property') : meta[i].name;
                 let content = meta[i].content;
 
                 if (key !== "" && content !== "") {
