@@ -96,11 +96,9 @@ class ActionViewController: UIViewController {
         
         newLink.fetchImage()
         
-        CoreDataStack.shared.saveContext()
-        
         self.titleLabel.text = "Saved correctly"
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
             self.extensionContext!.completeRequest(returningItems: nil, completionHandler: nil)
         })
     }
