@@ -58,7 +58,7 @@ struct MultipleSelectionRow: View {
     var body: some View {
         Button(action: self.action) {
             HStack {
-                Text(self.title).foregroundColor(.white)
+                Text(self.title)
                 
                 if self.isSelected {
                     Spacer()

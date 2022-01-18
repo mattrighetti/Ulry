@@ -157,12 +157,12 @@ class AddLinkViewController: UIViewController {
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textField.frame.size.height))
         paddingView.backgroundColor = .black.withAlphaComponent(0.2)
         
-        textField.layer.cornerRadius = 15
+        textField.layer.cornerRadius = 10
         textField.layer.borderColor = UIColor.clear.cgColor
         textField.keyboardType = .URL
         textField.clearButtonMode = .whileEditing
         textField.placeholder = "Link"
-        textField.backgroundColor = .black.withAlphaComponent(0.2)
+        textField.backgroundColor = .secondarySystemGroupedBackground
         textField.rightViewMode = .whileEditing
         textField.leftView = paddingView
         textField.leftViewMode = .always
@@ -192,8 +192,8 @@ class AddLinkViewController: UIViewController {
         }, for: .touchUpInside)
         
         textView.delegate = self
-        textView.backgroundColor = .black.withAlphaComponent(0.2)
-        textView.layer.cornerRadius = 5
+        textView.backgroundColor = .secondarySystemGroupedBackground
+        textView.layer.cornerRadius = 10
         
         textView.inputAccessoryView = accessoryView
         textView.translatesAutoresizingMaskIntoConstraints = false
@@ -220,7 +220,8 @@ class AddLinkViewController: UIViewController {
         var configuration = UIButton.Configuration.filled()
         configuration.title = selectedTagsStringValue
         configuration.image = UIImage(systemName: "chevron.right")
-        configuration.baseBackgroundColor = .gray.withAlphaComponent(0.1)
+        configuration.baseForegroundColor = .systemBlue
+        configuration.baseBackgroundColor = .secondarySystemGroupedBackground
         configuration.imagePlacement = .trailing
         configuration.imagePadding = 10.0
         configuration.cornerStyle = .medium
@@ -250,7 +251,8 @@ class AddLinkViewController: UIViewController {
         var configuration = UIButton.Configuration.filled()
         configuration.title = selectedFolderStringValue
         configuration.image = UIImage(systemName: "chevron.right")
-        configuration.baseBackgroundColor = .gray.withAlphaComponent(0.1)
+        configuration.baseForegroundColor = .systemBlue
+        configuration.baseBackgroundColor = .secondarySystemGroupedBackground
         configuration.imagePlacement = .trailing
         configuration.imagePadding = 10.0
         configuration.cornerStyle = .medium
@@ -358,7 +360,8 @@ class AddLinkViewController: UIViewController {
           self.dismiss(animated: true)
         })
         
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .systemGroupedBackground
+        
         view.addSubview(urlTextFieldLabel)
         view.addSubview(urlTextField)
         view.addSubview(noteTextViewLabel)

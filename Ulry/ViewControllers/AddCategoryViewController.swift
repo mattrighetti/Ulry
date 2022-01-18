@@ -8,147 +8,47 @@
 import UIKit
 import SwiftUI
 
-struct DefaultColorPickerView: View {
-    @State var selected: Color? = nil
-    @Binding var selectedColor: UIColor
-    var customAction: (() -> Void)? = nil
-    
-    var colors: [Color] = [
-        .flatDeepLilac, .flatBlueSmoke, .flatGreen, .flatShakespeare,
-        .lightRed, .flatRaven, .flatBlue, .flatHurricane, .flatOrange
-    ]
-    
-    var body: some View {
-        VStack {
-            LazyHGrid(rows: Array(repeating: .init(.flexible()), count: 2), spacing: 30.0) {
-                ForEach(colors, id: \.self) { color in
-                    color
-                        .clipShape(Circle())
-                        .frame(minWidth: 40)
-                        .onTapGesture {
-                            selected = color
-                            selectedColor = UIColor(hex: color.toHex!)!
-                        }
-                        .modifier(OverlayModifier(select: color == selected))
-                }
-                
-                Color.gray
-                    .clipShape(Circle())
-                    .frame(minWidth: 40)
-                    .overlay(Image(systemName: "ellipsis"))
-                    .onTapGesture {
-                        selected = nil
-                        customAction?()
-                    }
-            }
-        }
-    }
-    
-    struct OverlayModifier: ViewModifier {
-        var select: Bool = false
-        
-        func body(content: Content) -> some View {
-            if select {
-                content
-                    .overlay(
-                        Circle()
-                            .stroke(lineWidth: 3.0)
-                            .foregroundColor(.blue)
-                            .frame(width: 50)
-                    )
-            } else {
-                content
-            }
-        }
-    }
-}
-
-struct DefaultIconPicker: View {
-    @State var selected: String? = nil
-    @Binding var selectedGlyph: String
-    var customAction: (() -> Void)?
-    
-    var glyphs = SFSymbols.all[0...13]
-    let gradient = Gradient(stops: [
-        .init(color: Color(uiColor: .systemGray), location: 0),
-        .init(color: Color(uiColor: .systemGray2), location: 0.8)
-    ])
-    
-    var body: some View {
-        VStack {
-            LazyHGrid(rows: Array(repeating: .init(.flexible()), count: 3), spacing: 30.0) {
-                ForEach(glyphs, id: \.self) { glyph in
-                    ZStack {
-                        LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
-                            .frame(minWidth: 40)
-                            .clipShape(Circle())
-                            .onTapGesture {
-                                selected = glyph
-                                selectedGlyph = glyph
-                            }
-                            .modifier(OverlayModifier(select: glyph == selected))
-                        Image(systemName: glyph)
-                    }
-                }
-                
-                ZStack {
-                    LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom)
-                        .frame(minWidth: 40)
-                        .clipShape(Circle())
-                        .onTapGesture {
-                            selected = nil
-                            customAction?()
-                        }
-                    Image(systemName: "ellipsis")
-                }
-            }
-        }
-    }
-    
-    struct OverlayModifier: ViewModifier {
-        var select: Bool = false
-        
-        func body(content: Content) -> some View {
-            if select {
-                content
-                    .overlay(
-                        Circle()
-                            .stroke(lineWidth: 3.0)
-                            .foregroundColor(.blue)
-                            .frame(width: 50)
-                    )
-            } else {
-                content
-            }
-        }
-    }
-}
-
 struct SFSymbolsList: View {
     @Environment (\.dismiss) var dismiss
+    
+    @State private var searchText: String = ""
     @State var selected: String? = nil
     @Binding var selectedGlyph: String
     
     var body: some View {
-        List {
-            ForEach(SFSymbols.all, id: \.self) { symbol in
-                Button(action: {
-                    self.selected = symbol
-                    self.selectedGlyph = symbol
-                    self.dismiss()
-                }) {
-                    HStack {
-                        Image(systemName: symbol)
-                        Text(symbol)
-                        Spacer()
-                        if selected == symbol {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.green)
+        NavigationView {
+            List {
+                ForEach(SFSymbols.all.filter {
+                    if !searchText.isEmpty {
+                        return $0.lowercased().contains(searchText.lowercased())
+                    }
+                    return true
+                }, id: \.self) { symbol in
+                    Button(action: {
+                        self.selected = symbol
+                        self.selectedGlyph = symbol
+                        self.dismiss()
+                    }) {
+                        HStack {
+                            Image(systemName: symbol)
+                            Text(symbol)
+                            Spacer()
+                            if selected == symbol {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                            }
                         }
                     }
                 }
             }
+            
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    ButtonClose(action: { self.dismiss() })
+                }
+            }
         }
+        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
     }
 }
 
@@ -199,7 +99,7 @@ class AddCategoryViewController: UIViewController {
     
     lazy var backgroundView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white.withAlphaComponent(0.1)
+        view.backgroundColor = .secondarySystemGroupedBackground
         view.layer.cornerRadius = 15
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -220,9 +120,10 @@ class AddCategoryViewController: UIViewController {
     
     lazy var colorBackgroundView: UIView = {
         let view = UIView()
-        view.layer.shadowRadius = 10.0
+        view.layer.shadowRadius = 6.0
         view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.5
+        view.layer.shadowOpacity = 0.3
+        view.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
         view.backgroundColor = color
         view.layer.cornerRadius = 50
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showColorPicker)))
@@ -234,7 +135,7 @@ class AddCategoryViewController: UIViewController {
         let textField = UITextField()
         textField.delegate = self
         textField.keyboardType = .asciiCapable
-        textField.backgroundColor = .white.withAlphaComponent(0.1)
+        textField.backgroundColor = .tertiarySystemGroupedBackground
         textField.layer.cornerRadius = 15
         textField.placeholder = "Name"
         textField.clearButtonMode = .whileEditing
@@ -246,7 +147,7 @@ class AddCategoryViewController: UIViewController {
     
     lazy var backgroundColor2: UIView = {
         let view = UIView()
-        view.backgroundColor = .white.withAlphaComponent(0.1)
+        view.backgroundColor = .secondarySystemGroupedBackground
         view.layer.cornerRadius = 15
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -254,42 +155,66 @@ class AddCategoryViewController: UIViewController {
     
     lazy var backgroundColor3: UIView = {
         let view = UIView()
-        view.backgroundColor = .white.withAlphaComponent(0.1)
+        view.backgroundColor = .secondarySystemGroupedBackground
         view.layer.cornerRadius = 15
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    lazy var colorSelectionGrid: UIHostingController<DefaultColorPickerView> = {
-        let view = DefaultColorPickerView(
-            selected: Color(uiColor: color),
-            selectedColor: .init(get: { self.color }, set: { color in self.color = color }),
-            customAction: { [unowned self] in
-                self.showColorPicker()
-            }
-        )
+    lazy var chooseColorButton: UIButton = {
+        var configuration = UIButton.Configuration.filled()
+        configuration.title = "Change color"
+        configuration.image = UIImage(systemName: "chevron.right")
+        configuration.baseForegroundColor = .systemBlue
+        configuration.baseBackgroundColor = .secondarySystemGroupedBackground
+        configuration.imagePlacement = .trailing
+        configuration.imagePadding = 10.0
+        configuration.cornerStyle = .large
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 0)
+        configuration.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(scale: .small)
         
-        let vc = UIHostingController(rootView: view)
-        vc.view.translatesAutoresizingMaskIntoConstraints = false
-        vc.view.backgroundColor = .clear
+        let button = UIButton()
+        button.configuration = configuration
         
-        return vc
+        button.addAction(UIAction { _ in
+            self.showColorPicker()
+        }, for: .touchUpInside)
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
-    lazy var iconSelectionGrid: UIHostingController<DefaultIconPicker> = {
-        let view = DefaultIconPicker(
-            selected: nil,
-            selectedGlyph: .init(get: { self.glyph }, set: { glyph in self.glyph = glyph }),
-            customAction: { [unowned self] in
-                self.showIconPicker()
-            }
-        )
+    lazy var chooseIconButton: UIButton = {
+        var configuration = UIButton.Configuration.filled()
+        configuration.title = "Change icon"
+        configuration.image = UIImage(systemName: "chevron.right")
+        configuration.baseForegroundColor = .systemBlue
+        configuration.baseBackgroundColor = .secondarySystemGroupedBackground
+        configuration.imagePlacement = .trailing
+        configuration.imagePadding = 10.0
+        configuration.cornerStyle = .large
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 0)
+        configuration.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(scale: .small)
         
-        let vc = UIHostingController(rootView: view)
-        vc.view.translatesAutoresizingMaskIntoConstraints = false
-        vc.view.backgroundColor = .clear
+        let button = UIButton()
+        button.configuration = configuration
         
-        return vc
+        button.addAction(UIAction { _ in
+            self.showIconPicker()
+        }, for: .touchUpInside)
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    lazy var buttonStackView: UIStackView = {
+        let stackview = UIStackView()
+        stackview.axis = .horizontal
+        stackview.alignment = .fill
+        stackview.distribution = .fillEqually
+        stackview.spacing = 10.0
+        stackview.translatesAutoresizingMaskIntoConstraints = false
+        return stackview
     }()
     
     override func viewDidLoad() {
@@ -341,10 +266,19 @@ class AddCategoryViewController: UIViewController {
         
         configure()
         
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .systemGroupedBackground
+        
         view.addSubview(backgroundView)
         view.addSubview(colorBackgroundView)
         view.addSubview(titleTextField)
+        view.addSubview(buttonStackView)
+        buttonStackView.addArrangedSubview(chooseColorButton)
+        
+        switch configuration {
+        case .group, .editGroup(_):
+            buttonStackView.addArrangedSubview(chooseIconButton)
+        default: break
+        }
         
         NSLayoutConstraint.activate([
             backgroundView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
@@ -359,59 +293,20 @@ class AddCategoryViewController: UIViewController {
             titleTextField.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -15),
             titleTextField.heightAnchor.constraint(equalToConstant: 50),
             backgroundView.bottomAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 25),
+            buttonStackView.topAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: 15),
+            buttonStackView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor),
+            buttonStackView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor),
+            buttonStackView.heightAnchor.constraint(equalToConstant: 50)
         ])
         
-        setupForConfiguration()
-    }
-    
-    private func setupForConfiguration() {
         switch configuration {
-        case .tag, .editTag(_):
-            view.addSubview(backgroundColor2)
-            
-            colorSelectionGrid.add(self, frame: .zero)
-            backgroundColor2.addSubview(colorSelectionGrid.view)
-            
-            NSLayoutConstraint.activate([
-                backgroundColor2.topAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: 25),
-                backgroundColor2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-                backgroundColor2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
-                colorSelectionGrid.view.topAnchor.constraint(equalTo: backgroundColor2.topAnchor, constant: 10),
-                colorSelectionGrid.view.leadingAnchor.constraint(equalTo: backgroundColor2.leadingAnchor, constant: 10),
-                colorSelectionGrid.view.trailingAnchor.constraint(equalTo: backgroundColor2.trailingAnchor, constant: -10),
-                backgroundColor2.bottomAnchor.constraint(equalTo: colorSelectionGrid.view.bottomAnchor, constant: 10),
-            ])
         case .group, .editGroup(_):
-            view.addSubview(backgroundColor2)
-            view.addSubview(backgroundColor3)
             view.addSubview(glyphLabel)
-            
-            colorSelectionGrid.add(self, frame: .zero)
-            iconSelectionGrid.add(self, frame: .zero)
-            
-            backgroundColor2.addSubview(colorSelectionGrid.view)
-            backgroundColor3.addSubview(iconSelectionGrid.view)
-            
             NSLayoutConstraint.activate([
                 glyphLabel.centerXAnchor.constraint(equalTo: colorBackgroundView.centerXAnchor),
-                glyphLabel.centerYAnchor.constraint(equalTo: colorBackgroundView.centerYAnchor),
-                backgroundColor2.topAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: 25),
-                backgroundColor2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-                backgroundColor2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
-                colorSelectionGrid.view.topAnchor.constraint(equalTo: backgroundColor2.topAnchor, constant: 10),
-                colorSelectionGrid.view.leadingAnchor.constraint(equalTo: backgroundColor2.leadingAnchor, constant: 10),
-                colorSelectionGrid.view.trailingAnchor.constraint(equalTo: backgroundColor2.trailingAnchor, constant: -10),
-                backgroundColor2.bottomAnchor.constraint(equalTo: colorSelectionGrid.view.bottomAnchor, constant: 10),
-                backgroundColor3.topAnchor.constraint(equalTo: backgroundColor2.bottomAnchor, constant: 25),
-                backgroundColor3.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-                backgroundColor3.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
-                iconSelectionGrid.view.topAnchor.constraint(equalTo: backgroundColor3.topAnchor, constant: 10),
-                iconSelectionGrid.view.leadingAnchor.constraint(equalTo: backgroundColor3.leadingAnchor, constant: 10),
-                iconSelectionGrid.view.trailingAnchor.constraint(equalTo: backgroundColor3.trailingAnchor, constant: -10),
-                backgroundColor3.bottomAnchor.constraint(equalTo: iconSelectionGrid.view.bottomAnchor, constant: 10),
+                glyphLabel.centerYAnchor.constraint(equalTo: colorBackgroundView.centerYAnchor)
             ])
-        case .none:
-            break
+        default: break
         }
     }
     
@@ -441,7 +336,7 @@ class AddCategoryViewController: UIViewController {
     @objc private func showIconPicker() {
         let view = SFSymbolsList(selected: glyph, selectedGlyph: .init(get: { self.glyph }, set: { glypn in self.glyph = glypn }))
         let vc = UIHostingController(rootView: view)
-        self.navigationController?.pushViewController(vc, animated: true)
+        present(vc, animated: true)
     }
 }
 

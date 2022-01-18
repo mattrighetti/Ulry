@@ -58,7 +58,6 @@ struct SelectionRow: View {
         Button(action: self.action) {
             HStack {
                 Text(self.title)
-                    .foregroundColor(.white)
                 
                 if self.isSelected {
                     Spacer()
