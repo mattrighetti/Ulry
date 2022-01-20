@@ -16,11 +16,17 @@ class AddLinkViewController: UIViewController {
     }
     
     let context = CoreDataStack.shared.managedContext
+    
+    lazy var dataFetcher: DataFetcher = {
+        DataFetcher()
+    }()
+    
     var configuration: Configuration = .new {
         didSet {
             switch configuration {
             case .edit(let link):
                 self.urlTextField.text = link.url
+                self.noteTextView.text = link.note
                 self.selectedFolder = link.group
                 self.selectedTags = Array(link.tags!)
             case .new:
@@ -93,6 +99,7 @@ class AddLinkViewController: UIViewController {
     
     lazy var noteTextView: UITextView = {
         let textView = UITextView()
+        textView.font = UIFont.rounded(ofSize: 17, weight: .regular)
         let accessoryView = UrlTextFieldAccessoryView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth, height: 50))
         accessoryView.httpsButton.isHidden = true
         accessoryView.wwwButton.isHidden = true
@@ -242,26 +249,30 @@ class AddLinkViewController: UIViewController {
             
             switch self.configuration {
             case .edit(let editedLink):
-                editedLink.setValue(self.urlTextField.text, forKey: "url")
-                editedLink.setValue(self.noteTextView.text, forKey: "note")
-                editedLink.setValue(true, forKey: "unread")
-                editedLink.setValue(self.selectedFolder, forKey: "group")
-                editedLink.setValue(Set(self.selectedTags), forKey: "tags")
-                
-                // TODO this should only run when url is changed
-                editedLink.loadMetaData()
+                editedLink.note = self.noteTextView.text
+                editedLink.unread = true
+                editedLink.group = self.selectedFolder
+                editedLink.tags = Set(self.selectedTags)
+                if editedLink.url != url {
+                    editedLink.url = url
+                    dataFetcher.fetchData(for: editedLink) {
+                        DispatchQueue.main.async {
+                            CoreDataStack.shared.saveContext()
+                        }
+                    }
+                }
                 
             case .new:
-                let newLink = Link(context: self.context)
-                newLink.setValue(self.urlTextField.text, forKey: "url")
-                newLink.setValue(self.noteTextView.text, forKey: "note")
-                newLink.setValue(nil, forKey: "imageData")
-                newLink.setValue(self.selectedFolder, forKey: "group")
-                newLink.setValue(Set(self.selectedTags), forKey: "tags")
-                
-                CoreDataStack.shared.saveContext()
-                
-                newLink.loadMetaData()
+                let link = Link()
+                link.url = url
+                link.note = self.noteTextView.text
+                link.group = self.selectedFolder
+                link.tags = Set(self.selectedTags)
+                dataFetcher.fetchData(for: link) {
+                    DispatchQueue.main.async {
+                        CoreDataStack.shared.saveContext()
+                    }
+                }
             }
             
             self.dismiss(animated: true)
@@ -309,15 +320,26 @@ class AddLinkViewController: UIViewController {
     }
     
     @objc private func showGroupsSelectionList() {
-        let view = SelectionList(selection: .init(get: { self.selectedFolder }, set: { group in self.selectedFolder = group }))
-            .environment(\.managedObjectContext, CoreDataStack.shared.managedContext)
+        let view = SelectionList(
+            selection: .init(
+                get: { self.selectedFolder },
+                set: { group in self.selectedFolder = group }
+            )
+        )
+        .environment(\.managedObjectContext, CoreDataStack.shared.managedContext)
         
         navigationController?.pushViewController(UIHostingController(rootView: view), animated: true)
     }
     
     @objc private func showTagsMultiselectionList() {
-        let view = MultipleSelectionList(selections: selectedTags, selectedTags: .init(get: { self.selectedTags }, set: { tags in self.selectedTags = tags }))
-            .environment(\.managedObjectContext, CoreDataStack.shared.managedContext)
+        let view = MultipleSelectionList(
+            selections: selectedTags,
+            selectedTags: .init(
+                get: { self.selectedTags },
+                set: { tags in self.selectedTags = tags }
+            )
+        )
+        .environment(\.managedObjectContext, CoreDataStack.shared.managedContext)
         
         navigationController?.pushViewController(UIHostingController(rootView: view), animated: true)
     }

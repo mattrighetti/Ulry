@@ -37,36 +37,6 @@ public class Link: NSManagedObject {
     
     var needsUpdate: Bool = false
     
-    func loadMetaData() {
-        needsUpdate = false
-        
-        let link = url.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !link.isEmpty, URL(string: link) != nil else { return }
-        
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            do {
-                let og = try MetaRod().build(link).og()
-                let imgUrl = og.findFirstValue(keys: URL.imageMeta)
-                self?.ogTitle = og.findFirstValue(keys: URL.titleMeta)
-                self?.ogDescription = og.findFirstValue(keys: URL.descriptionMeta)
-                self?.ogImageUrl = imgUrl
-                self?.fetchImage()
-            } catch {
-                os_log(.error, "encountered error while fetching URL data")
-            }
-        }
-    }
-    
-    func fetchImage(completion: (() -> Void)? = nil) {
-        guard let ogImageUrl = self.ogImageUrl, let url = URL(string: ogImageUrl) else { return }
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            self?.imageData = data
-            CoreDataStack.shared.saveContext()
-            completion?()
-        }
-        task.resume()
-    }
-    
     convenience init() {
         self.init(context: CoreDataStack.shared.managedContext)
     }
