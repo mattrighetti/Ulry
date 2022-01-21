@@ -32,7 +32,7 @@ struct CellContent: Hashable, Equatable {
 class GeneralSettingsViewController: UIViewController {
     let cells: [CellContent] = {
         return [
-            CellContent(title: "Mark as read on open", accessoryView: {
+            CellContent(title: "Mark as read on open", icon: "checkmark", accessoryView: {
                 let uiswitch = UISwitch()
                 uiswitch.isOn = UserDefaults.standard.value(forKey: Defaults.markReadOnOpen.rawValue) as! Bool
                 uiswitch.addAction(UIAction{ _ in
@@ -40,7 +40,7 @@ class GeneralSettingsViewController: UIViewController {
                 }, for: .valueChanged)
                 return uiswitch
             }),
-            CellContent(title: "Open links in-app", accessoryView: {
+            CellContent(title: "Open links in-app", icon: "safari.fill", accessoryView: {
                 let uiswitch = UISwitch()
                 uiswitch.isOn = UserDefaults.standard.value(forKey: Defaults.openInApp.rawValue) as! Bool
                 uiswitch.addAction(UIAction { _ in
@@ -48,7 +48,7 @@ class GeneralSettingsViewController: UIViewController {
                 }, for: .valueChanged)
                 return uiswitch
             }),
-            CellContent(title: "Reader mode", accessoryView: {
+            CellContent(title: "Reader mode", icon: "quote.opening", accessoryView: {
                 let uiswitch = UISwitch()
                 uiswitch.isOn = UserDefaults.standard.value(forKey: Defaults.readMode.rawValue) as! Bool
                 uiswitch.addAction(UIAction{ _ in
@@ -79,6 +79,7 @@ class GeneralSettingsViewController: UIViewController {
             
             if let icon = cellContent.icon, let image = UIImage(systemName: icon) {
                 cellConfig.image = image
+                cellConfig.imageProperties.tintColor = .label
             }
             
             cell.accessoryView = cellContent.accessoryView?()

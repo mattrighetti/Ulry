@@ -131,8 +131,8 @@ class UILinkTableViewCell: UITableViewCell {
     private func setDateText(text: String) {
         let attachment = NSTextAttachment()
         let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 15, weight: .regular, scale: .small)
-        attachment.image = UIImage(systemName: "calendar", withConfiguration: imageConfiguration)
-        attachment.bounds = CGRect(x: 0, y: -2.0, width: attachment.image!.size.width, height: attachment.image!.size.height)
+        attachment.image = UIImage(systemName: "calendar", withConfiguration: imageConfiguration)?.withTintColor(.label)
+        attachment.bounds = CGRect(x: 0, y: -2.5, width: attachment.image!.size.width, height: attachment.image!.size.height)
         
         let imageString = NSMutableAttributedString(attachment: attachment)
         imageString.append(NSAttributedString(string: " "))
