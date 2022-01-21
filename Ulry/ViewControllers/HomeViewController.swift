@@ -102,7 +102,14 @@ class HomeViewController: UIViewController {
             self.present(view, animated: true)
         }, menu: nil)
         
+        let settingsButton = UIBarButtonItem(title: nil, image: UIImage(systemName: "gearshape"), primaryAction: UIAction { _ in
+            let view = UINavigationController(rootViewController: SettingsViewController())
+            view.modalPresentationStyle = .fullScreen
+            self.present(view, animated: true)
+        }, menu: nil)
+        
         navigationItem.rightBarButtonItems = [addLinkButton]
+        navigationItem.leftBarButtonItems = [settingsButton]
         
         tagsFRC.delegate = self
         groupsFRC.delegate = self

@@ -12,6 +12,14 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        UserDefaults.standard.register(defaults: [
+            Defaults.openInApp.rawValue : false,
+            Defaults.readMode.rawValue : false,
+            Defaults.markReadOnOpen.rawValue: false,
+            Defaults.theme.rawValue : Theme.system.rawValue
+        ])
+        
         return true
     }
 

@@ -11,24 +11,25 @@ import SwiftUI
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
+    let themeController = ThemeController()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
+        
+        themeController.handler = { [weak self] theme in
+            UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveLinear, animations: { [weak self] in
+                self?.window?.overrideUserInterfaceStyle = theme
+            }, completion: .none)
+        }
+        
         let navigationController = UINavigationController(rootViewController: HomeViewController())
         window.rootViewController = navigationController
         
         window.makeKeyAndVisible()
         
         self.window = window
-        
-        let isFirstLaunch = UserDefaults.standard.integer(forKey: "TotalUserLaunches") == 1
-        
-        if isFirstLaunch {
-            // TODO launch preview screen
-        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

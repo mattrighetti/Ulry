@@ -38,6 +38,7 @@ class UILinkTableViewCell: UITableViewCell {
     lazy var dateLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.rounded(ofSize: 11, weight: .semibold)
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -116,10 +117,9 @@ class UILinkTableViewCell: UITableViewCell {
             descriptionLabel.topAnchor.constraint(greaterThanOrEqualTo: titleLabel.bottomAnchor, constant: 3),
             descriptionLabel.leadingAnchor.constraint(equalTo: backgroundLabelImage.trailingAnchor, constant: 10),
             descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
-            descriptionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
             
-            dateLabel.topAnchor.constraint(greaterThanOrEqualTo: backgroundLabelImage.bottomAnchor, constant: 5),
-            dateLabel.centerXAnchor.constraint(equalTo: backgroundLabelImage.centerXAnchor),
+            dateLabel.topAnchor.constraint(greaterThanOrEqualTo: descriptionLabel.bottomAnchor, constant: 5),
+            dateLabel.leadingAnchor.constraint(equalTo: backgroundLabelImage.trailingAnchor, constant: 10),
             dateLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
         ])
     }
@@ -128,10 +128,25 @@ class UILinkTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func setDateText(text: String) {
+        let attachment = NSTextAttachment()
+        let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 15, weight: .regular, scale: .small)
+        attachment.image = UIImage(systemName: "calendar", withConfiguration: imageConfiguration)?.withTintColor(.label)
+        attachment.bounds = CGRect(x: 0, y: -2.5, width: attachment.image!.size.width, height: attachment.image!.size.height)
+        
+        let imageString = NSMutableAttributedString(attachment: attachment)
+        imageString.append(NSAttributedString(string: " "))
+        imageString.append(NSAttributedString(string: text))
+        
+        dateLabel.attributedText = imageString
+    }
+    
     private func setupCellWithLink(link: Link) {
         urlHostnameLabel.text = link.hostname
         hostLabel.text = link.hostname.first!.uppercased()
-        dateLabel.text = link.dateString
+        
+        setDateText(text: link.dateString)
+        
         backgroundLabelImage.backgroundColor = UIColor(hex: link.colorHex)
         
         if let data = link.imageData {
