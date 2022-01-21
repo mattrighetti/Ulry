@@ -8,6 +8,7 @@
 import UIKit
 
 enum Setting: Hashable {
+    case general
     case appearance
     case tip
     case about
@@ -15,6 +16,9 @@ enum Setting: Hashable {
     
     var icon: UIImage? {
         switch self {
+        case .general:
+            let configuration = UIImage.SymbolConfiguration.init(paletteColors: [.white, .gray])
+            return UIImage(systemName: "ellipsis.circle.fill", withConfiguration: configuration)
         case .appearance:
             let configuration = UIImage.SymbolConfiguration.init(paletteColors: [.white, .purple])
             return UIImage(systemName: "eye.circle.fill", withConfiguration: configuration)
@@ -32,6 +36,8 @@ enum Setting: Hashable {
     
     var title: String? {
         switch self {
+        case .general:
+            return "General"
         case .appearance:
             return "Appearance"
         case .tip:
@@ -108,7 +114,7 @@ class SettingsViewController: UIViewController {
         
         snapshot.appendSections([0, 1])
         
-        snapshot.appendItems([.appearance], toSection: 0)
+        snapshot.appendItems([.general, .appearance], toSection: 0)
         snapshot.appendItems([.about, .tip, .rate], toSection: 1)
         
         datasource.apply(snapshot, animatingDifferences: false)
@@ -131,6 +137,8 @@ extension SettingsViewController: UITableViewDelegate {
         
         // TODO
         switch setting {
+        case .general:
+            navigationController?.pushViewController(GeneralSettingsViewController(), animated: true)
         case .appearance:
             navigationController?.pushViewController(AppearanceViewController(), animated: true)
         case .about:

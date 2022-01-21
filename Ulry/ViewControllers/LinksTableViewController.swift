@@ -9,6 +9,7 @@ import UIKit
 import CoreData
 import Combine
 import SwiftUI
+import SafariServices
 
 class LinksTableViewController: UIViewController {
     let context = CoreDataStack.shared.managedContext
@@ -141,9 +142,22 @@ extension LinksTableViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         
         if let url = URL(string: link.url) {
-            link.unread.toggle()
-            UIApplication.shared.open(url)
-            CoreDataStack.shared.saveContext()
+            if UserDefaults.standard.value(forKey: Defaults.openInApp.rawValue) as! Bool {
+                let configuration = SFSafariViewController.Configuration()
+                configuration.entersReaderIfAvailable = UserDefaults.standard.value(forKey: Defaults.readMode.rawValue) as! Bool
+                configuration.barCollapsingEnabled = true
+                
+                let safari = SFSafariViewController(url: url, configuration: configuration)
+                safari.modalPresentationStyle = .overFullScreen
+                present(safari, animated: true, completion: nil)
+            } else {
+                UIApplication.shared.open(url)
+            }
+            
+            if UserDefaults.standard.value(forKey: Defaults.markReadOnOpen.rawValue) as! Bool {
+                link.unread.toggle()
+                CoreDataStack.shared.saveContext()
+            }
         }
     }
     
