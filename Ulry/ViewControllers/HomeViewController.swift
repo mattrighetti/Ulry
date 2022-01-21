@@ -104,6 +104,7 @@ class HomeViewController: UIViewController {
         
         let settingsButton = UIBarButtonItem(title: nil, image: UIImage(systemName: "gearshape"), primaryAction: UIAction { _ in
             let view = UINavigationController(rootViewController: SettingsViewController())
+            view.modalPresentationStyle = .fullScreen
             self.present(view, animated: true)
         }, menu: nil)
         

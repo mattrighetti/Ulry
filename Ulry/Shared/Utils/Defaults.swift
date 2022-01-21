@@ -11,4 +11,5 @@ enum Defaults: String {
     case openInApp = "open-externally"
     case readMode = "read-mode"
     case markReadOnOpen = "mark-read-on-open"
+    case theme = "theme"
 }

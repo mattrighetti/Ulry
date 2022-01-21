@@ -16,7 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaults.standard.register(defaults: [
             Defaults.openInApp.rawValue : false,
             Defaults.readMode.rawValue : false,
-            Defaults.markReadOnOpen.rawValue: false
+            Defaults.markReadOnOpen.rawValue: false,
+            Defaults.theme.rawValue : Theme.system.rawValue
         ])
         
         return true

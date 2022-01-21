@@ -71,10 +71,8 @@ class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "Settings"
-        
-        navigationItem.largeTitleDisplayMode = .never
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .close, primaryAction: UIAction { _ in
           self.dismiss(animated: true)
@@ -143,8 +141,38 @@ extension SettingsViewController: UITableViewDelegate {
             navigationController?.pushViewController(AppearanceViewController(), animated: true)
         case .about:
             navigationController?.pushViewController(AboutViewController(), animated: true)
-        case .tip, .rate:
-            fatalError()
+        case .tip:
+            let tipsVc = TipsViewController()
+            // Animation, start with opacity 0
+            tipsVc.backgroundView.layer.opacity = 0
+            
+            tipsVc.discoseButton.addAction(UIAction { _ in
+                UIView.animate(
+                    withDuration: 0.1,
+                    delay: .zero,
+                    options: .curveLinear,
+                    animations: {
+                        tipsVc.backgroundView.layer.opacity = 0
+                    },
+                    completion: { _ in
+                        tipsVc.remove()
+                    }
+                )
+            }, for: .touchUpInside)
+            
+            tipsVc.add(self, frame: view.bounds)
+            
+            UIView.animate(withDuration: 0.1, delay: .zero, options: .curveLinear, animations: {
+                tipsVc.blur.layer.opacity = 1
+                tipsVc.backgroundView.layer.opacity = 1
+            })
+            
+        case .rate:
+            let alert = UIAlertController(title: "Not available", message: "Raiting will be available in the first production release", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
+            self.present(alert, animated: true)
         }
+        
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

@@ -7,55 +7,32 @@
 
 import UIKit
 
-enum AboutOption: Hashable {
-    // TODO
-}
-
-class AboutViewController: UIViewController {
-    let tableView = UITableView(frame: .zero, style: .insetGrouped)
+class AboutViewController: UIStaticTableView {
     
-    lazy var datasource: UITableViewDiffableDataSource<Int, AboutOption> = {
-        let datasource = UITableViewDiffableDataSource<Int, AboutOption>(tableView: tableView) { tableView, indexPath, option in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "AboutCell", for: indexPath)
-            var contentConfig = cell.defaultContentConfiguration()
-            cell.contentConfiguration = contentConfig
-            cell.selectionStyle = .none
-            return cell
-        }
+    init() {
+        let contact = CellContent(title: "Contact", icon: "envelope.fill", accessoryType: .accessoryType(.disclosureIndicator, .action({
+            UIApplication.shared.open(URL(string: "mailto:matt95.righett@gmail.com")!)
+        })))
         
-        return datasource
-    }()
+        let website = CellContent(title: "Website", icon: "network", accessoryType: .accessoryType(.disclosureIndicator, .action({
+            UIApplication.shared.open(URL(string: "https://mattrighetti.github.io")!)
+        })))
+        
+        let privacyPolicy = CellContent(title: "Privacy Policy", icon: "hand.raised.fill", accessoryType: .accessoryType(.disclosureIndicator, .navigationController({
+            let alert = UIAlertController(title: "⚠️ Not ready yet", message: "This will eventually be available in a production release", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+            return alert
+        })))
+        
+        super.init(cells: [[contact, website], [privacyPolicy]])
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.title = "About"
-        
-        tableView.delegate = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "AboutCell")
-        tableView.cellLayoutMarginsFollowReadableWidth = true
-        
-        view.addSubview(tableView)
-        
-        setup()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        tableView.frame = view.bounds
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
-    
-    private func setup() {
-        var snapshot = NSDiffableDataSourceSnapshot<Int, AboutOption>()
-        
-        snapshot.appendSections([0])
-        // TODO
-        
-        datasource.apply(snapshot, animatingDifferences: false)
-    }
-}
-
-extension AboutViewController: UITableViewDelegate {
-    
 }
