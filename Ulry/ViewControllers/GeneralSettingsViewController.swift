@@ -8,8 +8,12 @@
 import UIKit
 
 class GeneralSettingsViewController: UIStaticTableView {
-    init() {
-        super.init(cells: [
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        navigationItem.title = "General"
+        
+        cells = [
             [
                 CellContent(title: "Mark as read on open", icon: "checkmark", accessoryType: .viewInline({
                     let uiswitch = UISwitch()
@@ -38,16 +42,6 @@ class GeneralSettingsViewController: UIStaticTableView {
                     return uiswitch
                 }))
             ]
-        ])
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        navigationItem.title = "General"
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        ]
     }
 }
