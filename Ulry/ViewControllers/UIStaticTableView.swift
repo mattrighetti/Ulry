@@ -7,10 +7,6 @@
 
 import UIKit
 
-protocol CellContentDataSource {
-    func setupCells(cells: [[CellContent]])
-}
-
 struct CellContent: Hashable, Equatable {
     enum AccessoryType {
         case view(UIView)
@@ -42,7 +38,17 @@ struct CellContent: Hashable, Equatable {
 }
 
 class UIStaticTableView: UIViewController {
-    var cells: [[CellContent]]
+    var cells: [[CellContent]]? {
+        didSet {
+            setupCells()
+        }
+    }
+    
+    var navController: UINavigationController? {
+        get {
+            self.navigationController
+        }
+    }
     
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
@@ -85,15 +91,6 @@ class UIStaticTableView: UIViewController {
         return datasource
     }()
     
-    init(cells: [[CellContent]]) {
-        self.cells = cells
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -124,6 +121,7 @@ class UIStaticTableView: UIViewController {
     }
     
     func setupCells() {
+        guard let cells = cells else { return }
         var snapshot = NSDiffableDataSourceSnapshot<Int, CellContent>()
         
         for section in 0..<cells.count {

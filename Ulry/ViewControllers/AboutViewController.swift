@@ -8,8 +8,11 @@
 import UIKit
 
 class AboutViewController: UIStaticTableView {
-    
-    init() {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        navigationItem.title = "About"
+        
         let contact = CellContent(title: "Contact", icon: "envelope.fill", accessoryType: .accessoryType(.disclosureIndicator, .action({
             UIApplication.shared.open(URL(string: "mailto:matt95.righett@gmail.com")!)
         })))
@@ -24,15 +27,6 @@ class AboutViewController: UIStaticTableView {
             return alert
         })))
         
-        super.init(cells: [[contact, website], [privacyPolicy]])
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationItem.title = "About"
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        cells = [[contact, website], [privacyPolicy]]
     }
 }

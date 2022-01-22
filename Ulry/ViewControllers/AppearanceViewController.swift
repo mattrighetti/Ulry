@@ -8,8 +8,12 @@
 import UIKit
 
 class AppearanceViewController: UIStaticTableView {
-    init() {
-        super.init(cells: [
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        navigationItem.title = "Appearance"
+        
+        cells = [
             [
                 CellContent(title: "Theme color", icon: "paintpalette", accessoryType: .accessoryType(.disclosureIndicator, .navigationController({
                     let alert = UIAlertController(title: "Select theme color", message: nil, preferredStyle: .actionSheet)
@@ -26,15 +30,6 @@ class AppearanceViewController: UIStaticTableView {
                     return alert
                 })))
             ]
-        ])
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationItem.title = "Appearance"
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        ]
     }
 }
