@@ -43,6 +43,7 @@
 		C9267F40279A40EF0041B94A /* UIStaticTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9267F3F279A40EF0041B94A /* UIStaticTableView.swift */; };
 		C9267F42279A52A50041B94A /* TipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9267F41279A52A50041B94A /* TipsViewController.swift */; };
 		C92A0BA6279B4DC500ED0D13 /* ThemeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92A0BA5279B4DC500ED0D13 /* ThemeController.swift */; };
+		C92A0BA8279B8D7000ED0D13 /* LinkSharer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92A0BA7279B8D7000ED0D13 /* LinkSharer.swift */; };
 		C9437013278CAFF2009143A7 /* GetURL.js in Resources */ = {isa = PBXBuildFile; fileRef = C9437012278CAFF2009143A7 /* GetURL.js */; };
 		C94A2DD0278B710A007F6FFA /* +UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A2DCF278B710A007F6FFA /* +UIFont.swift */; };
 		C94A2DD2278BB3D3007F6FFA /* +UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */; };
@@ -168,6 +169,7 @@
 		C9267F3F279A40EF0041B94A /* UIStaticTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStaticTableView.swift; sourceTree = "<group>"; };
 		C9267F41279A52A50041B94A /* TipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsViewController.swift; sourceTree = "<group>"; };
 		C92A0BA5279B4DC500ED0D13 /* ThemeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeController.swift; sourceTree = "<group>"; };
+		C92A0BA7279B8D7000ED0D13 /* LinkSharer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSharer.swift; sourceTree = "<group>"; };
 		C9437012278CAFF2009143A7 /* GetURL.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = GetURL.js; sourceTree = "<group>"; };
 		C94A2DCF278B710A007F6FFA /* +UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UIFont.swift"; sourceTree = "<group>"; };
 		C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UIViewController.swift"; sourceTree = "<group>"; };
@@ -370,6 +372,7 @@
 				C9ABF9E42794451700F1B1F1 /* +Dictionary.swift */,
 				C9267F3C279A2C170041B94A /* Defaults.swift */,
 				C92A0BA5279B4DC500ED0D13 /* ThemeController.swift */,
+				C92A0BA7279B8D7000ED0D13 /* LinkSharer.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -691,6 +694,7 @@
 				C97467A32799882C00B53B8C /* UrlTextFieldAccessoryView.swift in Sources */,
 				C96016442798B29700675DC5 /* DataFetcher.swift in Sources */,
 				C9F4F95B278A40F200887A3E /* UIImageCircleTableViewCell.swift in Sources */,
+				C92A0BA8279B8D7000ED0D13 /* LinkSharer.swift in Sources */,
 				C9F4F9192789C2BD00887A3E /* Link+CoreDataProperties.swift in Sources */,
 				C9F4F91D2789C2BD00887A3E /* Group.swift in Sources */,
 				C9ABF9E52794451700F1B1F1 /* +Dictionary.swift in Sources */,
@@ -769,7 +773,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = UlryIntents/UlryIntents.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = UlryIntents/Info.plist;
@@ -780,7 +784,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.2;
+				MARKETING_VERSION = 0.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Ulry.UlryIntents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -795,7 +799,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = UlryIntents/UlryIntents.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = UlryIntents/Info.plist;
@@ -806,7 +810,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.2;
+				MARKETING_VERSION = 0.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Ulry.UlryIntents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -836,7 +840,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.2;
+				MARKETING_VERSION = 0.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Ulry.AddToUlryAction;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -866,7 +870,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.2;
+				MARKETING_VERSION = 0.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Ulry.AddToUlryAction;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1051,7 +1055,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.2;
+				MARKETING_VERSION = 0.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Ulry;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1084,7 +1088,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.2;
+				MARKETING_VERSION = 0.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Ulry;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

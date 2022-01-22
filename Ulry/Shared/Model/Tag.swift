@@ -16,17 +16,11 @@ public class Tag: NSManagedObject, Representable {
 }
 
 extension Tag {
-    enum Request: RawRepresentable {
+    enum Request {
         case all
         case withUuid(uuid: UUID)
         
-        typealias RawValue = NSFetchRequest<Tag>
-        
-        init?(rawValue: NSFetchRequest<Tag>) {
-            return nil
-        }
-        
-        var rawValue: NSFetchRequest<Tag> {
+        var fetchRequest: NSFetchRequest<Tag> {
             let request: NSFetchRequest<Tag>
             let sort = [NSSortDescriptor(key: "name", ascending: true)]
             

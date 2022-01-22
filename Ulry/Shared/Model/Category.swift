@@ -8,7 +8,21 @@
 import CoreData
 import UIKit
 
-public enum Category: Hashable, RawRepresentable {
+struct CategoryCellContent {
+    var title: String
+    var backgroundColor: UIColor
+    var icon: String?
+    var linksCount: Int
+    
+    init(title: String, backgroundColor: UIColor, icon: String?, linksCount: Link.Request) {
+        self.title = title
+        self.backgroundColor = backgroundColor
+        self.icon = icon
+        self.linksCount = try! CoreDataStack.shared.managedContext.count(for: linksCount.fetchRequest)
+    }
+}
+
+public enum Category: Hashable {
     case all
     case unread
     case starred
@@ -19,44 +33,18 @@ public enum Category: Hashable, RawRepresentable {
         return nil
     }
     
-    public typealias RawValue = (String, UIColor, String?, Int)
-    public var rawValue: RawValue {
+    var cellContent: CategoryCellContent {
         switch self {
         case .all:
-            return (
-                "All",
-                UIColor.orange,
-                "list.bullet",
-                try! CoreDataStack.shared.managedContext.count(for: Link.Request.all.rawValue)
-            )
+            return CategoryCellContent(title: "All", backgroundColor: .orange, icon: "list.bullet", linksCount: .all)
         case .unread:
-            return (
-                "Unread",
-                UIColor.systemGray,
-                "archivebox",
-                try! CoreDataStack.shared.managedContext.count(for: Link.Request.unread.rawValue)
-            )
+            return CategoryCellContent(title: "Unread", backgroundColor: .systemGray, icon: "archivebox", linksCount: .unread)
         case .starred:
-            return (
-                "Starred",
-                UIColor.systemYellow,
-                "star",
-                try! CoreDataStack.shared.managedContext.count(for: Link.Request.starred.rawValue)
-            )
+            return CategoryCellContent(title: "Starred", backgroundColor: .systemYellow, icon: "star", linksCount: .starred)
         case .group(let group):
-            return (
-                group.name,
-                UIColor(hex: group.colorHex)!,
-                group.iconName,
-                try! CoreDataStack.shared.managedContext.count(for: Link.Request.folder(group).rawValue)
-            )
+            return CategoryCellContent(title: group.name, backgroundColor: UIColor(hex: group.colorHex)!, icon: group.iconName, linksCount: .group(group))
         case .tag(let tag):
-            return (
-                tag.name,
-                UIColor(hex: tag.colorHex)!,
-                nil,
-                try! CoreDataStack.shared.managedContext.count(for: Link.Request.tag(tag).rawValue)
-            )
+            return CategoryCellContent(title: tag.name, backgroundColor: UIColor(hex: tag.colorHex)!, icon: nil, linksCount: .tag(tag))
         }
     }
 }

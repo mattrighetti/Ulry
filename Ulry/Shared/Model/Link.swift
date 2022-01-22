@@ -43,21 +43,30 @@ public class Link: NSManagedObject {
 }
 
 extension Link {
-    enum Request: RawRepresentable {
+    enum Request {
         case all
         case starred
         case unread
         case withUuid(uuid: UUID)
-        case folder(Group)
+        case group(Group)
         case tag(Tag)
         
-        typealias RawValue = NSFetchRequest<Link>
-        
-        init?(rawValue: NSFetchRequest<Link>) {
-            return nil
+        init(from category: Category) {
+            switch category {
+            case .all:
+                self = .all
+            case .unread:
+                self = .unread
+            case .starred:
+                self = .starred
+            case .group(let group):
+                self = .group(group)
+            case .tag(let tag):
+                self = .tag(tag)
+            }
         }
         
-        var rawValue: NSFetchRequest<Link> {
+        var fetchRequest: NSFetchRequest<Link> {
             let sort = [NSSortDescriptor(key: "createdAt", ascending: false)]
             let request: NSFetchRequest<Link>
             
@@ -70,7 +79,7 @@ extension Link {
                 request = Link.fetchRequest(unread: true)
             case .withUuid(uuid: let uuid):
                 request = Link.fetchRequest(withUUID: uuid)
-            case .folder(let group):
+            case .group(let group):
                 request = Link.fetchRequest(withGroup: group)
             case .tag(let tag):
                 request = Link.fetchRequest(withTag: tag)

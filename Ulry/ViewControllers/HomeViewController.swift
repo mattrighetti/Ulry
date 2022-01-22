@@ -34,7 +34,7 @@ class HomeViewController: UIViewController {
     
     lazy var tagsFRC: NSFetchedResultsController<Tag> = {
         NSFetchedResultsController(
-            fetchRequest: Tag.Request.all.rawValue,
+            fetchRequest: Tag.Request.all.fetchRequest,
             managedObjectContext: CoreDataStack.shared.managedContext,
             sectionNameKeyPath: nil,
             cacheName: nil
@@ -43,7 +43,7 @@ class HomeViewController: UIViewController {
     
     lazy var groupsFRC: NSFetchedResultsController<Group> = {
         NSFetchedResultsController(
-            fetchRequest: Group.Request.all.rawValue,
+            fetchRequest: Group.Request.all.fetchRequest,
             managedObjectContext: CoreDataStack.shared.managedContext,
             sectionNameKeyPath: nil,
             cacheName: nil
@@ -52,7 +52,7 @@ class HomeViewController: UIViewController {
     
     lazy var linksFRC: NSFetchedResultsController<Link> = {
         NSFetchedResultsController(
-            fetchRequest: Link.Request.all.rawValue,
+            fetchRequest: Link.Request.all.fetchRequest,
             managedObjectContext: CoreDataStack.shared.managedContext,
             sectionNameKeyPath: nil,
             cacheName: nil
@@ -64,18 +64,18 @@ class HomeViewController: UIViewController {
             if indexPath.section == 2 {
                 // Tags category
                 let cell = tableView.dequeueReusableCell(withIdentifier: categoryColorCell, for: indexPath) as! UIColorCircleTableViewCell
-                cell.text = category.rawValue.0
-                cell.color = category.rawValue.1
-                cell.count = category.rawValue.3
+                cell.text = category.cellContent.title
+                cell.color = category.cellContent.backgroundColor
+                cell.count = category.cellContent.linksCount
                 cell.accessoryType = .disclosureIndicator
                 return cell
             } else {
                 // Always present/Groups categories
                 let cell = tableView.dequeueReusableCell(withIdentifier: categoryImageCell, for: indexPath) as! UIImageCircleTableViewCell
-                cell.text = category.rawValue.0
-                cell.icon = category.rawValue.2!
-                cell.color = category.rawValue.1
-                cell.count = category.rawValue.3
+                cell.text = category.cellContent.title
+                cell.icon = category.cellContent.icon!
+                cell.color = category.cellContent.backgroundColor
+                cell.count = category.cellContent.linksCount
                 cell.accessoryType = .disclosureIndicator
                 return cell
             }
@@ -254,7 +254,7 @@ extension HomeViewController: UITableViewDelegate {
         
         let vc = LinksTableViewController()
         vc.category = category
-        vc.navigationItem.title = category.rawValue.0
+        vc.navigationItem.title = category.cellContent.title
         
         navigationController?.pushViewController(vc, animated: true)
     }

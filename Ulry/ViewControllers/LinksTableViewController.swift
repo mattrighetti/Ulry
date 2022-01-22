@@ -7,7 +7,6 @@
 
 import UIKit
 import CoreData
-import Combine
 import SwiftUI
 import SafariServices
 
@@ -19,20 +18,8 @@ class LinksTableViewController: UIViewController {
     var category: Category? {
         didSet {
             guard let category = category else { return }
-
-            let request: NSFetchRequest<Link>
-            switch category {
-            case .all:
-                request = Link.Request.all.rawValue
-            case .unread:
-                request = Link.Request.unread.rawValue
-            case .starred:
-                request = Link.Request.starred.rawValue
-            case .group(let group):
-                request = Link.Request.folder(group).rawValue
-            case .tag(let tag):
-                request = Link.Request.tag(tag).rawValue
-            }
+            let request = Link.Request(from: category).fetchRequest
+            request.sortDescriptors = orderBy.sortDescriptor
             
             coreDataController = NSFetchedResultsController(
                 fetchRequest: request,
@@ -42,6 +29,23 @@ class LinksTableViewController: UIViewController {
             )
         }
     }
+    
+    var orderBy: OrderBy {
+        get {
+            let orderByValue = UserDefaults.standard.string(forKey: Defaults.orderBy.rawValue)!
+            return OrderBy(rawValue: orderByValue)!
+        }
+        set {
+            UserDefaults.standard.setValue(newValue.rawValue, forKey: Defaults.orderBy.rawValue)
+            coreDataController.fetchRequest.sortDescriptors = newValue.sortDescriptor
+            try! coreDataController.performFetch()
+        }
+    }
+    
+    // MARK: - Actions
+    
+    
+    // MARK: - DataSource
     
     lazy var datasource: UITableViewDiffableDataSource<Int, NSManagedObjectID> = {
         let datasource = UITableViewDiffableDataSource<Int, NSManagedObjectID>(tableView: tableview) { tableview, indexPath, managedObjectId in
@@ -55,15 +59,7 @@ class LinksTableViewController: UIViewController {
             let cell = tableview.dequeueReusableCell(withIdentifier: "LinkCell", for: indexPath) as! UILinkTableViewCell
             cell.link = link
             cell.action = { [weak self] in
-                let vc = UIHostingController(rootView: LinkDetailView(link: link))
-                if let sheet = vc.sheetPresentationController {
-                    sheet.detents = [.medium(), .large()]
-                    sheet.preferredCornerRadius = 25.0
-                    sheet.largestUndimmedDetentIdentifier = .medium
-                    sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-                    sheet.prefersGrabberVisible = true
-                }
-                self?.present(vc, animated: true)
+                self?.showInfoViewController(for: link)
             }
             cell.contentView.setNeedsLayout()
             cell.contentView.layoutIfNeeded()
@@ -73,10 +69,14 @@ class LinksTableViewController: UIViewController {
         return datasource
     }()
     
+    // MARK: - General Setup
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.isToolbarHidden = true
+        setRightBarButtonItems(animated: false)
         
         coreDataController.delegate = self
         
@@ -98,25 +98,14 @@ class LinksTableViewController: UIViewController {
         try! coreDataController.performFetch()
     }
     
-    private func pushEmptyLottieView() {
-        let messageLabel = UILabel()
-        messageLabel.text = "Empty"
-        messageLabel.numberOfLines = 0
-        messageLabel.textAlignment = .center
-        messageLabel.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
-        messageLabel.sizeToFit()
-
-        tableview.backgroundView = messageLabel
-        tableview.separatorStyle = .none
+    // MARK: - Core Data Requests
+    private func orderByName() {
+        coreDataController.fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(Link.ogTitle), ascending: true)]
+        
+        try! coreDataController.performFetch()
     }
     
-    private func onEditPressed(link: Link) {
-        let view = AddLinkViewController()
-        view.configuration = .edit(link)
-        
-        let vc = UINavigationController(rootViewController: view)
-        present(vc, animated: true)
-    }
+    // MARK: - Data managment
     
     private func onDeletePressed(link: Link) {
         context.delete(link)
@@ -130,9 +119,34 @@ class LinksTableViewController: UIViewController {
     private func onReadPressed(link: Link) {
         link.unread = !link.unread
     }
+    
+    // MARK: - ViewControllers Presentations
+    
+    private func onEditPressed(link: Link) {
+        let view = AddLinkViewController()
+        view.configuration = .edit(link)
+        
+        let vc = UINavigationController(rootViewController: view)
+        present(vc, animated: true)
+    }
+    
+    private func showInfoViewController(for link: Link) {
+        let vc = UIHostingController(rootView: LinkDetailView(link: link))
+        if let sheet = vc.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]
+            sheet.preferredCornerRadius = 25.0
+            sheet.largestUndimmedDetentIdentifier = .medium
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+            sheet.prefersGrabberVisible = true
+        }
+        self.present(vc, animated: true)
+    }
 }
 
 extension LinksTableViewController: UITableViewDelegate {
+    
+    // MARK: - Row Selection
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard
             let id = datasource.itemIdentifier(for: indexPath),
@@ -160,6 +174,8 @@ extension LinksTableViewController: UITableViewDelegate {
             }
         }
     }
+    
+    // MARK: - Swipe Actions
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard
@@ -204,6 +220,124 @@ extension LinksTableViewController: UITableViewDelegate {
         
         return UISwipeActionsConfiguration(actions: [star, read])
     }
+    
+    // MARK: - Long press Context Menus
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard
+            let id = datasource.itemIdentifier(for: indexPath),
+            let link = try? self.context.existingObject(with: id) as? Link
+        else { return nil }
+        
+        let identifier = "\(indexPath.row)" as NSString
+        return UIContextMenuConfiguration(identifier: identifier, previewProvider: nil) { _ in
+            let shareAction = UIAction(title: "Share", image: UIImage(systemName: "square.and.arrow.up")) { _ in
+                LinkSharer.share(link: link, in: self)
+            }
+            
+            let editAction = UIAction(title: "Edit", image: UIImage(systemName: "square.and.pencil")) { _ in
+                self.onEditPressed(link: link)
+            }
+            
+            let infoAction = UIAction(title: "Info", image: UIImage(systemName: "info.circle")) { _ in
+                self.showInfoViewController(for: link)
+            }
+            
+            let deleteMenu = UIMenu(title: "", options: .displayInline, children: [
+                UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+                    self.onDeletePressed(link: link)
+                }
+            ])
+            
+            return UIMenu(title: "", children: [infoAction, editAction, shareAction, deleteMenu])
+        }
+    }
+    
+    // MARK: - TableView Editing
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        tableview.setEditing(editing, animated: animated)
+        setRightBarButtonItems(animated: false)
+    }
+    
+    private func setRightBarButtonItems(animated: Bool) {
+        let barButtonItems: [UIBarButtonItem] = {
+            if isEditing {
+                return [
+                    editButtonItem
+                ]
+            } else {
+                return [
+                    editButtonItem,
+                    UIBarButtonItem(image: UIImage(systemName: "line.3.horizontal.decrease.circle"), menu: createMenu())
+                ]
+            }
+        }()
+        
+        navigationItem.setRightBarButtonItems(barButtonItems, animated: animated)
+    }
+    
+    private func createMenu() -> UIMenu {
+        var newestAction: UIAction {
+            UIAction(
+                title: "Newest",
+                state: orderBy == .newest ? .on : .off,
+                handler: { [weak self] action in
+                    self?.orderBy = .newest
+                    self?.setRightBarButtonItems(animated: false)
+                }
+            )
+        }
+        
+        var oldestAction: UIAction {
+            UIAction(
+                title: "Oldest",
+                state: orderBy == .oldest ? .on : .off,
+                handler: { [weak self] action in
+                    self?.orderBy = .oldest
+                    self?.setRightBarButtonItems(animated: false)
+                }
+            )
+        }
+        
+        var nameAction: UIAction {
+            UIAction(
+                title: "Name",
+                image: UIImage(systemName: "textformat.abc.dottedunderline"),
+                state: orderBy == .name ? .on : .off,
+                handler: { [weak self] action in
+                    self?.orderBy = .name
+                    self?.setRightBarButtonItems(animated: false)
+                }
+            )
+        }
+        
+        var lastUpdatedAction: UIAction {
+            UIAction(
+                title: "Last updated",
+                image: UIImage(systemName: "clock"),
+                state: orderBy == .lastUpdated ? .on : .off,
+                handler: { [weak self] action in
+                    self?.orderBy = .lastUpdated
+                    self?.setRightBarButtonItems(animated: false)
+                }
+            )
+        }
+        
+        let dateMenu = UIMenu(title: "Date", image: UIImage(systemName: "calendar"), children: [
+            newestAction,
+            oldestAction,
+        ])
+        
+        let menu = UIMenu(title: "Order by", children: [
+            nameAction,
+            lastUpdatedAction,
+            dateMenu,
+        ])
+        
+        return menu
+    }
 }
 
 extension LinksTableViewController: NSFetchedResultsControllerDelegate {
@@ -226,5 +360,27 @@ extension LinksTableViewController: NSFetchedResultsControllerDelegate {
         snapshot.reloadItems(reloadIdentifiers)
         
         datasource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: true)
+    }
+}
+
+extension LinksTableViewController {
+    enum OrderBy: String {
+        case name
+        case lastUpdated
+        case oldest
+        case newest
+        
+        var sortDescriptor: [NSSortDescriptor] {
+            switch self {
+            case .name:
+                return [NSSortDescriptor(key: #keyPath(Link.ogTitle), ascending: true)]
+            case .lastUpdated:
+                return [NSSortDescriptor(key: #keyPath(Link.updatedAt), ascending: true)]
+            case .newest:
+                return [NSSortDescriptor(key: #keyPath(Link.createdAt), ascending: false)]
+            case .oldest:
+                return [NSSortDescriptor(key: #keyPath(Link.createdAt), ascending: true)]
+            }
+        }
     }
 }

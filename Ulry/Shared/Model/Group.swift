@@ -15,17 +15,11 @@ public class Group: NSManagedObject, Representable {
 }
 
 extension Group {
-    enum Request: RawRepresentable {
+    enum Request {
         case all
         case withUuid(uuid: UUID)
         
-        typealias RawValue = NSFetchRequest<Group>
-        
-        init?(rawValue: NSFetchRequest<Group>) {
-            return nil
-        }
-        
-        var rawValue: NSFetchRequest<Group> {
+        var fetchRequest: NSFetchRequest<Group> {
             let request: NSFetchRequest<Group>
             let sort = [NSSortDescriptor(key: "name", ascending: true)]
             
