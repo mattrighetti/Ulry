@@ -47,6 +47,7 @@
 		C9437013278CAFF2009143A7 /* GetURL.js in Resources */ = {isa = PBXBuildFile; fileRef = C9437012278CAFF2009143A7 /* GetURL.js */; };
 		C94A2DD0278B710A007F6FFA /* +UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A2DCF278B710A007F6FFA /* +UIFont.swift */; };
 		C94A2DD2278BB3D3007F6FFA /* +UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */; };
+		C953DA0F279D87F700357028 /* DataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96016432798B29700675DC5 /* DataFetcher.swift */; };
 		C96016442798B29700675DC5 /* DataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96016432798B29700675DC5 /* DataFetcher.swift */; };
 		C97467A32799882C00B53B8C /* UrlTextFieldAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97467A22799882C00B53B8C /* UrlTextFieldAccessoryView.swift */; };
 		C97467A527999A5B00B53B8C /* GeneralSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97467A427999A5B00B53B8C /* GeneralSettingsViewController.swift */; };
@@ -628,6 +629,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9179A3227973BD4008A82DD /* Tag.swift in Sources */,
+				C953DA0F279D87F700357028 /* DataFetcher.swift in Sources */,
 				C9179A2427973BCC008A82DD /* CoreDataStack.swift in Sources */,
 				C9179A2927973BD1008A82DD /* +UIColor.swift in Sources */,
 				C9179A2B27973BD1008A82DD /* SFSymbols.swift in Sources */,
@@ -798,6 +800,7 @@
 				INFOPLIST_FILE = UlryIntents/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = UlryIntents;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -824,6 +827,7 @@
 				INFOPLIST_FILE = UlryIntents/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = UlryIntents;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1064,6 +1068,7 @@
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Ulry/Info.plist;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -1097,6 +1102,7 @@
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Ulry/Info.plist;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
