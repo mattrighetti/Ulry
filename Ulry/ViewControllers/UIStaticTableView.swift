@@ -44,12 +44,6 @@ class UIStaticTableView: UIViewController {
         }
     }
     
-    var navController: UINavigationController? {
-        get {
-            self.navigationController
-        }
-    }
-    
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")

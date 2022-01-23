@@ -30,7 +30,14 @@ class DataFetcher {
         link.ogTitle = title
         link.ogDescription = description
         
-        guard let imgUrl = imgUrl, let url = URL(string: imgUrl) else { return }
+        guard
+            let imgUrl = imgUrl,
+                let url = URL(string: imgUrl)
+        else {
+            handler?()
+            return
+        }
+        
         let imgTask = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data else {
                 os_log(.debug, "cannot fetch image for link: \(imgUrl)")
@@ -42,5 +49,20 @@ class DataFetcher {
             handler?()
         }
         imgTask.resume()
+    }
+    
+    func fetchData(for links: [Link], completion handler: (() -> Void)? = nil) {
+        let dataGroup = DispatchGroup()
+        
+        links.forEach { [weak self] link in
+            dataGroup.enter()
+            self?.fetchData(for: link, completion: {
+                dataGroup.leave()
+            })
+        }
+        
+        dataGroup.notify(queue: .main) {
+            handler?()
+        }
     }
 }
