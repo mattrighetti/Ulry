@@ -14,7 +14,7 @@ class AboutViewController: UIStaticTableView {
         navigationItem.title = "About"
         
         let contact = CellContent(title: "Contact", icon: "envelope.fill", accessoryType: .accessoryType(.disclosureIndicator, .action({
-            UIApplication.shared.open(URL(string: "mailto:matt95.righett@gmail.com")!)
+            UIApplication.shared.open(URL(string: "mailto:matt95.righetti@gmail.com")!)
         })))
         
         let website = CellContent(title: "Website", icon: "network", accessoryType: .accessoryType(.disclosureIndicator, .action({
