@@ -10,8 +10,7 @@ import UIKit
 
 struct LinkSharer {
     static func share(link: Link, in viewController: UIViewController) {
-        let text = "Take a look at \(link.url)!"
-        let activityController = UIActivityViewController(activityItems: [text], applicationActivities: nil)
+        let activityController = UIActivityViewController(activityItems: [link.url], applicationActivities: nil)
         viewController.present(activityController, animated: true, completion: nil)
     }
 }

@@ -24,6 +24,7 @@ struct CellContent: Hashable, Equatable {
     var title: String
     var subtitle: String? = nil
     var icon: String? = nil
+    var isEnabled: Bool? = true
     var accessoryType: AccessoryType? = nil
     
     var id: UUID = UUID()
@@ -55,16 +56,20 @@ class UIStaticTableView: UIViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
             var cellConfig = UIListContentConfiguration.subtitleCell()
             
+            let foregroundColor: UIColor = cellContent.isEnabled! ? .label : .systemGray
+            
             cellConfig.text = cellContent.title
             cellConfig.textProperties.font = UIFont.rounded(ofSize: 14, weight: .semibold)
+            cellConfig.textProperties.color = foregroundColor
             
             cellConfig.secondaryText = cellContent.subtitle
             cellConfig.secondaryTextProperties.font = UIFont.rounded(ofSize: 11, weight: .regular)
+            cellConfig.secondaryTextProperties.color = foregroundColor
             cellConfig.textToSecondaryTextVerticalPadding = 5.0
             
             if let icon = cellContent.icon, let image = UIImage(systemName: icon) {
                 cellConfig.image = image
-                cellConfig.imageProperties.tintColor = .label
+                cellConfig.imageProperties.tintColor = foregroundColor
             }
             
             switch cellContent.accessoryType {
@@ -78,6 +83,7 @@ class UIStaticTableView: UIViewController {
                 break
             }
             
+            cell.isUserInteractionEnabled = cellContent.isEnabled!
             cell.contentConfiguration = cellConfig
             return cell
         }

@@ -10,10 +10,20 @@ import CoreData
 import SwiftUI
 import SafariServices
 
+private var reuseIdentifier = "LinkCell"
+
 class LinksTableViewController: UIViewController {
     let context = CoreDataStack.shared.managedContext
     var coreDataController: NSFetchedResultsController<Link>!
-    let tableview = UITableView()
+    
+    let tableview: UITableView = {
+        let tableview = UITableView()
+        tableview.backgroundColor = .clear
+        tableview.register(UILinkTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+        tableview.estimatedRowHeight = 200
+        tableview.rowHeight = UITableView.automaticDimension
+        return tableview
+    }()
     
     var category: Category? {
         didSet {
@@ -56,7 +66,7 @@ class LinksTableViewController: UIViewController {
                 fatalError("Managed object does not exist")
             }
             
-            let cell = tableview.dequeueReusableCell(withIdentifier: "LinkCell", for: indexPath) as! UILinkTableViewCell
+            let cell = tableview.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! UILinkTableViewCell
             cell.link = link
             cell.action = { [weak self] in
                 self?.showInfoViewController(for: link)
@@ -78,15 +88,10 @@ class LinksTableViewController: UIViewController {
         navigationController?.isToolbarHidden = true
         setRightBarButtonItems(animated: false)
         
-        coreDataController.delegate = self
-        
         view.backgroundColor = .systemBackground
-        tableview.backgroundColor = .clear
+        
         tableview.delegate = self
-        tableview.dataSource = datasource
-        tableview.register(UILinkTableViewCell.self, forCellReuseIdentifier: "LinkCell")
-        tableview.estimatedRowHeight = 200
-        tableview.rowHeight = UITableView.automaticDimension
+        coreDataController.delegate = self
         
         view.addSubview(tableview)
     }
@@ -342,11 +347,6 @@ extension LinksTableViewController: UITableViewDelegate {
 
 extension LinksTableViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        guard let datasource = tableview.dataSource as? UITableViewDiffableDataSource<Int, NSManagedObjectID> else {
-            assertionFailure("The data source has not implemented snapshot support while it should")
-            return
-        }
-        
         var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
         let currentSnapshot = datasource.snapshot() as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
         
@@ -357,7 +357,8 @@ extension LinksTableViewController: NSFetchedResultsControllerDelegate {
             guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
             return itemIdentifier
         }
-        snapshot.reloadItems(reloadIdentifiers)
+        // Reconfigure items that have the same index
+        snapshot.reconfigureItems(reloadIdentifiers)
         
         datasource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: true)
     }

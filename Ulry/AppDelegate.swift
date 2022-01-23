@@ -18,7 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Defaults.readMode.rawValue : false,
             Defaults.markReadOnOpen.rawValue: false,
             Defaults.theme.rawValue : Theme.system.rawValue,
-            Defaults.orderBy.rawValue : LinksTableViewController.OrderBy.newest.rawValue
+            Defaults.orderBy.rawValue : LinksTableViewController.OrderBy.newest.rawValue,
+            Defaults.isPremium.rawValue : false
         ])
         
         return true

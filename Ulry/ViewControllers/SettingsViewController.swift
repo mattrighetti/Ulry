@@ -8,6 +8,7 @@
 import UIKit
 
 enum Setting: Hashable {
+    case premium
     case general
     case appearance
     case backup
@@ -17,6 +18,9 @@ enum Setting: Hashable {
     
     var icon: UIImage? {
         switch self {
+        case .premium:
+            let configuration = UIImage.SymbolConfiguration.init(paletteColors: [.yellow])
+            return UIImage(systemName: "sparkles", withConfiguration: configuration)
         case .general:
             let configuration = UIImage.SymbolConfiguration.init(paletteColors: [.white, .gray])
             return UIImage(systemName: "ellipsis.circle.fill", withConfiguration: configuration)
@@ -40,6 +44,8 @@ enum Setting: Hashable {
     
     var title: String? {
         switch self {
+        case .premium:
+            return "Go premium"
         case .general:
             return "General"
         case .appearance:
@@ -62,11 +68,11 @@ class SettingsViewController: UIViewController {
     lazy var datasource: UITableViewDiffableDataSource<Int, Setting> = {
         let datasource = UITableViewDiffableDataSource<Int, Setting>(tableView: tableView) { tableView, indexPath, setting in
             let cell = tableView.dequeueReusableCell(withIdentifier: "SettingCell", for: indexPath)
-            var content = UIListContentConfiguration.valueCell()
-            content.text = setting.title
-            content.textProperties.font = UIFont.rounded(ofSize: 14, weight: .semibold)
-            content.image = setting.icon
-            cell.contentConfiguration = content
+            var contentConfig = UIListContentConfiguration.valueCell()
+            contentConfig.text = setting.title
+            contentConfig.textProperties.font = UIFont.rounded(ofSize: 14, weight: .semibold)
+            contentConfig.image = setting.icon
+            cell.contentConfiguration = contentConfig
             cell.accessoryType = .disclosureIndicator
             return cell
         }
@@ -116,11 +122,16 @@ class SettingsViewController: UIViewController {
     private func addSettings() {
         var snapshot = NSDiffableDataSourceSnapshot<Int, Setting>()
         
-        snapshot.appendSections([0, 1, 2])
-        
-        snapshot.appendItems([.general, .appearance], toSection: 0)
-        snapshot.appendItems([.backup], toSection: 1)
-        snapshot.appendItems([.about, .tip, .rate], toSection: 2)
+        if UserDefaults.standard.bool(forKey: Defaults.isPremium.rawValue) {
+            snapshot.appendSections([0, 1])
+            snapshot.appendItems([.general, .appearance, .backup], toSection: 0)
+            snapshot.appendItems([.about, .tip, .rate], toSection: 1)
+        } else {
+            snapshot.appendSections([0, 1, 2])
+            snapshot.appendItems([.premium], toSection: 0)
+            snapshot.appendItems([.general, .appearance, .backup], toSection: 1)
+            snapshot.appendItems([.about, .tip, .rate], toSection: 2)
+        }
         
         datasource.apply(snapshot, animatingDifferences: false)
     }
@@ -142,6 +153,10 @@ extension SettingsViewController: UITableViewDelegate {
         
         // TODO
         switch setting {
+        case.premium:
+            let alert = UIAlertController(title: "Not available", message: "Premium membership will be available in the first production release", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
+            self.present(alert, animated: true)
         case .general:
             navigationController?.pushViewController(GeneralSettingsViewController(), animated: true)
         case .appearance:
