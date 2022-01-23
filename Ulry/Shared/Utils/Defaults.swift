@@ -12,6 +12,7 @@ enum Defaults: String {
     case readMode = "read-mode"
     case markReadOnOpen = "mark-read-on-open"
     case theme = "theme"
+    case isPremium = "is-premium"
     
     // MARK: - Link
     case orderBy = "order-by"

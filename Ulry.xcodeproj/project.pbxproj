@@ -47,6 +47,7 @@
 		C9437013278CAFF2009143A7 /* GetURL.js in Resources */ = {isa = PBXBuildFile; fileRef = C9437012278CAFF2009143A7 /* GetURL.js */; };
 		C94A2DD0278B710A007F6FFA /* +UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A2DCF278B710A007F6FFA /* +UIFont.swift */; };
 		C94A2DD2278BB3D3007F6FFA /* +UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */; };
+		C953DA0F279D87F700357028 /* DataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96016432798B29700675DC5 /* DataFetcher.swift */; };
 		C96016442798B29700675DC5 /* DataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96016432798B29700675DC5 /* DataFetcher.swift */; };
 		C97467A32799882C00B53B8C /* UrlTextFieldAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97467A22799882C00B53B8C /* UrlTextFieldAccessoryView.swift */; };
 		C97467A527999A5B00B53B8C /* GeneralSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97467A427999A5B00B53B8C /* GeneralSettingsViewController.swift */; };
@@ -78,6 +79,9 @@
 		C9A142C9278A6B9200B627BF /* UILinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A142C8278A6B9200B627BF /* UILinkTableViewCell.swift */; };
 		C9ABF9E52794451700F1B1F1 /* +Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ABF9E42794451700F1B1F1 /* +Dictionary.swift */; };
 		C9ABF9E627944A6900F1B1F1 /* +Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ABF9E42794451700F1B1F1 /* +Dictionary.swift */; };
+		C9C56971279C1AC40064D8EB /* Codables.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C56970279C1AC40064D8EB /* Codables.swift */; };
+		C9C56973279C1EEF0064D8EB /* JSONDumpHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C56972279C1EEF0064D8EB /* JSONDumpHelper.swift */; };
+		C9C56975279C214B0064D8EB /* BackupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C56974279C214B0064D8EB /* BackupViewController.swift */; };
 		C9D37C5E2798297E0084F188 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C5D2798297E0084F188 /* SettingsViewController.swift */; };
 		C9D37C60279830EB0084F188 /* AppearanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C5F279830EB0084F188 /* AppearanceViewController.swift */; };
 		C9D37C622798361C0084F188 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C612798361C0084F188 /* AboutViewController.swift */; };
@@ -188,6 +192,9 @@
 		C9A142C6278A4E8600B627BF /* LinksTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinksTableViewController.swift; sourceTree = "<group>"; };
 		C9A142C8278A6B9200B627BF /* UILinkTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILinkTableViewCell.swift; sourceTree = "<group>"; };
 		C9ABF9E42794451700F1B1F1 /* +Dictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+Dictionary.swift"; sourceTree = "<group>"; };
+		C9C56970279C1AC40064D8EB /* Codables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codables.swift; sourceTree = "<group>"; };
+		C9C56972279C1EEF0064D8EB /* JSONDumpHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDumpHelper.swift; sourceTree = "<group>"; };
+		C9C56974279C214B0064D8EB /* BackupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupViewController.swift; sourceTree = "<group>"; };
 		C9D37C5D2798297E0084F188 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		C9D37C5F279830EB0084F188 /* AppearanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceViewController.swift; sourceTree = "<group>"; };
 		C9D37C612798361C0084F188 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
@@ -296,6 +303,14 @@
 			path = AddToUlryAction;
 			sourceTree = "<group>";
 		};
+		C9C5696F279C1AB50064D8EB /* Codables */ = {
+			isa = PBXGroup;
+			children = (
+				C9C56970279C1AC40064D8EB /* Codables.swift */,
+			);
+			path = Codables;
+			sourceTree = "<group>";
+		};
 		C9D7FE84278AFFA100016B04 /* UlryTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -373,6 +388,7 @@
 				C9267F3C279A2C170041B94A /* Defaults.swift */,
 				C92A0BA5279B4DC500ED0D13 /* ThemeController.swift */,
 				C92A0BA7279B8D7000ED0D13 /* LinkSharer.swift */,
+				C9C56972279C1EEF0064D8EB /* JSONDumpHelper.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -380,6 +396,7 @@
 		C9F4F9082789C2BD00887A3E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				C9C5696F279C1AB50064D8EB /* Codables */,
 				C9F4F9092789C2BD00887A3E /* Group+CoreDataProperties.swift */,
 				C9F4F90A2789C2BD00887A3E /* Link+CoreDataProperties.swift */,
 				C9F4F90B2789C2BD00887A3E /* Tag+CoreDataProperties.swift */,
@@ -407,6 +424,7 @@
 				C97467A427999A5B00B53B8C /* GeneralSettingsViewController.swift */,
 				C9267F3F279A40EF0041B94A /* UIStaticTableView.swift */,
 				C9267F41279A52A50041B94A /* TipsViewController.swift */,
+				C9C56974279C214B0064D8EB /* BackupViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -556,7 +574,6 @@
 			mainGroup = C9F4F8D52789C28A00887A3E;
 			packageReferences = (
 				C9F4F9492789C35200887A3E /* XCRemoteSwiftPackageReference "SwiftSoup" */,
-				C9F4F94C2789C36200887A3E /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			productRefGroup = C9F4F8DF2789C28A00887A3E /* Products */;
 			projectDirPath = "";
@@ -612,6 +629,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9179A3227973BD4008A82DD /* Tag.swift in Sources */,
+				C953DA0F279D87F700357028 /* DataFetcher.swift in Sources */,
 				C9179A2427973BCC008A82DD /* CoreDataStack.swift in Sources */,
 				C9179A2927973BD1008A82DD /* +UIColor.swift in Sources */,
 				C9179A2B27973BD1008A82DD /* SFSymbols.swift in Sources */,
@@ -691,6 +709,7 @@
 				C9F4F91A2789C2BD00887A3E /* Tag+CoreDataProperties.swift in Sources */,
 				C9A142C9278A6B9200B627BF /* UILinkTableViewCell.swift in Sources */,
 				C99C14D6278C678200936D27 /* Representable.swift in Sources */,
+				C9C56973279C1EEF0064D8EB /* JSONDumpHelper.swift in Sources */,
 				C97467A32799882C00B53B8C /* UrlTextFieldAccessoryView.swift in Sources */,
 				C96016442798B29700675DC5 /* DataFetcher.swift in Sources */,
 				C9F4F95B278A40F200887A3E /* UIImageCircleTableViewCell.swift in Sources */,
@@ -705,6 +724,7 @@
 				C9F4F959278A187D00887A3E /* +UIColor.swift in Sources */,
 				C9F4F9472789C2DE00887A3E /* LinkCounterText.swift in Sources */,
 				C90C0A2327964CBE004FABDD /* AddCategoryViewController.swift in Sources */,
+				C9C56975279C214B0064D8EB /* BackupViewController.swift in Sources */,
 				C9267F3D279A2C170041B94A /* Defaults.swift in Sources */,
 				C9267F42279A52A50041B94A /* TipsViewController.swift in Sources */,
 				C9F4F9222789C2D600887A3E /* SceneDelegate.swift in Sources */,
@@ -718,6 +738,7 @@
 				C9F4F8FC2789C2B400887A3E /* Urly.xcdatamodeld in Sources */,
 				C9F4F9182789C2BD00887A3E /* Group+CoreDataProperties.swift in Sources */,
 				C94A2DD2278BB3D3007F6FFA /* +UIViewController.swift in Sources */,
+				C9C56971279C1AC40064D8EB /* Codables.swift in Sources */,
 				C9F4F957278A17FA00887A3E /* +UIImage.swift in Sources */,
 				C9D37C622798361C0084F188 /* AboutViewController.swift in Sources */,
 				C90C0A212795E36C004FABDD /* AddLinkViewController.swift in Sources */,
@@ -779,6 +800,7 @@
 				INFOPLIST_FILE = UlryIntents/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = UlryIntents;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -805,6 +827,7 @@
 				INFOPLIST_FILE = UlryIntents/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = UlryIntents;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1045,6 +1068,7 @@
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Ulry/Info.plist;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -1078,6 +1102,7 @@
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Ulry/Info.plist;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -1154,14 +1179,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.0.0;
-			};
-		};
-		C9F4F94C2789C36200887A3E /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/airbnb/lottie-ios";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

@@ -68,6 +68,8 @@ class HomeViewController: UIViewController {
                 cell.color = category.cellContent.backgroundColor
                 cell.count = category.cellContent.linksCount
                 cell.accessoryType = .disclosureIndicator
+                cell.contentView.setNeedsLayout()
+                cell.contentView.layoutIfNeeded()
                 return cell
             } else {
                 // Always present/Groups categories
@@ -77,6 +79,8 @@ class HomeViewController: UIViewController {
                 cell.color = category.cellContent.backgroundColor
                 cell.count = category.cellContent.linksCount
                 cell.accessoryType = .disclosureIndicator
+                cell.contentView.setNeedsLayout()
+                cell.contentView.layoutIfNeeded()
                 return cell
             }
         }

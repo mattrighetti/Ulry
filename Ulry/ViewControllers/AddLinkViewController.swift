@@ -256,9 +256,7 @@ class AddLinkViewController: UIViewController {
                 if editedLink.url != url {
                     editedLink.url = url
                     dataFetcher.fetchData(for: editedLink) {
-                        DispatchQueue.main.async {
-                            CoreDataStack.shared.saveContext()
-                        }
+                        CoreDataStack.shared.saveContext()
                     }
                 }
                 
@@ -269,9 +267,7 @@ class AddLinkViewController: UIViewController {
                 link.group = self.selectedFolder
                 link.tags = Set(self.selectedTags)
                 dataFetcher.fetchData(for: link) {
-                    DispatchQueue.main.async {
-                        CoreDataStack.shared.saveContext()
-                    }
+                    CoreDataStack.shared.saveContext()
                 }
             }
             
