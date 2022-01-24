@@ -259,7 +259,7 @@ extension HomeViewController: UITableViewDelegate {
         let vc = LinksTableViewController()
         vc.category = category
         vc.navigationItem.title = category.cellContent.title
-        
+        vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }
     

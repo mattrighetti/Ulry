@@ -85,7 +85,7 @@ class LinksTableViewController: UIViewController {
         super.viewDidLoad()
         
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.isToolbarHidden = true
+        
         setRightBarButtonItems(animated: false)
         
         view.backgroundColor = .systemBackground
