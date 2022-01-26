@@ -12,15 +12,18 @@ class DataFetcher {
     let urlSession = URLSession.shared
     
     func fetchData(for link: Link, completion handler: (() -> Void)? = nil) {
+        os_signpost(.begin, log: OSLog(subsystem: "com.mattrighetti.Ulry", category: .pointsOfInterest), name: "fetchSingleData")
         let url = link.url.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !url.isEmpty, URL(string: url) != nil else { return }
         
         var og = [String:String]()
+        os_signpost(.begin, log: OSLog(subsystem: "com.mattrighetti.Ulry", category: .pointsOfInterest), name: "parseOG")
         do {
             og = try MetaRod().build(url).og()
         } catch {
             os_log(.error, "🛑 encountered error while fetching URL data")
         }
+        os_signpost(.end, log: OSLog(subsystem: "com.mattrighetti.Ulry", category: .pointsOfInterest), name: "parseOG")
         
         let imgUrl = og.findFirstValue(keys: URL.imageMeta)
         let title = og.findFirstValue(keys: URL.titleMeta)
@@ -39,10 +42,12 @@ class DataFetcher {
                 }
                 
                 link.imageData = data
+                os_signpost(.end, log: OSLog(subsystem: "com.mattrighetti.Ulry", category: .pointsOfInterest), name: "fetchSingleData")
                 handler?()
             }
             imgTask.resume()
         } else {
+            os_signpost(.end, log: OSLog(subsystem: "com.mattrighetti.Ulry", category: .pointsOfInterest), name: "fetchSingleData")
             handler?()
         }
     }

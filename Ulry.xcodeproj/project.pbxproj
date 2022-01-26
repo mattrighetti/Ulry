@@ -49,6 +49,8 @@
 		C94A2DD2278BB3D3007F6FFA /* +UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */; };
 		C953DA0F279D87F700357028 /* DataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96016432798B29700675DC5 /* DataFetcher.swift */; };
 		C96016442798B29700675DC5 /* DataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96016432798B29700675DC5 /* DataFetcher.swift */; };
+		C96D597D27A0BDED00A990B3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C96D597C27A0BDED00A990B3 /* StoreKit.framework */; };
+		C96D597F27A0BDFA00A990B3 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C96D597E27A0BDFA00A990B3 /* CloudKit.framework */; };
 		C97467A32799882C00B53B8C /* UrlTextFieldAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97467A22799882C00B53B8C /* UrlTextFieldAccessoryView.swift */; };
 		C97467A527999A5B00B53B8C /* GeneralSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97467A427999A5B00B53B8C /* GeneralSettingsViewController.swift */; };
 		C99C14B1278C66FC00936D27 /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C99C14B0278C66FC00936D27 /* UniformTypeIdentifiers.framework */; };
@@ -178,6 +180,8 @@
 		C94A2DCF278B710A007F6FFA /* +UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UIFont.swift"; sourceTree = "<group>"; };
 		C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UIViewController.swift"; sourceTree = "<group>"; };
 		C96016432798B29700675DC5 /* DataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFetcher.swift; sourceTree = "<group>"; };
+		C96D597C27A0BDED00A990B3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		C96D597E27A0BDFA00A990B3 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		C97467A22799882C00B53B8C /* UrlTextFieldAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlTextFieldAccessoryView.swift; sourceTree = "<group>"; };
 		C97467A427999A5B00B53B8C /* GeneralSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsViewController.swift; sourceTree = "<group>"; };
 		C99C14AE278C66FC00936D27 /* AddToUlryAction.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AddToUlryAction.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -263,7 +267,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C96D597F27A0BDFA00A990B3 /* CloudKit.framework in Frameworks */,
 				C9F4F94B2789C35200887A3E /* SwiftSoup in Frameworks */,
+				C96D597D27A0BDED00A990B3 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,6 +289,8 @@
 		C99C14AF278C66FC00936D27 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C96D597E27A0BDFA00A990B3 /* CloudKit.framework */,
+				C96D597C27A0BDED00A990B3 /* StoreKit.framework */,
 				C99C14B0278C66FC00936D27 /* UniformTypeIdentifiers.framework */,
 				C91799EE27972614008A82DD /* Intents.framework */,
 				C91799F927972615008A82DD /* IntentsUI.framework */,
@@ -794,7 +802,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = UlryIntents/UlryIntents.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = UlryIntents/Info.plist;
@@ -821,7 +829,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = UlryIntents/UlryIntents.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = UlryIntents/Info.plist;
@@ -850,7 +858,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = ExtensionAppIcon;
 				CODE_SIGN_ENTITLEMENTS = AddToUlryAction/AddToUlryAction.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -880,7 +888,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = ExtensionAppIcon;
 				CODE_SIGN_ENTITLEMENTS = AddToUlryAction/AddToUlryAction.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1064,7 +1072,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Ulry/Ulry.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Ulry/Info.plist;
@@ -1098,7 +1106,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Ulry/Ulry.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Ulry/Info.plist;
