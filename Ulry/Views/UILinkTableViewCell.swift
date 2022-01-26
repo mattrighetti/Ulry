@@ -94,12 +94,12 @@ class UILinkTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             backgroundLabelImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
-            backgroundLabelImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            backgroundLabelImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             backgroundLabelImage.widthAnchor.constraint(equalToConstant: 60),
             backgroundLabelImage.heightAnchor.constraint(equalToConstant: 60),
             
             image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
-            image.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            image.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             image.widthAnchor.constraint(equalToConstant: 60),
             image.heightAnchor.constraint(equalToConstant: 60),
             
@@ -153,6 +153,7 @@ class UILinkTableViewCell: UITableViewCell {
             if let img = UIImage(data: data) {
                 image.image = img
                 backgroundLabelImage.isHidden = true
+                hostLabel.isHidden = true
             } else {
                 image.isHidden = true
             }
@@ -175,13 +176,16 @@ class UILinkTableViewCell: UITableViewCell {
     }
     
     override func prepareForReuse() {
-        image.isHidden = false
         image.image = nil
         hostLabel.text = nil
         dateLabel.text = nil
         urlHostnameLabel.text = nil
         descriptionLabel.text = nil
         titleLabel.text = nil
+        
+        image.isHidden = false
+        hostLabel.isHidden = false
+        descriptionLabel.isHidden = false
         backgroundLabelImage.isHidden = false
     }
     
