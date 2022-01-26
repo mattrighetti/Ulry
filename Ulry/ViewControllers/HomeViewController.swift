@@ -30,7 +30,14 @@ fileprivate var categoryImageCell = "CategoryImageCell"
 
 class HomeViewController: UIViewController {
     let context = CoreDataStack.shared.managedContext
-    let tableView = UITableView(frame: .zero, style: .insetGrouped)
+    lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .insetGrouped)
+        tableView.register(UIColorCircleTableViewCell.self, forCellReuseIdentifier: categoryColorCell)
+        tableView.register(UIImageCircleTableViewCell.self, forCellReuseIdentifier: categoryImageCell)
+        tableView.cellLayoutMarginsFollowReadableWidth = true
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        return tableView
+    }()
     
     lazy var tagsFRC: NSFetchedResultsController<Tag> = {
         NSFetchedResultsController(
@@ -120,9 +127,6 @@ class HomeViewController: UIViewController {
         linksFRC.delegate = self
         
         tableView.delegate = self
-        tableView.register(UIColorCircleTableViewCell.self, forCellReuseIdentifier: categoryColorCell)
-        tableView.register(UIImageCircleTableViewCell.self, forCellReuseIdentifier: categoryImageCell)
-        tableView.cellLayoutMarginsFollowReadableWidth = true
         
         view.addSubview(tableView)
         
@@ -335,6 +339,8 @@ extension HomeViewController: NSFetchedResultsControllerDelegate {
             fatalError()
         }
         
+        // Applying with animatingDiffereces while not being visible fired a strange log message
+        shouldAnimate = shouldAnimate && navigationController?.visibleViewController == self
         datasource.apply(snapshot, animatingDifferences: shouldAnimate)
     }
 }

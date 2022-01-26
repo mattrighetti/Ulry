@@ -23,6 +23,8 @@ class BackupViewController: UIStaticTableView {
         return uialert
     }()
     
+    var onDoneAlertNotify: ((String, String) -> Void)? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -35,32 +37,20 @@ class BackupViewController: UIStaticTableView {
                 CellContent(
                     title: "Export to file",
                     icon: "arrow.up.doc.fill",
-                    isEnabled: false,
+                    isEnabled: true,
                     accessoryType: .accessoryType(.disclosureIndicator, .action({ [weak self] in
                         do {
-                            self?.alertvc.title = "Exporting"
-                            self?.alertvc.message = "Exporting data to file..."
-                            self?.alertvc.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
-                            self?.alertvc.actions.first?.isEnabled = false
-                            guard let alertvc = self?.alertvc else { return }
-                            self?.navigationController?.present(alertvc, animated: false, completion: nil)
-                            
+                            self?.popupCompletionViewContoller()
                             try self?.dumpHelper.dumpAllToDocumentFile()
-                            
-                            self?.alertvc.title = "Done"
-                            self?.alertvc.message = "Exported data correctly"
-                            self?.alertvc.actions.first?.isEnabled = true
                         } catch {
-                            self?.alertvc.title = "Ops!"
-                            self?.alertvc.message = "Something went wrong while importing from file, try again later or report to developer"
-                            self?.alertvc.actions.first?.isEnabled = true
+                            self?.onDoneAlertNotify?("Ops!", "Something went wrong while importing from file, try again later or report to developer")
                         }
                     }))
                 ),
                 CellContent(
                     title: "Load from file",
                     icon: "arrow.down.doc.fill",
-                    isEnabled: false,
+                    isEnabled: true,
                     accessoryType: .accessoryType(
                         .disclosureIndicator,
                         .action({ [weak self] in
@@ -69,51 +59,62 @@ class BackupViewController: UIStaticTableView {
                         })
                     )
                 )
-            ],
-            [
-                CellContent(
-                    title: "iCloud sync",
-                    subtitle: "Premium members only",
-                    icon: "arrow.clockwise.icloud.fill",
-                    isEnabled: false,
-                    accessoryType: .viewInline({
-                        let uiswitch = UISwitch()
-                        uiswitch.isEnabled = false
-                        // TODO save to user defaults
-                        return uiswitch
-                    })
-                )
             ]
         ]
+    }
+    
+    private func popupCompletionViewContoller() {
+        alertvc.message =  "Please wait..."
+
+        let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.style = UIActivityIndicatorView.Style.medium
+        loadingIndicator.startAnimating();
+
+        alertvc.view.addSubview(loadingIndicator)
+        
+        onDoneAlertNotify = { [weak self] title, message in
+            loadingIndicator.stopAnimating()
+            self?.alertvc.title = title
+            self?.alertvc.message = message
+            let okButton = UIAlertAction(title: "Ok", style: .cancel)
+            self?.alertvc.addAction(okButton)
+        }
+        
+        present(alertvc, animated: true, completion: nil)
+    }
+    
+    private func initImport(for urls: [URL]) {
+        if let url = urls.first {
+            popupCompletionViewContoller()
+            
+            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + .milliseconds(500)) {
+                self.dumpHelper.loadFromFile(from: url)
+            }
+        }
     }
  }
 
 extension BackupViewController: JSONDumpHelperDelegate {
-    func helper(_: JSONDumpHelper, didFinishFetching: [Link]) {
-        self.alertvc.title = "Done"
-        self.alertvc.message = "Loaded \(didFinishFetching.count) correclty!"
-        self.alertvc.actions.first?.isEnabled = true
+    func helper(_: JSONDumpHelper, didFinishFetching links: [Link]) {
+        DispatchQueue.main.async {
+            self.onDoneAlertNotify?("Done", "Exported \(links.count) links")
+        }
+    }
+    
+    func helper(_: JSONDumpHelper, didFinishExporting links: [Link]) {
+        DispatchQueue.main.async {
+            self.onDoneAlertNotify?("Done!", "Exported all data to file")
+        }
     }
 }
 
 extension BackupViewController: UIDocumentPickerDelegate {
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        if let url = urls.first {
-            self.alertvc.title = "Importing"
-            self.alertvc.message = "Fetching data..."
-            self.alertvc.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
-            self.alertvc.actions.first?.isEnabled = false
-            self.navigationController?.present(self.alertvc, animated: false, completion: nil)
-            
-            DispatchQueue(label: "com.mattrighetti.Ulry.LoadFromFile").async {
-                do {
-                    try self.dumpHelper.loadFromFile(from: url)
-                } catch {
-                    self.alertvc.title = "Ops!"
-                    self.alertvc.message = "Something went wrong while importing from file, try again later or report to developer"
-                    self.alertvc.actions.first?.isEnabled = true
-                }
-            }
-        }
+        self.initImport(for: urls)
     }
 }

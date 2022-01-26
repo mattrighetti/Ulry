@@ -48,6 +48,8 @@ class UIStaticTableView: UIViewController {
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.cellLayoutMarginsFollowReadableWidth = true
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
     

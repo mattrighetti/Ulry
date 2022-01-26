@@ -5,6 +5,7 @@
 //  Created by Mattia Righetti on 1/22/22.
 //
 
+import os
 import Foundation
 import MobileCoreServices
 import CoreData
@@ -17,11 +18,12 @@ fileprivate struct Dump: Codable {
 }
 
 protocol JSONDumpHelperDelegate {
-    func helper(_: JSONDumpHelper, didFinishFetching: [Link])
+    func helper(_: JSONDumpHelper, didFinishExporting links: [Link])
+    func helper(_: JSONDumpHelper, didFinishFetching links: [Link])
 }
 
 struct JSONDumpHelper {
-    
+    static let pointsOfInterest = OSLog(subsystem: "com.mattrighetti.Ulry", category: .pointsOfInterest)
     var delegate: JSONDumpHelperDelegate?
     
     func dumpAllToDocumentFile(
@@ -49,6 +51,7 @@ struct JSONDumpHelper {
         let fileUrl = dir.appendingPathComponent(file)
         
         try json?.write(to: fileUrl, atomically: false, encoding: .utf8)
+        delegate?.helper(self, didFinishExporting: links)
     }
     
     func loadFromFile(
@@ -57,11 +60,11 @@ struct JSONDumpHelper {
         decoder: JSONDecoder = JSONDecoder(),
         context: NSManagedObjectContext = CoreDataStack.shared.managedContext,
         dataFetcher: DataFetcher = DataFetcher()
-    ) throws {
-        guard FileManager.default.fileExists(atPath: url.path) else { return }
+    ) {
+        os_signpost(.begin, log: JSONDumpHelper.pointsOfInterest, name: "loadFromFile")
         
-        let data = try Data(contentsOf: url)
-        let dump = try decoder.decode(Dump.self, from: data)
+        let data = try! Data(contentsOf: url)
+        let dump = try! decoder.decode(Dump.self, from: data)
         
         var tagsHash: [UUID:Tag] = [:]
         if let tagsCodable = dump.tags {
@@ -118,6 +121,7 @@ struct JSONDumpHelper {
         
         dataFetcher.fetchData(for: links, completion: {
             delegate?.helper(self, didFinishFetching: links)
+            os_signpost(.end, log: JSONDumpHelper.pointsOfInterest, name: "loadFromFile")
         })
     }
 }

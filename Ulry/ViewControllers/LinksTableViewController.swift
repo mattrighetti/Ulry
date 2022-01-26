@@ -16,7 +16,7 @@ class LinksTableViewController: UIViewController {
     let context = CoreDataStack.shared.managedContext
     var coreDataController: NSFetchedResultsController<Link>!
     
-    let tableview: UITableView = {
+    lazy var tableview: UITableView = {
         let tableview = UITableView()
         tableview.backgroundColor = .clear
         tableview.register(UILinkTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)

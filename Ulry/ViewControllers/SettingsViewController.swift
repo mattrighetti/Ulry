@@ -63,7 +63,13 @@ enum Setting: Hashable {
 }
 
 class SettingsViewController: UIViewController {
-    let tableView = UITableView(frame: .zero, style: .insetGrouped)
+    lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .insetGrouped)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SettingCell")
+        tableView.cellLayoutMarginsFollowReadableWidth = true
+        return tableView
+    }()
     
     lazy var datasource: UITableViewDiffableDataSource<Int, Setting> = {
         let datasource = UITableViewDiffableDataSource<Int, Setting>(tableView: tableView) { tableView, indexPath, setting in
@@ -91,8 +97,6 @@ class SettingsViewController: UIViewController {
         })
         
         tableView.delegate = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SettingCell")
-        tableView.cellLayoutMarginsFollowReadableWidth = true
         
         view.addSubview(tableView)
         
