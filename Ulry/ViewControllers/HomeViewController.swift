@@ -95,6 +95,33 @@ class HomeViewController: UIViewController {
         return datasource
     }()
     
+    lazy var addTagButton: UIButton = {
+        let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 20, weight: .bold)
+        
+        var configuration = UIButton.Configuration.plain()
+        configuration.baseForegroundColor = .systemBlue
+        configuration.attributedTitle = AttributedString(NSAttributedString(string: "Add tag", attributes: [.font: UIFont.rounded(ofSize: 14, weight: .bold)]))
+        configuration.image = UIImage(systemName: "plus.circle.fill", withConfiguration: imageConfiguration)?.withTintColor(.systemBlue)
+        configuration.imagePadding = 5.0
+        configuration.imagePlacement = .trailing
+        
+        let button = UIButton(configuration: configuration, primaryAction: UIAction { _ in self.addTagPressed() })
+        return button
+    }()
+    
+    lazy var addGroupButton: UIButton = {
+        let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 20, weight: .bold)
+        
+        var configuration = UIButton.Configuration.plain()
+        configuration.baseForegroundColor = .systemTeal
+        configuration.attributedTitle = AttributedString(NSAttributedString(string: "Add group", attributes: [.font: UIFont.rounded(ofSize: 14, weight: .bold)]))
+        configuration.image = UIImage(systemName: "folder.fill.badge.plus", withConfiguration: imageConfiguration)?.withTintColor(.systemTeal)
+        configuration.imagePadding = 7.0
+        
+        let button = UIButton(configuration: configuration, primaryAction: UIAction { _ in self.addGroupPressed() })
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -103,9 +130,9 @@ class HomeViewController: UIViewController {
         navigationItem.title = "Ulry"
         
         setToolbarItems([
-            UIBarButtonItem(title: "Add group", style: .plain, target: self, action: #selector(addGroupPressed)),
+            UIBarButtonItem(customView: addGroupButton),
             UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil),
-            UIBarButtonItem(title: "Add tag", style: .plain, target: self, action: #selector(addTagPressed))
+            UIBarButtonItem(customView: addTagButton)
         ], animated: false)
         
         let addLinkButton = UIBarButtonItem(title: nil, image: UIImage(systemName: "plus.circle"), primaryAction: UIAction { _ in
