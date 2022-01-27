@@ -15,6 +15,9 @@ class AppearanceViewController: UIStaticTableView {
         
         cells = [
             [
+                CellContent(title: "App Icon", icon: "app", accessoryType: .accessoryType(.disclosureIndicator, .action({ [weak self] in
+                    self?.navigationController?.pushViewController(AppIconsViewController(), animated: true)
+                }))),
                 CellContent(title: "Theme color", icon: "paintpalette", accessoryType: .accessoryType(.disclosureIndicator, .navigationController({
                     let alert = UIAlertController(title: "Select theme color", message: nil, preferredStyle: .actionSheet)
                     alert.addAction(UIAlertAction(title: "Light", style: .default, handler: { _ in
