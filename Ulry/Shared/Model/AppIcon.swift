@@ -12,6 +12,7 @@ enum AppIcon: String, CaseIterable, Hashable {
     case yellow = "yellow"
     case blue = "blue"
     case dark = "dark"
+    case roundedDark = "rounded-dark"
     
     static var currentAppIcon: AppIcon {
         guard let name = UIApplication.shared.alternateIconName else { return .default }
@@ -41,6 +42,8 @@ enum AppIcon: String, CaseIterable, Hashable {
             return "Blueish App Icon"
         case .dark:
             return "Dark Orange App Icon"
+        case .roundedDark:
+            return "Dark Orange Rounded App Icon"
         }
     }
     
@@ -54,6 +57,8 @@ enum AppIcon: String, CaseIterable, Hashable {
             return "Frosty blue glasses"
         case .dark:
             return "Wanna join the dark side?"
+        case .roundedDark:
+            return "Dark side, but rounded"
         }
     }
 }
