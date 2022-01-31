@@ -19,5 +19,5 @@ public extension URL {
     
     static let titleMeta = ["og:title", "title", "twitter:title"]
     static let descriptionMeta = ["og:description", "description", "twitter:description"]
-    static let imageMeta = ["og:image", "image", "image:src", "twitter:image:src"]
+    static let imageMeta = ["og:image", "og:image:src", "image", "image:src", "twitter:image:src"]
 }

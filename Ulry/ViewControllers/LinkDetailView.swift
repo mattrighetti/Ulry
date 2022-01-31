@@ -24,14 +24,6 @@ struct LinkDetailView: View {
     
     var link: Link
     
-    var hostname: String? {
-        guard
-            let url = URL(string: link.url)
-        else { return nil }
-        
-        return url.host
-    }
-    
     var body: some View {
         VStack {
             if
@@ -53,7 +45,7 @@ struct LinkDetailView: View {
                     Spacer()
                 }
                 .foregroundColor(.white)
-                .frame(height: 100)
+                .frame(height: 150)
                 .background(link.color)
                 .cornerRadius(20)
                 .padding([.horizontal, .top])

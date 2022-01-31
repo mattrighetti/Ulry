@@ -15,6 +15,7 @@ private var reuseIdentifier = "LinkCell"
 class LinksTableViewController: UIViewController {
     let context = CoreDataStack.shared.managedContext
     var coreDataController: NSFetchedResultsController<Link>!
+    lazy var dataFetcher = DataFetcher()
     
     lazy var tableview: UITableView = {
         let tableview = UITableView()

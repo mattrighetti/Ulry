@@ -16,10 +16,7 @@ class AddLinkViewController: UIViewController {
     }
     
     let context = CoreDataStack.shared.managedContext
-    
-    lazy var dataFetcher: DataFetcher = {
-        DataFetcher()
-    }()
+    lazy var dataFetcher = DataFetcher()
     
     var configuration: Configuration = .new {
         didSet {

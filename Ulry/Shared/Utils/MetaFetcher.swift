@@ -67,10 +67,12 @@ public class MetaRod: NSObject {
         do {
             let header = self.document?.head()
             let metaList = try header?.getElementsByTag("meta")
-            try metaList?.forEach{ elm in
-                let prop = try elm.attr("property")
-                if (!prop.isEmpty && prop.contains("og:")) {
+            
+            try metaList?.forEach { elm in
+                if let prop = try? elm.attr("property"), !prop.isEmpty, prop.contains("og:") {
                     og[prop] = try elm.attr("content")
+                } else if let name = try? elm.attr("name"), !name.isEmpty, name.contains("og:") {
+                    og[name] = try elm.attr("content")
                 }
             }
             
