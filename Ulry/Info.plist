@@ -5,7 +5,6 @@
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>AddURLIntent</string>
-		<string>AddURLsIntent</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

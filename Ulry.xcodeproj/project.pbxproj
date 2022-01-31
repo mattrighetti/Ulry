@@ -57,7 +57,6 @@
 		C97467A527999A5B00B53B8C /* GeneralSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97467A427999A5B00B53B8C /* GeneralSettingsViewController.swift */; };
 		C99C14B1278C66FC00936D27 /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C99C14B0278C66FC00936D27 /* UniformTypeIdentifiers.framework */; };
 		C99C14B4278C66FC00936D27 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C99C14B3278C66FC00936D27 /* Media.xcassets */; };
-		C99C14B6278C66FC00936D27 /* ActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99C14B5278C66FC00936D27 /* ActionViewController.swift */; };
 		C99C14B9278C66FC00936D27 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C99C14B7278C66FC00936D27 /* MainInterface.storyboard */; };
 		C99C14BD278C66FC00936D27 /* AddToUlryAction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C99C14AE278C66FC00936D27 /* AddToUlryAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C99C14C3278C672C00936D27 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F90E2789C2BD00887A3E /* Group.swift */; };
@@ -86,6 +85,8 @@
 		C9C56971279C1AC40064D8EB /* Codables.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C56970279C1AC40064D8EB /* Codables.swift */; };
 		C9C56973279C1EEF0064D8EB /* JSONDumpHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C56972279C1EEF0064D8EB /* JSONDumpHelper.swift */; };
 		C9C56975279C214B0064D8EB /* BackupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C56974279C214B0064D8EB /* BackupViewController.swift */; };
+		C9CE80E827A75DAD005D1005 /* AddURLIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE80E727A75DAD005D1005 /* AddURLIntentHandler.swift */; };
+		C9CE80EA27A75FA9005D1005 /* AddURLIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE80E727A75DAD005D1005 /* AddURLIntentHandler.swift */; };
 		C9D37C5E2798297E0084F188 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C5D2798297E0084F188 /* SettingsViewController.swift */; };
 		C9D37C60279830EB0084F188 /* AppearanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C5F279830EB0084F188 /* AppearanceViewController.swift */; };
 		C9D37C622798361C0084F188 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C612798361C0084F188 /* AboutViewController.swift */; };
@@ -191,7 +192,6 @@
 		C99C14AE278C66FC00936D27 /* AddToUlryAction.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AddToUlryAction.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		C99C14B0278C66FC00936D27 /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = SDKROOT; };
 		C99C14B3278C66FC00936D27 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
-		C99C14B5278C66FC00936D27 /* ActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionViewController.swift; sourceTree = "<group>"; };
 		C99C14B8278C66FC00936D27 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		C99C14BA278C66FC00936D27 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C99C14D5278C678200936D27 /* Representable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Representable.swift; sourceTree = "<group>"; };
@@ -203,6 +203,7 @@
 		C9C56970279C1AC40064D8EB /* Codables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codables.swift; sourceTree = "<group>"; };
 		C9C56972279C1EEF0064D8EB /* JSONDumpHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDumpHelper.swift; sourceTree = "<group>"; };
 		C9C56974279C214B0064D8EB /* BackupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupViewController.swift; sourceTree = "<group>"; };
+		C9CE80E727A75DAD005D1005 /* AddURLIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddURLIntentHandler.swift; sourceTree = "<group>"; };
 		C9D37C5D2798297E0084F188 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		C9D37C5F279830EB0084F188 /* AppearanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceViewController.swift; sourceTree = "<group>"; };
 		C9D37C612798361C0084F188 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
@@ -280,16 +281,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		C9179A1827972E2B008A82DD /* UlryIntents */ = {
-			isa = PBXGroup;
-			children = (
-				C9179A3A27973D70008A82DD /* UlryIntents.entitlements */,
-				C9179A1927972E2B008A82DD /* IntentHandler.swift */,
-				C9179A1B27972E2B008A82DD /* Info.plist */,
-			);
-			path = UlryIntents;
-			sourceTree = "<group>";
-		};
 		C99C14AF278C66FC00936D27 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -307,7 +298,6 @@
 			children = (
 				C99C14DB278C6BD200936D27 /* AddToUlryAction.entitlements */,
 				C99C14B3278C66FC00936D27 /* Media.xcassets */,
-				C99C14B5278C66FC00936D27 /* ActionViewController.swift */,
 				C99C14B7278C66FC00936D27 /* MainInterface.storyboard */,
 				C99C14BA278C66FC00936D27 /* Info.plist */,
 				C9437012278CAFF2009143A7 /* GetURL.js */,
@@ -321,6 +311,25 @@
 				C9C56970279C1AC40064D8EB /* Codables.swift */,
 			);
 			path = Codables;
+			sourceTree = "<group>";
+		};
+		C9CE80E427A75C6D005D1005 /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				C9179A1027972BD3008A82DD /* Intents.intentdefinition */,
+				C9CE80E727A75DAD005D1005 /* AddURLIntentHandler.swift */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
+		C9CE80E527A75CA7005D1005 /* IntentsExtension */ = {
+			isa = PBXGroup;
+			children = (
+				C9179A3A27973D70008A82DD /* UlryIntents.entitlements */,
+				C9179A1927972E2B008A82DD /* IntentHandler.swift */,
+				C9179A1B27972E2B008A82DD /* Info.plist */,
+			);
+			path = IntentsExtension;
 			sourceTree = "<group>";
 		};
 		C9D7FE84278AFFA100016B04 /* UlryTests */ = {
@@ -337,7 +346,6 @@
 				C9F4F8E02789C28A00887A3E /* Ulry */,
 				C9D7FE84278AFFA100016B04 /* UlryTests */,
 				C99C14B2278C66FC00936D27 /* AddToUlryAction */,
-				C9179A1827972E2B008A82DD /* UlryIntents */,
 				C99C14AF278C66FC00936D27 /* Frameworks */,
 				C9F4F8DF2789C28A00887A3E /* Products */,
 			);
@@ -357,15 +365,17 @@
 		C9F4F8E02789C28A00887A3E /* Ulry */ = {
 			isa = PBXGroup;
 			children = (
+				C9F4F8EF2789C28B00887A3E /* LaunchScreen.storyboard */,
+				C9F4F8F82789C2AB00887A3E /* AppDelegate.swift */,
+				C9F4F9212789C2D600887A3E /* SceneDelegate.swift */,
 				C99C14DC278C6C0000936D27 /* Ulry.entitlements */,
 				C9F4F8FD2789C2BD00887A3E /* Shared */,
 				C9F4F92F2789C2DE00887A3E /* Views */,
 				C9F4F9272789C2DE00887A3E /* ViewControllers */,
-				C9F4F8EF2789C28B00887A3E /* LaunchScreen.storyboard */,
+				C9CE80E427A75C6D005D1005 /* Intents */,
+				C9CE80E527A75CA7005D1005 /* IntentsExtension */,
 				C9F4F8F22789C28B00887A3E /* Info.plist */,
-				C9F4F8F82789C2AB00887A3E /* AppDelegate.swift */,
 				C9F4F8FA2789C2B400887A3E /* Urly.xcdatamodeld */,
-				C9F4F9212789C2D600887A3E /* SceneDelegate.swift */,
 				C9F4F9502789C4F600887A3E /* Assets.xcassets */,
 			);
 			path = Ulry;
@@ -374,7 +384,6 @@
 		C9F4F8FD2789C2BD00887A3E /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				C9179A1027972BD3008A82DD /* Intents.intentdefinition */,
 				C90AA80C2794D6BC000113BA /* CoreDataStack.swift */,
 				C9F4F9032789C2BD00887A3E /* Utils */,
 				C9F4F9082789C2BD00887A3E /* Model */,
@@ -658,6 +667,7 @@
 				C9179A2827973BD1008A82DD /* +Color.swift in Sources */,
 				C9179A3B27973E2A008A82DD /* Urly.xcdatamodeld in Sources */,
 				C9179A3427973BD4008A82DD /* Group+CoreDataProperties.swift in Sources */,
+				C9CE80EA27A75FA9005D1005 /* AddURLIntentHandler.swift in Sources */,
 				C9179A2A27973BD1008A82DD /* +UIScreen.swift in Sources */,
 				C9179A3627973BD4008A82DD /* Link.swift in Sources */,
 				C9179A2F27973BD1008A82DD /* +URL.swift in Sources */,
@@ -676,7 +686,6 @@
 				C99C14C4278C672C00936D27 /* Tag.swift in Sources */,
 				C99C14C8278C675700936D27 /* Link+CoreDataProperties.swift in Sources */,
 				C99C14C3278C672C00936D27 /* Group.swift in Sources */,
-				C99C14B6278C66FC00936D27 /* ActionViewController.swift in Sources */,
 				C9ABF9E627944A6900F1B1F1 /* +Dictionary.swift in Sources */,
 				C99C14CE278C675E00936D27 /* +Color.swift in Sources */,
 				C99C14CB278C675700936D27 /* Link.swift in Sources */,
@@ -755,6 +764,7 @@
 				C9F4F9182789C2BD00887A3E /* Group+CoreDataProperties.swift in Sources */,
 				C94A2DD2278BB3D3007F6FFA /* +UIViewController.swift in Sources */,
 				C9C56971279C1AC40064D8EB /* Codables.swift in Sources */,
+				C9CE80E827A75DAD005D1005 /* AddURLIntentHandler.swift in Sources */,
 				C9F4F957278A17FA00887A3E /* +UIImage.swift in Sources */,
 				C9D37C622798361C0084F188 /* AboutViewController.swift in Sources */,
 				C90C0A212795E36C004FABDD /* AddLinkViewController.swift in Sources */,
@@ -808,12 +818,12 @@
 		C9179A2027972E2B008A82DD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = UlryIntents/UlryIntents.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Ulry/IntentsExtension/UlryIntents.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = UlryIntents/Info.plist;
+				INFOPLIST_FILE = Ulry/IntentsExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = UlryIntents;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -835,12 +845,12 @@
 		C9179A2127972E2B008A82DD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = UlryIntents/UlryIntents.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Ulry/IntentsExtension/UlryIntents.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = UlryIntents/Info.plist;
+				INFOPLIST_FILE = Ulry/IntentsExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = UlryIntents;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
