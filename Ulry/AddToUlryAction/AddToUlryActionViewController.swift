@@ -24,7 +24,7 @@ class ActionViewController: UIViewController {
     lazy var image: UIImageView = {
         let imageview = UIImageView()
         imageview.image = UIImage(named: "AppIcon")
-        imageview.layer.cornerRadius = 15
+        imageview.layer.cornerRadius = 35
         imageview.clipsToBounds = true
         imageview.contentMode = .scaleToFill
         imageview.translatesAutoresizingMaskIntoConstraints = false

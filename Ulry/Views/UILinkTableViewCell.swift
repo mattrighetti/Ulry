@@ -94,12 +94,13 @@ class UILinkTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             backgroundLabelImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
-            backgroundLabelImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            backgroundLabelImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             backgroundLabelImage.widthAnchor.constraint(equalToConstant: 60),
             backgroundLabelImage.heightAnchor.constraint(equalToConstant: 60),
+            backgroundLabelImage.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -10),
             
             image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
-            image.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            image.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             image.widthAnchor.constraint(equalToConstant: 60),
             image.heightAnchor.constraint(equalToConstant: 60),
             
