@@ -217,11 +217,8 @@ class AddCategoryViewController: UIViewController {
         return stackview
     }()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        navigationController?.navigationBar.prefersLargeTitles = false
-        navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .save, primaryAction: UIAction { [unowned self] _ in
+    lazy var rightBarButtonItem: UIBarButtonItem = {
+        UIBarButtonItem(systemItem: .save, primaryAction: UIAction { [unowned self] _ in
             guard let text = titleTextField.text, !text.isEmpty else {
                 let alert = UIAlertController(title: "No name", message: "Please make sure to insert a valid name", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
@@ -259,6 +256,13 @@ class AddCategoryViewController: UIViewController {
             
             self.dismiss(animated: true)
         })
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.rightBarButtonItem = rightBarButtonItem
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .close, primaryAction: UIAction { _ in
           self.dismiss(animated: true)
@@ -274,12 +278,12 @@ class AddCategoryViewController: UIViewController {
         view.addSubview(buttonStackView)
         buttonStackView.addArrangedSubview(chooseColorButton)
         
-        switch configuration {
-        case .group, .editGroup(_):
-            buttonStackView.addArrangedSubview(chooseIconButton)
-        default: break
-        }
+        setup()
         
+        showKeyboard()
+    }
+    
+    private func setup() {
         NSLayoutConstraint.activate([
             backgroundView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             backgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
@@ -301,6 +305,8 @@ class AddCategoryViewController: UIViewController {
         
         switch configuration {
         case .group, .editGroup(_):
+            buttonStackView.addArrangedSubview(chooseIconButton)
+            
             view.addSubview(glyphLabel)
             NSLayoutConstraint.activate([
                 glyphLabel.centerXAnchor.constraint(equalTo: colorBackgroundView.centerXAnchor),
@@ -337,6 +343,12 @@ class AddCategoryViewController: UIViewController {
         let view = SFSymbolsList(selected: glyph, selectedGlyph: .init(get: { self.glyph }, set: { glypn in self.glyph = glypn }))
         let vc = UIHostingController(rootView: view)
         present(vc, animated: true)
+    }
+    
+    private func showKeyboard() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
+            self?.titleTextField.becomeFirstResponder()
+        }
     }
 }
 

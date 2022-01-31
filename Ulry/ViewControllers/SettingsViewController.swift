@@ -126,16 +126,9 @@ class SettingsViewController: UIViewController {
     private func addSettings() {
         var snapshot = NSDiffableDataSourceSnapshot<Int, Setting>()
         
-        if UserDefaults.standard.bool(forKey: Defaults.isPremium.rawValue) {
-            snapshot.appendSections([0, 1])
-            snapshot.appendItems([.general, .appearance, .backup], toSection: 0)
-            snapshot.appendItems([.about, .tip, .rate], toSection: 1)
-        } else {
-            snapshot.appendSections([0, 1, 2])
-            snapshot.appendItems([.premium], toSection: 0)
-            snapshot.appendItems([.general, .appearance, .backup], toSection: 1)
-            snapshot.appendItems([.about, .tip, .rate], toSection: 2)
-        }
+        snapshot.appendSections([0, 1])
+        snapshot.appendItems([.general, .appearance, .backup], toSection: 0)
+        snapshot.appendItems([.about, .tip, .rate], toSection: 1)
         
         datasource.apply(snapshot, animatingDifferences: false)
     }
