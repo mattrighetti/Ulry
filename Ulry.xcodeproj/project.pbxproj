@@ -82,11 +82,15 @@
 		C9A142C9278A6B9200B627BF /* UILinkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A142C8278A6B9200B627BF /* UILinkTableViewCell.swift */; };
 		C9ABF9E52794451700F1B1F1 /* +Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ABF9E42794451700F1B1F1 /* +Dictionary.swift */; };
 		C9ABF9E627944A6900F1B1F1 /* +Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ABF9E42794451700F1B1F1 /* +Dictionary.swift */; };
-		C9C56971279C1AC40064D8EB /* Codables.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C56970279C1AC40064D8EB /* Codables.swift */; };
+		C9C56971279C1AC40064D8EB /* TagCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C56970279C1AC40064D8EB /* TagCodable.swift */; };
 		C9C56973279C1EEF0064D8EB /* JSONDumpHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C56972279C1EEF0064D8EB /* JSONDumpHelper.swift */; };
 		C9C56975279C214B0064D8EB /* BackupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C56974279C214B0064D8EB /* BackupViewController.swift */; };
 		C9CE80E827A75DAD005D1005 /* AddURLIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE80E727A75DAD005D1005 /* AddURLIntentHandler.swift */; };
 		C9CE80EA27A75FA9005D1005 /* AddURLIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE80E727A75DAD005D1005 /* AddURLIntentHandler.swift */; };
+		C9CE80EC27A76F0F005D1005 /* LinkCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE80EB27A76F0F005D1005 /* LinkCodable.swift */; };
+		C9CE80EE27A76F20005D1005 /* GroupCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE80ED27A76F20005D1005 /* GroupCodable.swift */; };
+		C9CE80F027A76FA4005D1005 /* AddToUlryActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE80EF27A76FA4005D1005 /* AddToUlryActionViewController.swift */; };
+		C9CE80F127A76FA4005D1005 /* AddToUlryActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE80EF27A76FA4005D1005 /* AddToUlryActionViewController.swift */; };
 		C9D37C5E2798297E0084F188 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C5D2798297E0084F188 /* SettingsViewController.swift */; };
 		C9D37C60279830EB0084F188 /* AppearanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C5F279830EB0084F188 /* AppearanceViewController.swift */; };
 		C9D37C622798361C0084F188 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C612798361C0084F188 /* AboutViewController.swift */; };
@@ -200,10 +204,13 @@
 		C9A142C6278A4E8600B627BF /* LinksTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinksTableViewController.swift; sourceTree = "<group>"; };
 		C9A142C8278A6B9200B627BF /* UILinkTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILinkTableViewCell.swift; sourceTree = "<group>"; };
 		C9ABF9E42794451700F1B1F1 /* +Dictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+Dictionary.swift"; sourceTree = "<group>"; };
-		C9C56970279C1AC40064D8EB /* Codables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codables.swift; sourceTree = "<group>"; };
+		C9C56970279C1AC40064D8EB /* TagCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCodable.swift; sourceTree = "<group>"; };
 		C9C56972279C1EEF0064D8EB /* JSONDumpHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDumpHelper.swift; sourceTree = "<group>"; };
 		C9C56974279C214B0064D8EB /* BackupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupViewController.swift; sourceTree = "<group>"; };
 		C9CE80E727A75DAD005D1005 /* AddURLIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddURLIntentHandler.swift; sourceTree = "<group>"; };
+		C9CE80EB27A76F0F005D1005 /* LinkCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkCodable.swift; sourceTree = "<group>"; };
+		C9CE80ED27A76F20005D1005 /* GroupCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCodable.swift; sourceTree = "<group>"; };
+		C9CE80EF27A76FA4005D1005 /* AddToUlryActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToUlryActionViewController.swift; sourceTree = "<group>"; };
 		C9D37C5D2798297E0084F188 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		C9D37C5F279830EB0084F188 /* AppearanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceViewController.swift; sourceTree = "<group>"; };
 		C9D37C612798361C0084F188 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
@@ -297,6 +304,7 @@
 			isa = PBXGroup;
 			children = (
 				C99C14DB278C6BD200936D27 /* AddToUlryAction.entitlements */,
+				C9CE80EF27A76FA4005D1005 /* AddToUlryActionViewController.swift */,
 				C99C14B3278C66FC00936D27 /* Media.xcassets */,
 				C99C14B7278C66FC00936D27 /* MainInterface.storyboard */,
 				C99C14BA278C66FC00936D27 /* Info.plist */,
@@ -308,7 +316,9 @@
 		C9C5696F279C1AB50064D8EB /* Codables */ = {
 			isa = PBXGroup;
 			children = (
-				C9C56970279C1AC40064D8EB /* Codables.swift */,
+				C9C56970279C1AC40064D8EB /* TagCodable.swift */,
+				C9CE80EB27A76F0F005D1005 /* LinkCodable.swift */,
+				C9CE80ED27A76F20005D1005 /* GroupCodable.swift */,
 			);
 			path = Codables;
 			sourceTree = "<group>";
@@ -332,6 +342,19 @@
 			path = IntentsExtension;
 			sourceTree = "<group>";
 		};
+		C9CE80F227A77116005D1005 /* UIKit Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C9F4F9052789C2BD00887A3E /* +UIScreen.swift */,
+				C9F4F9072789C2BD00887A3E /* +Color.swift */,
+				C9F4F956278A17FA00887A3E /* +UIImage.swift */,
+				C9F4F958278A187D00887A3E /* +UIColor.swift */,
+				C94A2DCF278B710A007F6FFA /* +UIFont.swift */,
+				C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */,
+			);
+			path = "UIKit Extensions";
+			sourceTree = "<group>";
+		};
 		C9D7FE84278AFFA100016B04 /* UlryTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -345,7 +368,6 @@
 			children = (
 				C9F4F8E02789C28A00887A3E /* Ulry */,
 				C9D7FE84278AFFA100016B04 /* UlryTests */,
-				C99C14B2278C66FC00936D27 /* AddToUlryAction */,
 				C99C14AF278C66FC00936D27 /* Frameworks */,
 				C9F4F8DF2789C28A00887A3E /* Products */,
 			);
@@ -372,8 +394,10 @@
 				C9F4F8FD2789C2BD00887A3E /* Shared */,
 				C9F4F92F2789C2DE00887A3E /* Views */,
 				C9F4F9272789C2DE00887A3E /* ViewControllers */,
+				C99C14B2278C66FC00936D27 /* AddToUlryAction */,
 				C9CE80E427A75C6D005D1005 /* Intents */,
 				C9CE80E527A75CA7005D1005 /* IntentsExtension */,
+				C9CE80F227A77116005D1005 /* UIKit Extensions */,
 				C9F4F8F22789C28B00887A3E /* Info.plist */,
 				C9F4F8FA2789C2B400887A3E /* Urly.xcdatamodeld */,
 				C9F4F9502789C4F600887A3E /* Assets.xcassets */,
@@ -396,13 +420,7 @@
 			isa = PBXGroup;
 			children = (
 				C9F4F9042789C2BD00887A3E /* SFSymbols.swift */,
-				C9F4F9052789C2BD00887A3E /* +UIScreen.swift */,
 				C9F4F9062789C2BD00887A3E /* MetaFetcher.swift */,
-				C9F4F9072789C2BD00887A3E /* +Color.swift */,
-				C9F4F956278A17FA00887A3E /* +UIImage.swift */,
-				C9F4F958278A187D00887A3E /* +UIColor.swift */,
-				C94A2DCF278B710A007F6FFA /* +UIFont.swift */,
-				C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */,
 				C99C14D5278C678200936D27 /* Representable.swift */,
 				C91053B2278E4659005AC807 /* +URL.swift */,
 				C9ABF9E42794451700F1B1F1 /* +Dictionary.swift */,
@@ -697,6 +715,7 @@
 				C99C14D3278C675E00936D27 /* +UIScreen.swift in Sources */,
 				C90AA80E2794E047000113BA /* CoreDataStack.swift in Sources */,
 				C99C14CD278C675E00936D27 /* +UIImage.swift in Sources */,
+				C9CE80F127A76FA4005D1005 /* AddToUlryActionViewController.swift in Sources */,
 				C99C14D7278C678500936D27 /* Representable.swift in Sources */,
 				C99C14D2278C675E00936D27 /* +UIViewController.swift in Sources */,
 				C99C14CF278C675E00936D27 /* +UIColor.swift in Sources */,
@@ -742,6 +761,7 @@
 				C9F4F91D2789C2BD00887A3E /* Group.swift in Sources */,
 				C972BAFE27A22201005B6312 /* AppIconsViewController.swift in Sources */,
 				C9ABF9E52794451700F1B1F1 /* +Dictionary.swift in Sources */,
+				C9CE80F027A76FA4005D1005 /* AddToUlryActionViewController.swift in Sources */,
 				C9F4F9142789C2BD00887A3E /* SFSymbols.swift in Sources */,
 				C9F4F9162789C2BD00887A3E /* MetaFetcher.swift in Sources */,
 				C92A0BA6279B4DC500ED0D13 /* ThemeController.swift in Sources */,
@@ -761,14 +781,16 @@
 				C97467A527999A5B00B53B8C /* GeneralSettingsViewController.swift in Sources */,
 				C9F4F8F92789C2AB00887A3E /* AppDelegate.swift in Sources */,
 				C9F4F8FC2789C2B400887A3E /* Urly.xcdatamodeld in Sources */,
+				C9CE80EC27A76F0F005D1005 /* LinkCodable.swift in Sources */,
 				C9F4F9182789C2BD00887A3E /* Group+CoreDataProperties.swift in Sources */,
 				C94A2DD2278BB3D3007F6FFA /* +UIViewController.swift in Sources */,
-				C9C56971279C1AC40064D8EB /* Codables.swift in Sources */,
+				C9C56971279C1AC40064D8EB /* TagCodable.swift in Sources */,
 				C9CE80E827A75DAD005D1005 /* AddURLIntentHandler.swift in Sources */,
 				C9F4F957278A17FA00887A3E /* +UIImage.swift in Sources */,
 				C9D37C622798361C0084F188 /* AboutViewController.swift in Sources */,
 				C90C0A212795E36C004FABDD /* AddLinkViewController.swift in Sources */,
 				C9F4F9402789C2DE00887A3E /* MultipleSelectionList.swift in Sources */,
+				C9CE80EE27A76F20005D1005 /* GroupCodable.swift in Sources */,
 				C9F4F93B2789C2DE00887A3E /* LinkDetailView.swift in Sources */,
 				C9D7FE7C278AF66D00016B04 /* Category.swift in Sources */,
 				C91053B3278E4659005AC807 /* +URL.swift in Sources */,
@@ -874,13 +896,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = ExtensionAppIcon;
 				ASSETCATALOG_COMPILER_APPICON_NAME = ExtensionAppIcon;
-				CODE_SIGN_ENTITLEMENTS = AddToUlryAction/AddToUlryAction.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Ulry/AddToUlryAction/AddToUlryAction.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AddToUlryAction/Info.plist;
+				INFOPLIST_FILE = Ulry/AddToUlryAction/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Save to Ulry";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -904,13 +926,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = ExtensionAppIcon;
 				ASSETCATALOG_COMPILER_APPICON_NAME = ExtensionAppIcon;
-				CODE_SIGN_ENTITLEMENTS = AddToUlryAction/AddToUlryAction.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Ulry/AddToUlryAction/AddToUlryAction.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AddToUlryAction/Info.plist;
+				INFOPLIST_FILE = Ulry/AddToUlryAction/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Save to Ulry";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
