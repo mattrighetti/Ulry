@@ -8,7 +8,7 @@
 import UIKit
 import SwiftUI
 
-class UILinkTableViewCell: UITableViewCell {
+class LinkCell: UITableViewCell {
     var link: Link? {
         didSet {
             guard let link = link else { return }
@@ -79,6 +79,15 @@ class UILinkTableViewCell: UITableViewCell {
         return label
     }()
     
+    lazy var tagsDetailLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.rounded(ofSize: 11, weight: .semibold)
+        label.numberOfLines = 1
+        label.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showLinkTags)))
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -91,13 +100,13 @@ class UILinkTableViewCell: UITableViewCell {
         contentView.addSubview(titleLabel)
         contentView.addSubview(image)
         contentView.addSubview(descriptionLabel)
+        contentView.addSubview(tagsDetailLabel)
         
         NSLayoutConstraint.activate([
             backgroundLabelImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
             backgroundLabelImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             backgroundLabelImage.widthAnchor.constraint(equalToConstant: 60),
             backgroundLabelImage.heightAnchor.constraint(equalToConstant: 60),
-            backgroundLabelImage.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -10),
             
             image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
             image.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
@@ -121,7 +130,12 @@ class UILinkTableViewCell: UITableViewCell {
             
             dateLabel.topAnchor.constraint(greaterThanOrEqualTo: descriptionLabel.bottomAnchor, constant: 5),
             dateLabel.leadingAnchor.constraint(equalTo: backgroundLabelImage.trailingAnchor, constant: 10),
-            dateLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
+            dateLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+            
+            tagsDetailLabel.centerYAnchor.constraint(equalTo: dateLabel.centerYAnchor),
+            tagsDetailLabel.leadingAnchor.constraint(equalTo: dateLabel.trailingAnchor, constant: 10),
+            tagsDetailLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            tagsDetailLabel.heightAnchor.constraint(equalToConstant: 12),
         ])
     }
     
@@ -169,10 +183,28 @@ class UILinkTableViewCell: UITableViewCell {
             titleLabel.text = link.url
         }
         
+        setupDescriptionLabel()
+        
+        setupTagsLabel()
+    }
+    
+    private func setupDescriptionLabel() {
+        guard let link = link else { return }
         if let description = link.ogDescription {
             descriptionLabel.text = description
         } else {
             descriptionLabel.isHidden = true
+        }
+    }
+    
+    private func setupTagsLabel() {
+        guard let link = link else { return }
+        if let tags = link.tags {
+            tagsDetailLabel.attributedText = NSMutableAttributedString(
+                coloredStrings: tags.map { ($0.name, UIColor(hex: $0.colorHex)!) }, separator: " · "
+            )
+        } else {
+            tagsDetailLabel.isHidden = true
         }
     }
     
@@ -183,6 +215,7 @@ class UILinkTableViewCell: UITableViewCell {
         urlHostnameLabel.text = nil
         descriptionLabel.text = nil
         titleLabel.text = nil
+        tagsDetailLabel.text = nil
         
         image.isHidden = false
         hostLabel.isHidden = false
@@ -192,5 +225,9 @@ class UILinkTableViewCell: UITableViewCell {
     
     @objc private func onInfoButtonPressed() {
         action?()
+    }
+    
+    @objc private func showLinkTags() {
+        print("Show tags")
     }
 }

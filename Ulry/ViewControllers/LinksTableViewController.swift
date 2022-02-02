@@ -20,7 +20,7 @@ class LinksTableViewController: UIViewController {
     lazy var tableview: UITableView = {
         let tableview = UITableView()
         tableview.backgroundColor = .clear
-        tableview.register(UILinkTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+        tableview.register(LinkCell.self, forCellReuseIdentifier: reuseIdentifier)
         tableview.estimatedRowHeight = 200
         tableview.rowHeight = UITableView.automaticDimension
         return tableview
@@ -67,7 +67,7 @@ class LinksTableViewController: UIViewController {
                 fatalError("Managed object does not exist")
             }
             
-            let cell = tableview.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! UILinkTableViewCell
+            let cell = tableview.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! LinkCell
             cell.link = link
             cell.action = { [weak self] in
                 self?.showInfoViewController(for: link)
