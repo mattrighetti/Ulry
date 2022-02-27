@@ -107,7 +107,10 @@ extension AppIconsViewController: UITableViewDelegate {
         let alternateIconName: String? = appIconStatus.appIcon == .default ? nil : appIconStatus.appIcon.rawValue
         
         if !UIApplication.shared.supportsAlternateIcons {
-            fatalError()
+            let alert = UIAlertController(title: "Not supported", message: "Sorry, this device does not support changing icon", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+            present(alert, animated: false, completion: nil)
+            return
         }
         
         UIApplication.shared.setAlternateIconName(alternateIconName) { [weak self] error in
