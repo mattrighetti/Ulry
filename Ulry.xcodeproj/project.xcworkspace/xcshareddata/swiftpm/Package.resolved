@@ -2,6 +2,24 @@
   "object": {
     "pins": [
       {
+        "package": "FMDB",
+        "repositoryURL": "https://github.com/ccgus/fmdb",
+        "state": {
+          "branch": null,
+          "revision": "61e51fde7f7aab6554f30ab061cc588b28a97d04",
+          "version": "2.7.7"
+        }
+      },
+      {
+        "package": "FMDBMigrationManager",
+        "repositoryURL": "https://github.com/mattrighetti/FMDBMigrationManager",
+        "state": {
+          "branch": "master",
+          "revision": "66cf8de54b5353eaa2c2069d03782bd9450f775b",
+          "version": null
+        }
+      },
+      {
         "package": "SwiftSoup",
         "repositoryURL": "https://github.com/scinfu/SwiftSoup",
         "state": {

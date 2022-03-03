@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		C909E75327D0248A0073CC6E /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C909E75227D0248A0073CC6E /* IAPManager.swift */; };
+		C909E75627D04C6C0073CC6E /* 20220303014811805_v1.0.sql in Resources */ = {isa = PBXBuildFile; fileRef = C909E75527D04C6C0073CC6E /* 20220303014811805_v1.0.sql */; };
+		C909E75927D054BB0073CC6E /* FMDB in Frameworks */ = {isa = PBXBuildFile; productRef = C909E75827D054BB0073CC6E /* FMDB */; };
+		C909E75F27D05B030073CC6E /* MigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C909E75E27D05B030073CC6E /* MigrationManager.swift */; };
 		C90AA80D2794D6BC000113BA /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90AA80C2794D6BC000113BA /* CoreDataStack.swift */; };
 		C90AA80E2794E047000113BA /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90AA80C2794D6BC000113BA /* CoreDataStack.swift */; };
 		C90C0A212795E36C004FABDD /* AddLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90C0A202795E36C004FABDD /* AddLinkViewController.swift */; };
@@ -45,6 +48,7 @@
 		C9267F42279A52A50041B94A /* TipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9267F41279A52A50041B94A /* TipsViewController.swift */; };
 		C92A0BA6279B4DC500ED0D13 /* ThemeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92A0BA5279B4DC500ED0D13 /* ThemeController.swift */; };
 		C92A0BA8279B8D7000ED0D13 /* LinkSharer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92A0BA7279B8D7000ED0D13 /* LinkSharer.swift */; };
+		C940559E27D0F82C00F982E4 /* FMDBMigrationManager in Frameworks */ = {isa = PBXBuildFile; productRef = C940559D27D0F82C00F982E4 /* FMDBMigrationManager */; };
 		C9437013278CAFF2009143A7 /* GetURL.js in Resources */ = {isa = PBXBuildFile; fileRef = C9437012278CAFF2009143A7 /* GetURL.js */; };
 		C94A2DD0278B710A007F6FFA /* +UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A2DCF278B710A007F6FFA /* +UIFont.swift */; };
 		C94A2DD2278BB3D3007F6FFA /* +UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */; };
@@ -168,6 +172,8 @@
 
 /* Begin PBXFileReference section */
 		C909E75227D0248A0073CC6E /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
+		C909E75527D04C6C0073CC6E /* 20220303014811805_v1.0.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = 20220303014811805_v1.0.sql; sourceTree = "<group>"; };
+		C909E75E27D05B030073CC6E /* MigrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManager.swift; sourceTree = "<group>"; };
 		C90AA80C2794D6BC000113BA /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		C90C0A202795E36C004FABDD /* AddLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLinkViewController.swift; sourceTree = "<group>"; };
 		C90C0A2227964CBE004FABDD /* AddCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCategoryViewController.swift; sourceTree = "<group>"; };
@@ -280,7 +286,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C96D597F27A0BDFA00A990B3 /* CloudKit.framework in Frameworks */,
+				C909E75927D054BB0073CC6E /* FMDB in Frameworks */,
 				C9F4F94B2789C35200887A3E /* SwiftSoup in Frameworks */,
+				C940559E27D0F82C00F982E4 /* FMDBMigrationManager in Frameworks */,
 				C96D597D27A0BDED00A990B3 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -288,6 +296,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C909E75427D0479D0073CC6E /* migrations */ = {
+			isa = PBXGroup;
+			children = (
+				C909E75527D04C6C0073CC6E /* 20220303014811805_v1.0.sql */,
+			);
+			path = migrations;
+			sourceTree = "<group>";
+		};
 		C99C14AF278C66FC00936D27 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -399,6 +415,7 @@
 				C9CE80E427A75C6D005D1005 /* Intents */,
 				C9CE80E527A75CA7005D1005 /* IntentsExtension */,
 				C9CE80F227A77116005D1005 /* UIKit Extensions */,
+				C909E75427D0479D0073CC6E /* migrations */,
 				C9F4F8F22789C28B00887A3E /* Info.plist */,
 				C9F4F8FA2789C2B400887A3E /* Urly.xcdatamodeld */,
 				C9F4F9502789C4F600887A3E /* Assets.xcassets */,
@@ -430,6 +447,7 @@
 				C92A0BA7279B8D7000ED0D13 /* LinkSharer.swift */,
 				C9C56972279C1EEF0064D8EB /* JSONDumpHelper.swift */,
 				C909E75227D0248A0073CC6E /* IAPManager.swift */,
+				C909E75E27D05B030073CC6E /* MigrationManager.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -573,6 +591,8 @@
 			name = Ulry;
 			packageProductDependencies = (
 				C9F4F94A2789C35200887A3E /* SwiftSoup */,
+				C909E75827D054BB0073CC6E /* FMDB */,
+				C940559D27D0F82C00F982E4 /* FMDBMigrationManager */,
 			);
 			productName = Ulry;
 			productReference = C9F4F8DE2789C28A00887A3E /* Ulry.app */;
@@ -615,6 +635,8 @@
 			mainGroup = C9F4F8D52789C28A00887A3E;
 			packageReferences = (
 				C9F4F9492789C35200887A3E /* XCRemoteSwiftPackageReference "SwiftSoup" */,
+				C909E75727D054BB0073CC6E /* XCRemoteSwiftPackageReference "fmdb" */,
+				C940559C27D0F82C00F982E4 /* XCRemoteSwiftPackageReference "FMDBMigrationManager" */,
 			);
 			productRefGroup = C9F4F8DF2789C28A00887A3E /* Products */;
 			projectDirPath = "";
@@ -659,6 +681,7 @@
 			files = (
 				C9F4F8F12789C28B00887A3E /* LaunchScreen.storyboard in Resources */,
 				C9F4F9512789C4F600887A3E /* Assets.xcassets in Resources */,
+				C909E75627D04C6C0073CC6E /* 20220303014811805_v1.0.sql in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -792,6 +815,7 @@
 				C9F4F9402789C2DE00887A3E /* MultipleSelectionList.swift in Sources */,
 				C9CE80EE27A76F20005D1005 /* GroupCodable.swift in Sources */,
 				C9F4F93B2789C2DE00887A3E /* LinkDetailView.swift in Sources */,
+				C909E75F27D05B030073CC6E /* MigrationManager.swift in Sources */,
 				C9D7FE7C278AF66D00016B04 /* Category.swift in Sources */,
 				C91053B3278E4659005AC807 /* +URL.swift in Sources */,
 			);
@@ -1223,6 +1247,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		C909E75727D054BB0073CC6E /* XCRemoteSwiftPackageReference "fmdb" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ccgus/fmdb";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		C940559C27D0F82C00F982E4 /* XCRemoteSwiftPackageReference "FMDBMigrationManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mattrighetti/FMDBMigrationManager";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		C9F4F9492789C35200887A3E /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/scinfu/SwiftSoup";
@@ -1234,10 +1274,20 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C909E75827D054BB0073CC6E /* FMDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C909E75727D054BB0073CC6E /* XCRemoteSwiftPackageReference "fmdb" */;
+			productName = FMDB;
+		};
 		C9179A3727973C99008A82DD /* SwiftSoup */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9F4F9492789C35200887A3E /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
+		};
+		C940559D27D0F82C00F982E4 /* FMDBMigrationManager */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C940559C27D0F82C00F982E4 /* XCRemoteSwiftPackageReference "FMDBMigrationManager" */;
+			productName = FMDBMigrationManager;
 		};
 		C99C14D8278C679200936D27 /* SwiftSoup */ = {
 			isa = XCSwiftPackageProductDependency;
