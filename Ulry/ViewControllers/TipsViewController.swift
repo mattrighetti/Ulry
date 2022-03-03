@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import StoreKit
 
 class TipsViewController: UIViewController {
+    let manager = IAPManager.shared
+    
     lazy var glyphSign: UIImageView = {
         let configuration = UIImage.SymbolConfiguration.init(paletteColors: [.systemRed])
         let imageView = UIImageView()
@@ -91,9 +94,7 @@ class TipsViewController: UIViewController {
     
     lazy var smallTipButton: UIButton = {
         var configuration = UIButton.Configuration.filled()
-        configuration.attributedTitle = AttributedString(
-            NSAttributedString(string: "$ 0.99", attributes: [.font: UIFont.rounded(ofSize: 14, weight: .semibold)])
-        )
+        configuration.showsActivityIndicator = true
         let button = UIButton(configuration: configuration)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -101,9 +102,7 @@ class TipsViewController: UIViewController {
     
     lazy var mediumTipButton: UIButton = {
         var configuration = UIButton.Configuration.filled()
-        configuration.attributedTitle = AttributedString(
-            NSAttributedString(string: "$ 2.99", attributes: [.font: UIFont.rounded(ofSize: 14, weight: .semibold)])
-        )
+        configuration.showsActivityIndicator = true
         let button = UIButton(configuration: configuration)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -111,9 +110,7 @@ class TipsViewController: UIViewController {
     
     lazy var bigTipButton: UIButton = {
         var configuration = UIButton.Configuration.filled()
-        configuration.attributedTitle = AttributedString(
-            NSAttributedString(string: "$ 5.99", attributes: [.font: UIFont.rounded(ofSize: 14, weight: .semibold)])
-        )
+        configuration.showsActivityIndicator = true
         let button = UIButton(configuration: configuration)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -121,16 +118,25 @@ class TipsViewController: UIViewController {
     
     lazy var extraTipButton: UIButton = {
         var configuration = UIButton.Configuration.filled()
-        configuration.attributedTitle = AttributedString(
-            NSAttributedString(string: "$ 10.99", attributes: [.font: UIFont.rounded(ofSize: 14, weight: .semibold)])
-        )
+        configuration.showsActivityIndicator = true
         let button = UIButton(configuration: configuration)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
+    func buttonTextWithFont(_ string: String) -> AttributedString {
+        return AttributedString(
+            NSAttributedString(string: string, attributes: [.font: UIFont.rounded(ofSize: 14, weight: .semibold)])
+        )
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        Task.init(priority: .high) {
+            let products = try! await manager.fetchProducts()
+            setupButtons(with: products)
+        }
         
         view.backgroundColor = .clear
         
@@ -202,5 +208,42 @@ class TipsViewController: UIViewController {
             extraTipLabel.centerYAnchor.constraint(equalTo: extraTipButton.centerYAnchor),
             extraTipLabel.leadingAnchor.constraint(equalTo: descriptionLabel.leadingAnchor),
         ])
+    }
+    
+    func setupButtons(with products: [Product]) {
+        setup(button: smallTipButton, with: products[0])
+        setup(button: mediumTipButton, with: products[1])
+        setup(button: bigTipButton, with: products[2])
+        setup(button: extraTipButton, with: products[3])
+    }
+    
+    var buttonIsSelected = false
+    
+    func setup(button: UIButton, with product: Product) {
+        button.configuration?.showsActivityIndicator = false
+        button.configuration?.attributedTitle = buttonTextWithFont(product.displayPrice)
+        button.addAction(UIAction { _ in
+            Task.init { [weak self] in
+                button.configuration?.showsActivityIndicator = true
+                button.configuration?.title = ""
+                
+                do {
+                    let _ = try await self?.manager.purchase(product)
+                    self?.showThankYou()
+                } catch {
+                    print("error: \(error)")
+                }
+                
+                button.configuration?.showsActivityIndicator = false
+                button.configuration?.attributedTitle = self?.buttonTextWithFont(product.displayPrice)
+            }
+        }, for: .touchUpInside)
+    }
+    
+    func showThankYou() {
+        let ac = UIAlertController(title: "Thank you!", message: nil, preferredStyle: .alert)
+        let ok = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
+        ac.addAction(ok)
+        present(ac, animated: false, completion: nil)
     }
 }

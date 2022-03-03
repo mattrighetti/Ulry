@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C909E75327D0248A0073CC6E /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C909E75227D0248A0073CC6E /* IAPManager.swift */; };
 		C90AA80D2794D6BC000113BA /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90AA80C2794D6BC000113BA /* CoreDataStack.swift */; };
 		C90AA80E2794E047000113BA /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90AA80C2794D6BC000113BA /* CoreDataStack.swift */; };
 		C90C0A212795E36C004FABDD /* AddLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90C0A202795E36C004FABDD /* AddLinkViewController.swift */; };
@@ -166,6 +167,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C909E75227D0248A0073CC6E /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
 		C90AA80C2794D6BC000113BA /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		C90C0A202795E36C004FABDD /* AddLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLinkViewController.swift; sourceTree = "<group>"; };
 		C90C0A2227964CBE004FABDD /* AddCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCategoryViewController.swift; sourceTree = "<group>"; };
@@ -427,6 +429,7 @@
 				C92A0BA5279B4DC500ED0D13 /* ThemeController.swift */,
 				C92A0BA7279B8D7000ED0D13 /* LinkSharer.swift */,
 				C9C56972279C1EEF0064D8EB /* JSONDumpHelper.swift */,
+				C909E75227D0248A0073CC6E /* IAPManager.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -735,6 +738,7 @@
 			files = (
 				C9179A232797379A008A82DD /* Intents.intentdefinition in Sources */,
 				C94A2DD0278B710A007F6FFA /* +UIFont.swift in Sources */,
+				C909E75327D0248A0073CC6E /* IAPManager.swift in Sources */,
 				C972BB0027A22383005B6312 /* AppIcon.swift in Sources */,
 				C90AA80D2794D6BC000113BA /* CoreDataStack.swift in Sources */,
 				C9F4F9412789C2DE00887A3E /* SelectionList.swift in Sources */,
