@@ -105,8 +105,7 @@ struct LinkDetailView: View {
 
 struct LinkDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        let link = Link()
-        link.id = UUID()
+        let link = Link(url: "https://example.com", note: "This is a particular not about the link")
         link.url = "https://brennancolberg.com"
         link.colorHex = "#023047"
         link.ogImageUrl = nil
@@ -117,7 +116,6 @@ struct LinkDetailView_Previews: PreviewProvider {
         link.ogImageUrl = nil
         link.ogTitle = "Little title"
         link.ogDescription = "Random description that will for sure surpass"
-        link.note = "This is a particular not about the link"
         link.imageData = nil
         
         return LinkDetailView(link: link)

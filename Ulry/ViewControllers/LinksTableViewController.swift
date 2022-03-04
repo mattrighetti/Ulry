@@ -13,8 +13,8 @@ import SafariServices
 private var reuseIdentifier = "LinkCell"
 
 class LinksTableViewController: UIViewController {
-    let context = CoreDataStack.shared.managedContext
-    var coreDataController: NSFetchedResultsController<Link>!
+    let database = Database.shared
+    
     lazy var dataFetcher = DataFetcher()
     
     lazy var tableview: UITableView = {
@@ -26,20 +26,14 @@ class LinksTableViewController: UIViewController {
         return tableview
     }()
     
-    var category: Category? {
+    var links: [Link] = [] {
         didSet {
-            guard let category = category else { return }
-            let request = Link.Request(from: category).fetchRequest
-            request.sortDescriptors = orderBy.sortDescriptor
-            
-            coreDataController = NSFetchedResultsController(
-                fetchRequest: request,
-                managedObjectContext: context,
-                sectionNameKeyPath: nil,
-                cacheName: nil
-            )
+            print("didSet links to: \(links)")
+            loadLinks()
         }
     }
+    
+    var category: Category?
     
     var orderBy: OrderBy {
         get {
@@ -48,8 +42,9 @@ class LinksTableViewController: UIViewController {
         }
         set {
             UserDefaults.standard.setValue(newValue.rawValue, forKey: Defaults.orderBy.rawValue)
-            coreDataController.fetchRequest.sortDescriptors = newValue.sortDescriptor
-            try! coreDataController.performFetch()
+            // TODO
+            //coreDataController.fetchRequest.sortDescriptors = newValue.sortDescriptor
+            //try! coreDataController.performFetch()
         }
     }
     
@@ -58,12 +53,9 @@ class LinksTableViewController: UIViewController {
     
     // MARK: - DataSource
     
-    lazy var datasource: UITableViewDiffableDataSource<Int, NSManagedObjectID> = {
-        let datasource = UITableViewDiffableDataSource<Int, NSManagedObjectID>(tableView: tableview) { tableview, indexPath, managedObjectId in
-            guard
-                let object = try? self.context.existingObject(with: managedObjectId),
-                let link = object as? Link
-            else {
+    lazy var datasource: UITableViewDiffableDataSource<Int, String> = {
+        let datasource = UITableViewDiffableDataSource<Int, String>(tableView: tableview) { tableview, indexPath, uuidString in
+            guard let link = self.database.getLink(with: UUID(uuidString: uuidString)!) else {
                 fatalError("Managed object does not exist")
             }
             
@@ -72,6 +64,7 @@ class LinksTableViewController: UIViewController {
             cell.action = { [weak self] in
                 self?.showInfoViewController(for: link)
             }
+            
             cell.contentView.setNeedsLayout()
             cell.contentView.layoutIfNeeded()
             return cell
@@ -92,7 +85,6 @@ class LinksTableViewController: UIViewController {
         view.backgroundColor = .systemBackground
         
         tableview.delegate = self
-        coreDataController.delegate = self
         
         view.addSubview(tableview)
     }
@@ -101,29 +93,52 @@ class LinksTableViewController: UIViewController {
         super.viewDidLayoutSubviews()
         tableview.frame = view.bounds
         
-        try! coreDataController.performFetch()
+        guard let category = category else { return }
+        
+        switch category {
+        case .all:
+            links = database.getAllLinks()
+        case .unread:
+            links = database.getAllLinks() // TODO
+        case .starred:
+            links = database.getAllLinks()
+        case .group(let group):
+            links = database.getLinksIn(group)
+        case .tag(let tag):
+            links = database.getLinksIn(tag)
+        }
     }
     
     // MARK: - Core Data Requests
     private func orderByName() {
-        coreDataController.fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(Link.ogTitle), ascending: true)]
+        //coreDataController.fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(Link.ogTitle), ascending: true)]
         
-        try! coreDataController.performFetch()
+        //try! coreDataController.performFetch()
+    }
+    
+    private func loadLinks() {
+        var snapshot = NSDiffableDataSourceSnapshot<Int, String>()
+        
+        snapshot.appendSections([0])
+        snapshot.appendItems(database.getAllLinksUUID(), toSection: 0)
+        
+        datasource.apply(snapshot, animatingDifferences: true)
     }
     
     // MARK: - Data managment
     
     private func onDeletePressed(link: Link) {
-        context.delete(link)
-        CoreDataStack.shared.saveContext()
+        database.delete(link)
     }
     
     private func onStarPressed(link: Link) {
         link.starred = !link.starred
+        _ = database.update(link)
     }
     
     private func onReadPressed(link: Link) {
         link.unread = !link.unread
+        _ = database.update(link)
     }
     
     // MARK: - ViewControllers Presentations
@@ -155,8 +170,8 @@ extension LinksTableViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard
-            let id = datasource.itemIdentifier(for: indexPath),
-            let link = try? self.context.existingObject(with: id) as? Link
+            let uuid = datasource.itemIdentifier(for: indexPath),
+            let link = database.getLink(with: UUID(uuidString: uuid)!)
         else { return }
         
         tableView.deselectRow(at: indexPath, animated: true)
@@ -176,7 +191,7 @@ extension LinksTableViewController: UITableViewDelegate {
             
             if UserDefaults.standard.value(forKey: Defaults.markReadOnOpen.rawValue) as! Bool {
                 link.unread.toggle()
-                CoreDataStack.shared.saveContext()
+                _ = database.update(link)
             }
         }
     }
@@ -185,8 +200,8 @@ extension LinksTableViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard
-            let id = datasource.itemIdentifier(for: indexPath),
-            let link = try? self.context.existingObject(with: id) as? Link
+            let uuid = datasource.itemIdentifier(for: indexPath),
+            let link = database.getLink(with: UUID(uuidString: uuid)!)
         else { return nil }
         
         let edit = UIContextualAction(style: .normal, title: "Edit") { [weak self] action, view, completionHandler in
@@ -206,8 +221,8 @@ extension LinksTableViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard
-            let id = datasource.itemIdentifier(for: indexPath),
-            let link = try? self.context.existingObject(with: id) as? Link
+            let uuid = datasource.itemIdentifier(for: indexPath),
+            let link = database.getLink(with: UUID(uuidString: uuid)!)
         else { return nil }
         
         let starActionTitle = link.starred ? "Unstar" : "Star"
@@ -215,14 +230,14 @@ extension LinksTableViewController: UITableViewDelegate {
             self?.onStarPressed(link: link)
             completionHandler(true)
         }
-        star.backgroundColor = .systemYellow
+        //star.backgroundColor = .systemYellow
         
         let readActionTitle = link.unread ? "Read" : "Unread"
         let read = UIContextualAction(style: .destructive, title: readActionTitle) { [weak self] (action, view, completionHandler) in
             self?.onReadPressed(link: link)
             completionHandler(true)
         }
-        read.backgroundColor = .systemBlue
+        //read.backgroundColor = .systemBlue
         
         return UISwipeActionsConfiguration(actions: [star, read])
     }
@@ -231,8 +246,8 @@ extension LinksTableViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard
-            let id = datasource.itemIdentifier(for: indexPath),
-            let link = try? self.context.existingObject(with: id) as? Link
+            let uuid = datasource.itemIdentifier(for: indexPath),
+            let link = database.getLink(with: UUID(uuidString: uuid)!)
         else { return nil }
         
         let identifier = "\(indexPath.row)" as NSString
@@ -346,24 +361,24 @@ extension LinksTableViewController: UITableViewDelegate {
     }
 }
 
-extension LinksTableViewController: NSFetchedResultsControllerDelegate {
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
-        let currentSnapshot = datasource.snapshot() as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
-        
-        let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
-            guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
-                return nil
-            }
-            guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
-            return itemIdentifier
-        }
-        // Reconfigure items that have the same index
-        snapshot.reconfigureItems(reloadIdentifiers)
-        
-        datasource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: true)
-    }
-}
+//extension LinksTableViewController: NSFetchedResultsControllerDelegate {
+//    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
+//        var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, String>
+//        let currentSnapshot = datasource.snapshot() as NSDiffableDataSourceSnapshot<Int, String>
+//
+//        let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
+//            guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
+//                return nil
+//            }
+//            guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
+//            return itemIdentifier
+//        }
+//        // Reconfigure items that have the same index
+//        snapshot.reconfigureItems(reloadIdentifiers)
+//
+//        datasource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: true)
+//    }
+//}
 
 extension LinksTableViewController {
     enum OrderBy: String {
@@ -373,16 +388,17 @@ extension LinksTableViewController {
         case newest
         
         var sortDescriptor: [NSSortDescriptor] {
-            switch self {
-            case .name:
-                return [NSSortDescriptor(key: #keyPath(Link.ogTitle), ascending: true)]
-            case .lastUpdated:
-                return [NSSortDescriptor(key: #keyPath(Link.updatedAt), ascending: true)]
-            case .newest:
-                return [NSSortDescriptor(key: #keyPath(Link.createdAt), ascending: false)]
-            case .oldest:
-                return [NSSortDescriptor(key: #keyPath(Link.createdAt), ascending: true)]
-            }
+            return []
+//            switch self {
+//            case .name:
+//                return [NSSortDescriptor(key: #keyPath(Link.ogTitle), ascending: true)]
+//            case .lastUpdated:
+//                return [NSSortDescriptor(key: #keyPath(Link.updatedAt), ascending: true)]
+//            case .newest:
+//                return [NSSortDescriptor(key: #keyPath(Link.createdAt), ascending: false)]
+//            case .oldest:
+//                return [NSSortDescriptor(key: #keyPath(Link.createdAt), ascending: true)]
+//            }
         }
     }
 }

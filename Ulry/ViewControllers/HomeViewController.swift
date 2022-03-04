@@ -29,7 +29,8 @@ fileprivate var categoryColorCell = "CategoryColorCell"
 fileprivate var categoryImageCell = "CategoryImageCell"
 
 class HomeViewController: UIViewController {
-    let context = CoreDataStack.shared.managedContext
+    let database = Database.shared
+    
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.register(UIColorCircleTableViewCell.self, forCellReuseIdentifier: categoryColorCell)
@@ -37,33 +38,6 @@ class HomeViewController: UIViewController {
         tableView.cellLayoutMarginsFollowReadableWidth = true
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
-    }()
-    
-    lazy var tagsFRC: NSFetchedResultsController<Tag> = {
-        NSFetchedResultsController(
-            fetchRequest: Tag.Request.all.fetchRequest,
-            managedObjectContext: CoreDataStack.shared.managedContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-    }()
-    
-    lazy var groupsFRC: NSFetchedResultsController<Group> = {
-        NSFetchedResultsController(
-            fetchRequest: Group.Request.all.fetchRequest,
-            managedObjectContext: CoreDataStack.shared.managedContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-    }()
-    
-    lazy var linksFRC: NSFetchedResultsController<Link> = {
-        NSFetchedResultsController(
-            fetchRequest: Link.Request.all.fetchRequest,
-            managedObjectContext: CoreDataStack.shared.managedContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
     }()
     
     lazy var datasource: HomeDiffableDataSource = {
@@ -149,22 +123,9 @@ class HomeViewController: UIViewController {
         navigationItem.rightBarButtonItems = [addLinkButton]
         navigationItem.leftBarButtonItems = [settingsButton]
         
-        tagsFRC.delegate = self
-        groupsFRC.delegate = self
-        linksFRC.delegate = self
-        
         tableView.delegate = self
         
         view.addSubview(tableView)
-        
-        do {
-            try tagsFRC.performFetch()
-            try groupsFRC.performFetch()
-            try linksFRC.performFetch()
-        } catch let error as NSError {
-            print("Unresolved error \(error), \(error.userInfo)")
-        }
-        
         addCategories()
     }
     
@@ -195,10 +156,10 @@ class HomeViewController: UIViewController {
         snapshot.appendItems([.all, .unread, .starred], toSection: 0)
         
         snapshot.appendSections([1])
-        snapshot.appendItems(groupsFRC.fetchedObjects!.map { .group($0) }, toSection: 1)
+        snapshot.appendItems(database.getAllGroups().map { .group($0) }, toSection: 1)
         
         snapshot.appendSections([2])
-        snapshot.appendItems(tagsFRC.fetchedObjects!.map { .tag($0) }, toSection: 2)
+        snapshot.appendItems(database.getAllTags().map { .tag($0) }, toSection: 2)
         
         datasource.apply(snapshot, animatingDifferences: true)
     }
@@ -209,7 +170,6 @@ class HomeViewController: UIViewController {
     }
     
     @objc private func addGroupPressed() {
-        // let view = AddCategoryView(mode: .group).environment(\.managedObjectContext, context)
         let view = AddCategoryViewController()
         view.configuration = .group
         let vc = UINavigationController(rootViewController: view)
@@ -217,7 +177,6 @@ class HomeViewController: UIViewController {
     }
     
     @objc private func addTagPressed() {
-        // let view = AddCategoryView(mode: .tag).environment(\.managedObjectContext, context)
         let view = AddCategoryViewController()
         view.configuration = .tag
         let vc = UINavigationController(rootViewController: view)
@@ -227,20 +186,9 @@ class HomeViewController: UIViewController {
     private func handleMoveToTrash(category: Category) {
         switch category {
         case .group(let group):
-            context.delete(group)
-            do {
-                try context.save()
-            } catch {
-                print(error)
-            }
-            
+            database.delete(group)
         case .tag(let tag):
-            context.delete(tag)
-            do {
-                try context.save()
-            } catch {
-                print(error)
-            }
+            database.delete(tag)
         default:
             return
         }

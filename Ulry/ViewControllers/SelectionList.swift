@@ -12,8 +12,7 @@ struct SelectionList: View {
     @State var isSheetShown: Bool = false
     @Binding var selection: Group?
     
-    @FetchRequest(entity: Group.entity(), sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)])
-    var items: FetchedResults<Group>
+    var items: [Group] = Database.shared.getAllGroups()
 
     var body: some View {
         List {

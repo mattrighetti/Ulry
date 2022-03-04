@@ -30,17 +30,22 @@ struct JSONDumpHelper {
         with filemanager: FileManager = .default,
         encoder: JSONEncoder = JSONEncoder()
     ) throws {
-        let context = CoreDataStack.shared.managedContext
-        let links = try context.fetch(Link.Request.all.fetchRequest)
-        let groups = try context.fetch(Group.Request.all.fetchRequest)
-        let tags = try context.fetch(Tag.Request.all.fetchRequest)
+        //let context = CoreDataStack.shared.managedContext
         
-        let linksCodable = links.map { LinkCodable(from: $0) }
-        let groupsCodable = groups.map { GroupCodable(from: $0) }
-        let tagsCodable = tags.map { TagCodable(from: $0) }
+        // Here I could just dump database using sqlite json features
+        // TODO
         
-        let dump = Dump(links: linksCodable, groups: groupsCodable, tags: tagsCodable)
+        //let links = try context.fetch(Link.Request.all.fetchRequest)
+        //let groups = try context.fetch(Group.Request.all.fetchRequest)
+        //let tags = try context.fetch(Tag.Request.all.fetchRequest)
+        
+        //let linksCodable = links.map { LinkCodable(from: $0) }
+        //let groupsCodable = groups.map { GroupCodable(from: $0) }
+        //let tagsCodable = tags.map { TagCodable(from: $0) }
+        
+        //let dump = Dump(links: linksCodable, groups: groupsCodable, tags: tagsCodable)
 
+        let dump = "{ \"test\": \"jsontest\" }"
         encoder.outputFormatting = .prettyPrinted
         
         let data = try encoder.encode(dump)
@@ -51,14 +56,13 @@ struct JSONDumpHelper {
         let fileUrl = dir.appendingPathComponent(file)
         
         try json?.write(to: fileUrl, atomically: false, encoding: .utf8)
-        delegate?.helper(self, didFinishExporting: links)
+        // delegate?.helper(self, didFinishExporting: links)
     }
     
     func loadFromFile(
         with filemanager: FileManager = .default,
         from url: URL,
         decoder: JSONDecoder = JSONDecoder(),
-        context: NSManagedObjectContext = CoreDataStack.shared.managedContext,
         dataFetcher: DataFetcher = DataFetcher()
     ) {
         os_signpost(.begin, log: JSONDumpHelper.pointsOfInterest, name: "loadFromFile")
@@ -69,53 +73,53 @@ struct JSONDumpHelper {
         var tagsHash: [UUID:Tag] = [:]
         if let tagsCodable = dump.tags {
             for tagCodable in tagsCodable {
-                let tag = Tag(context: context)
-                tag.id = tagCodable.id
-                tag.name = tagCodable.name
-                tag.colorHex = tagCodable.colorHex
-                
-                tagsHash[tag.id] = tag
+//                let tag = Tag(context: context)
+//                tag.id = tagCodable.id
+//                tag.name = tagCodable.name
+//                tag.colorHex = tagCodable.colorHex
+//
+//                tagsHash[tag.id] = tag
             }
         }
         
         var groupHash: [UUID:Group] = [:]
         if let groupsCodable = dump.groups {
             for groupCodable in groupsCodable {
-                let group = Group(context: context)
-                group.id = groupCodable.id
-                group.name = groupCodable.name
-                group.colorHex = groupCodable.colorHex
-                group.iconName = groupCodable.iconName
-                
-                groupHash[group.id] = group
+//                let group = Group(context: context)
+//                group.id = groupCodable.id
+//                group.name = groupCodable.name
+//                group.colorHex = groupCodable.colorHex
+//                group.iconName = groupCodable.iconName
+//
+//                groupHash[group.id] = group
             }
         }
         
         var links: [Link] = []
         if let linksCodable = dump.links {
             for linkCodable in linksCodable {
-                let link = Link(context: context)
-                link.id = linkCodable.id
-                link.url = linkCodable.url
-                link.createdAt = linkCodable.createdAt
-                link.updatedAt = linkCodable.updatedAt
-                link.colorHex = linkCodable.colorHex
-                link.note = linkCodable.note
-                link.starred = linkCodable.starred
-                link.unread = linkCodable.unread
-                
-                if let uuidGroup = linkCodable.group?.id {
-                    link.group = groupHash[uuidGroup]
-                }
-                
-                if let tags = linkCodable.tags {
-                    link.tags = Set<Tag>()
-                    for tagUUID in tags.map({ $0.id }) {
-                        link.tags?.insert(tagsHash[tagUUID]!)
-                    }
-                }
-                
-                links.append(link)
+//                let link = Link(context: context)
+//                link.id = linkCodable.id
+//                link.url = linkCodable.url
+//                link.createdAt = linkCodable.createdAt
+//                link.updatedAt = linkCodable.updatedAt
+//                link.colorHex = linkCodable.colorHex
+//                link.note = linkCodable.note
+//                link.starred = linkCodable.starred
+//                link.unread = linkCodable.unread
+//                
+//                if let uuidGroup = linkCodable.group?.id {
+//                    link.group = groupHash[uuidGroup]
+//                }
+//                
+//                if let tags = linkCodable.tags {
+//                    link.tags = Set<Tag>()
+//                    for tagUUID in tags.map({ $0.id }) {
+//                        link.tags?.insert(tagsHash[tagUUID]!)
+//                    }
+//                }
+//                
+//                links.append(link)
             }
         }
         

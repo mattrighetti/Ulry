@@ -11,7 +11,7 @@ import MobileCoreServices
 import UniformTypeIdentifiers
 
 class ActionViewController: UIViewController {
-    let context = CoreDataStack.shared.managedContext
+    let database = Database.shared
     
     lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -84,16 +84,15 @@ class ActionViewController: UIViewController {
         description = dictData?.findFirstValue(keys: URL.descriptionMeta)
         imageUrl = dictData?.findFirstValue(keys: URL.imageMeta)
         
-        let link = Link(context: self.context)
-        link.url = urlString
+        let link = Link(url: urlString)
         link.ogTitle = title
         link.ogDescription = description
         link.ogImageUrl = imageUrl
         link.group = nil
         link.tags = nil
+        database.insert(link)
         
         guard let imageUrl = imageUrl else {
-            CoreDataStack.shared.saveContext()
             self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
             return
         }
@@ -103,7 +102,7 @@ class ActionViewController: UIViewController {
                 link.imageData = data
             }
             
-            CoreDataStack.shared.saveContext()
+            // TODO where shoudl I save data? previously -> CoreDataStack.shared.saveContext()
             
             DispatchQueue.main.async {
                 self.titleLabel.text = "Saved correctly"
