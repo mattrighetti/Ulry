@@ -124,9 +124,10 @@ class HomeViewController: UIViewController {
         navigationItem.leftBarButtonItems = [settingsButton]
         
         tableView.delegate = self
+        database.delegate = self
         
         view.addSubview(tableView)
-        addCategories()
+        addSections()
     }
     
     override func viewDidLayoutSubviews() {
@@ -137,6 +138,8 @@ class HomeViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        reloadSections()
+        
         // Fade the table deselection as the view controller is popped
         if let selectedIndexPath = tableView.indexPathForSelectedRow, let transitionCoordinator = transitionCoordinator {
             transitionCoordinator.animate { context in
@@ -149,7 +152,7 @@ class HomeViewController: UIViewController {
         }
     }
     
-    private func addCategories() {
+    private func addSections() {
         var snapshot = NSDiffableDataSourceSnapshot<Int, Category>()
         
         snapshot.appendSections([0])
@@ -162,6 +165,13 @@ class HomeViewController: UIViewController {
         snapshot.appendItems(database.getAllTags().map { .tag($0) }, toSection: 2)
         
         datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    private func reloadSections() {
+        // Useful to reload basic data in case underlying data changes
+        var snapshot = datasource.snapshot()
+        snapshot.reloadSections([0,1,2])
+        datasource.apply(snapshot, animatingDifferences: false)
     }
     
     @objc private func addLinkPressed() {
@@ -268,54 +278,71 @@ extension HomeViewController: UITableViewDelegate {
     }
 }
 
-extension HomeViewController: NSFetchedResultsControllerDelegate {
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        var snapshot = datasource.snapshot()
-        var shouldAnimate = false
-        
-        switch type {
-        case .insert:
-            shouldAnimate = true
-            if let group = anObject as? Group {
-                snapshot.appendItems([.group(group)], toSection: 1)
-            } else if let tag = anObject as? Tag {
-                snapshot.appendItems([.tag(tag)], toSection: 2)
-            } else if let link = anObject as? Link {
-                var reconfigureItemsCategories: [Category] = [.all, .unread, .starred]
-                reconfigureItemsCategories.append(contentsOf: link.tags?.map { .tag($0) } ?? [])
-                if let group = link.group {
-                    reconfigureItemsCategories.append(.group(group))
-                }
-                snapshot.reconfigureItems(reconfigureItemsCategories)
-            }
-        case .delete:
-            shouldAnimate = true
-            if let group = anObject as? Group {
-                snapshot.deleteItems([.group(group)])
-            } else if let tag = anObject as? Tag {
-                snapshot.deleteItems([.tag(tag)])
-            } else if let link = anObject as? Link {
-                var reconfigureItemsCategories: [Category] = [.all, .unread, .starred]
-                reconfigureItemsCategories.append(contentsOf: link.tags?.map { .tag($0) } ?? [])
-                if let group = link.group {
-                    reconfigureItemsCategories.append(.group(group))
-                }
-                snapshot.reconfigureItems(reconfigureItemsCategories)
-            }
-        case .update:
-            if let group = anObject as? Group {
-                snapshot.reconfigureItems([.group(group)])
-            } else if let tag = anObject as? Tag {
-                snapshot.reconfigureItems([.tag(tag)])
-            }
-        case .move:
-            return
-        @unknown default:
-            fatalError()
-        }
-        
-        // Applying with animatingDiffereces while not being visible fired a strange log message
-        shouldAnimate = shouldAnimate && navigationController?.visibleViewController == self
-        datasource.apply(snapshot, animatingDifferences: shouldAnimate)
+extension HomeViewController: DatabaseControllerDelegate {
+    func databaseController(_ databaseController: Database, didInsert link: Link) {
+        // Maybe reloading every section could be avoidable:
+        // What needs change is:
+        //   1. Tag that links belong to
+        //   2. Group that links belong to
+        //   3. All and unread for sure
+        //   4. Starred maybe
+        reloadSections()
     }
+    
+    func databaseController(_ databaseController: Database, didInsert tag: Tag) {
+        var snapshot = datasource.snapshot()
+        snapshot.appendItems([.tag(tag)], toSection: 2)
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func databaseController(_ databaseController: Database, didInsert group: Group) {
+        var snapshot = datasource.snapshot()
+        snapshot.appendItems([.group(group)], toSection: 1)
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func databaseController(_ databaseController: Database, didUpdate group: Group) {
+        var snapshot = datasource.snapshot()
+        snapshot.reloadItems([.group(group)])
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func databaseController(_ databaseController: Database, didUpdate tag: Tag) {
+        var snapshot = datasource.snapshot()
+        snapshot.reloadItems([.tag(tag)])
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func databaseController(_ databaseController: Database, didDelete link: Link) {
+        // Maybe reloading every section could be avoidable:
+        // What needs change is:
+        //   1. Tag that links belong to
+        //   2. Group that links belong to
+        //   3. All and unread for sure
+        //   4. Starred maybe
+        reloadSections()
+    }
+    
+    func databaseController(_ databaseController: Database, didDelete links: [Link]) {
+        // Maybe reloading every section could be avoidable:
+        // What needs change is:
+        //   1. Tag that links belong to
+        //   2. Group that links belong to
+        //   3. All and unread for sure
+        //   4. Starred maybe
+        reloadSections()
+    }
+    
+    func databaseController(_ databaseController: Database, didDelete group: Group) {
+        var snapshot = datasource.snapshot()
+        snapshot.deleteItems([.group(group)])
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func databaseController(_ databaseController: Database, didDelete tag: Tag) {
+        var snapshot = datasource.snapshot()
+        snapshot.deleteItems([.tag(tag)])
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
 }

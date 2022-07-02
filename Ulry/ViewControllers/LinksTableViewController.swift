@@ -26,14 +26,11 @@ class LinksTableViewController: UIViewController {
         return tableview
     }()
     
-    var links: [Link] = [] {
+    var category: Category? {
         didSet {
-            print("didSet links to: \(links)")
             loadLinks()
         }
     }
-    
-    var category: Category?
     
     var orderBy: OrderBy {
         get {
@@ -92,21 +89,6 @@ class LinksTableViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableview.frame = view.bounds
-        
-        guard let category = category else { return }
-        
-        switch category {
-        case .all:
-            links = database.getAllLinks()
-        case .unread:
-            links = database.getAllLinks() // TODO
-        case .starred:
-            links = database.getAllLinks()
-        case .group(let group):
-            links = database.getLinksIn(group)
-        case .tag(let tag):
-            links = database.getLinksIn(tag)
-        }
     }
     
     // MARK: - Core Data Requests
@@ -120,7 +102,21 @@ class LinksTableViewController: UIViewController {
         var snapshot = NSDiffableDataSourceSnapshot<Int, String>()
         
         snapshot.appendSections([0])
-        snapshot.appendItems(database.getAllLinksUUID(), toSection: 0)
+        
+        guard let category = category else { return }
+        
+        switch category {
+        case .all:
+            snapshot.appendItems(database.getAllLinksUUID(), toSection: 0)
+        case .unread:
+            snapshot.appendItems(database.getAllUnreadLinksUUID(), toSection: 0)
+        case .starred:
+            snapshot.appendItems(database.getAllStarredLinksUUID(), toSection: 0)
+        case .group(let group):
+            snapshot.appendItems(database.getAllLinksUUID(in: group), toSection: 0)
+        case .tag(let tag):
+            snapshot.appendItems(database.getAllLinksUUID(in: tag), toSection: 0)
+        }
         
         datasource.apply(snapshot, animatingDifferences: true)
     }
@@ -361,24 +357,43 @@ extension LinksTableViewController: UITableViewDelegate {
     }
 }
 
-//extension LinksTableViewController: NSFetchedResultsControllerDelegate {
-//    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-//        var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, String>
-//        let currentSnapshot = datasource.snapshot() as NSDiffableDataSourceSnapshot<Int, String>
-//
-//        let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
-//            guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
-//                return nil
-//            }
-//            guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
-//            return itemIdentifier
-//        }
-//        // Reconfigure items that have the same index
-//        snapshot.reconfigureItems(reloadIdentifiers)
-//
-//        datasource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: true)
-//    }
-//}
+extension LinksTableViewController: DatabaseControllerDelegate {
+    func databaseController(_ databaseController: Database, didInsert link: Link) {
+        var snapshot = datasource.snapshot()
+        snapshot.appendItems([link.id.uuidString])
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func databaseController(_ databaseController: Database, didInsert links: [Link]) {
+        var snapshot = datasource.snapshot()
+        snapshot.appendItems(links.map(\.id.uuidString))
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func databaseController(_ databaseController: Database, didUpdate link: Link) {
+        var snapshot = datasource.snapshot()
+        snapshot.reloadItems([link.id.uuidString])
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func databaseController(_ databaseController: Database, didUpdate links: [Link]) {
+        var snapshot = datasource.snapshot()
+        snapshot.reloadItems(links.map(\.id.uuidString))
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func databaseController(_ databaseController: Database, didDelete link: Link) {
+        var snapshot = datasource.snapshot()
+        snapshot.deleteItems([link.id.uuidString])
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func databaseController(_ databaseController: Database, didDelete links: [Link]) {
+        var snapshot = datasource.snapshot()
+        snapshot.deleteItems(links.map(\.id.uuidString))
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+}
 
 extension LinksTableViewController {
     enum OrderBy: String {

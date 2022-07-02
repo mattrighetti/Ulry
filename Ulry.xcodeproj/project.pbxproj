@@ -16,8 +16,6 @@
 		C90A2A1127D2CEB200C40BAA /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94055AD27D1241500F982E4 /* Database.swift */; };
 		C90A2A1327D2CEC100C40BAA /* FMDBMigrationManager in Frameworks */ = {isa = PBXBuildFile; productRef = C90A2A1227D2CEC100C40BAA /* FMDBMigrationManager */; };
 		C90A2A1527D2CEC500C40BAA /* FMDBMigrationManager in Frameworks */ = {isa = PBXBuildFile; productRef = C90A2A1427D2CEC500C40BAA /* FMDBMigrationManager */; };
-		C90AA80D2794D6BC000113BA /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90AA80C2794D6BC000113BA /* CoreDataStack.swift */; };
-		C90AA80E2794E047000113BA /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90AA80C2794D6BC000113BA /* CoreDataStack.swift */; };
 		C90C0A212795E36C004FABDD /* AddLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90C0A202795E36C004FABDD /* AddLinkViewController.swift */; };
 		C90C0A2327964CBE004FABDD /* AddCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90C0A2227964CBE004FABDD /* AddCategoryViewController.swift */; };
 		C91053B3278E4659005AC807 /* +URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91053B2278E4659005AC807 /* +URL.swift */; };
@@ -27,7 +25,6 @@
 		C9179A1E27972E2B008A82DD /* UlryIntents.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C9179A1627972E2B008A82DD /* UlryIntents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C9179A2227972F07008A82DD /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = C9179A1027972BD3008A82DD /* Intents.intentdefinition */; };
 		C9179A232797379A008A82DD /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = C9179A1027972BD3008A82DD /* Intents.intentdefinition */; };
-		C9179A2427973BCC008A82DD /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90AA80C2794D6BC000113BA /* CoreDataStack.swift */; };
 		C9179A2527973BD1008A82DD /* +Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ABF9E42794451700F1B1F1 /* +Dictionary.swift */; };
 		C9179A2627973BD1008A82DD /* MetaFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9062789C2BD00887A3E /* MetaFetcher.swift */; };
 		C9179A2727973BD1008A82DD /* +UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94A2DD1278BB3D3007F6FFA /* +UIViewController.swift */; };
@@ -167,7 +164,6 @@
 /* Begin PBXFileReference section */
 		C909E75227D0248A0073CC6E /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
 		C909E75527D04C6C0073CC6E /* 20220303014811805_v1.0.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = 20220303014811805_v1.0.sql; sourceTree = "<group>"; };
-		C90AA80C2794D6BC000113BA /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		C90C0A202795E36C004FABDD /* AddLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLinkViewController.swift; sourceTree = "<group>"; };
 		C90C0A2227964CBE004FABDD /* AddCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCategoryViewController.swift; sourceTree = "<group>"; };
 		C91053B2278E4659005AC807 /* +URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+URL.swift"; sourceTree = "<group>"; };
@@ -419,7 +415,6 @@
 		C9F4F8FD2789C2BD00887A3E /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				C90AA80C2794D6BC000113BA /* CoreDataStack.swift */,
 				C9F4F9032789C2BD00887A3E /* Utils */,
 				C9F4F9082789C2BD00887A3E /* Model */,
 				C96016432798B29700675DC5 /* DataFetcher.swift */,
@@ -688,7 +683,6 @@
 			files = (
 				C9179A3227973BD4008A82DD /* Tag.swift in Sources */,
 				C953DA0F279D87F700357028 /* DataFetcher.swift in Sources */,
-				C9179A2427973BCC008A82DD /* CoreDataStack.swift in Sources */,
 				C9179A2927973BD1008A82DD /* +UIColor.swift in Sources */,
 				C9179A2B27973BD1008A82DD /* SFSymbols.swift in Sources */,
 				C9179A3027973BD4008A82DD /* Group.swift in Sources */,
@@ -724,7 +718,6 @@
 				C99C14D1278C675E00936D27 /* SFSymbols.swift in Sources */,
 				C99C14C9278C675700936D27 /* Category.swift in Sources */,
 				C99C14D3278C675E00936D27 /* +UIScreen.swift in Sources */,
-				C90AA80E2794E047000113BA /* CoreDataStack.swift in Sources */,
 				C99C14CD278C675E00936D27 /* +UIImage.swift in Sources */,
 				C9CE80F127A76FA4005D1005 /* AddToUlryActionViewController.swift in Sources */,
 				C99C14D7278C678500936D27 /* Representable.swift in Sources */,
@@ -751,7 +744,6 @@
 				C94A2DD0278B710A007F6FFA /* +UIFont.swift in Sources */,
 				C909E75327D0248A0073CC6E /* IAPManager.swift in Sources */,
 				C972BB0027A22383005B6312 /* AppIcon.swift in Sources */,
-				C90AA80D2794D6BC000113BA /* CoreDataStack.swift in Sources */,
 				C9F4F9412789C2DE00887A3E /* SelectionList.swift in Sources */,
 				C9D37C60279830EB0084F188 /* AppearanceViewController.swift in Sources */,
 				C9F4F9462789C2DE00887A3E /* AwareBackgroundColor.swift in Sources */,

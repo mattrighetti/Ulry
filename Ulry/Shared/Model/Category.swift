@@ -35,20 +35,15 @@ public enum Category: Hashable {
     var cellContent: CategoryCellContent {
         switch self {
         case .all:
-//            return CategoryCellContent(title: "All", backgroundColor: .orange, icon: "list.bullet", linksCount: Database.shared.countLinks())
-            return CategoryCellContent(title: "All", backgroundColor: .orange, icon: "list.bullet", linksCount: 10)
+            return CategoryCellContent(title: "All", backgroundColor: .orange, icon: "list.bullet", linksCount: Database.shared.countLinks())
         case .unread:
-//            return CategoryCellContent(title: "Unread", backgroundColor: .systemGray, icon: "archivebox", linksCount: Database.shared.countLinks())
-            return CategoryCellContent(title: "Unread", backgroundColor: .systemGray, icon: "archivebox", linksCount: 15)
+            return CategoryCellContent(title: "Unread", backgroundColor: .systemGray, icon: "archivebox", linksCount: Database.shared.countUnreadLinks())
         case .starred:
-//            return CategoryCellContent(title: "Starred", backgroundColor: .systemYellow, icon: "star", linksCount: Database.shared.countLinks())
-            return CategoryCellContent(title: "Starred", backgroundColor: .systemYellow, icon: "star", linksCount: 20)
+            return CategoryCellContent(title: "Starred", backgroundColor: .systemYellow, icon: "star", linksCount: Database.shared.countStarredLinks())
         case .group(let group):
-//            return CategoryCellContent(title: group.name, backgroundColor: UIColor(hex: group.colorHex)!, icon: group.iconName, linksCount: Database.shared.countLinksIn(group))
-            return CategoryCellContent(title: group.name, backgroundColor: UIColor(hex: group.colorHex)!, icon: group.iconName, linksCount: 25)
+            return CategoryCellContent(title: group.name, backgroundColor: UIColor(hex: group.colorHex)!, icon: group.iconName, linksCount: Database.shared.countLinksIn(group))
         case .tag(let tag):
-//            return CategoryCellContent(title: tag.name, backgroundColor: UIColor(hex: tag.colorHex)!, icon: nil, linksCount: Database.shared.countLinksIn(tag))
-            return CategoryCellContent(title: tag.name, backgroundColor: UIColor(hex: tag.colorHex)!, icon: nil, linksCount: 30)
+            return CategoryCellContent(title: tag.name, backgroundColor: UIColor(hex: tag.colorHex)!, icon: nil, linksCount: Database.shared.countLinksIn(tag))
         }
     }
 }

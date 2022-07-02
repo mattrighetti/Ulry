@@ -9,14 +9,51 @@ import os
 import FMDB
 import FMDBMigrationManager
 
-protocol DatabaseControllerDelegate {
-    func inserted(link: Link)
-    func inserted(tag: Tag)
-    func inserted(group: Group)
+public protocol DatabaseControllerDelegate: AnyObject {
+    func databaseController(_ databaseController: Database, didInsert link: Link)
+    func databaseController(_ databaseController: Database, didInsert links: [Link])
+    func databaseController(_ databaseController: Database, didInsert tag: Tag)
+    func databaseController(_ databaseController: Database, didInsert tags: [Tag])
+    func databaseController(_ databaseController: Database, didInsert group: Group)
+    func databaseController(_ databaseController: Database, didInsert groups: [Group])
+    func databaseController(_ databaseController: Database, didUpdate link: Link)
+    func databaseController(_ databaseController: Database, didUpdate links: [Link])
+    func databaseController(_ databaseController: Database, didUpdate group: Group)
+    func databaseController(_ databaseController: Database, didUpdate groups: [Group])
+    func databaseController(_ databaseController: Database, didUpdate tag: Tag)
+    func databaseController(_ databaseController: Database, didUpdate tags: [Tag])
+    func databaseController(_ databaseController: Database, didDelete link: Link)
+    func databaseController(_ databaseController: Database, didDelete links: [Link])
+    func databaseController(_ databaseController: Database, didDelete group: Group)
+    func databaseController(_ databaseController: Database, didDelete groups: [Group])
+    func databaseController(_ databaseController: Database, didDelete tag: Tag)
+    func databaseController(_ databaseController: Database, didDelete tags: [Tag])
+}
+
+extension DatabaseControllerDelegate {
+    func databaseController(_ databaseController: Database, didInsert link: Link) {}
+    func databaseController(_ databaseController: Database, didInsert links: [Link]) {}
+    func databaseController(_ databaseController: Database, didInsert tag: Tag) {}
+    func databaseController(_ databaseController: Database, didInsert tags: [Tag]) {}
+    func databaseController(_ databaseController: Database, didInsert group: Group) {}
+    func databaseController(_ databaseController: Database, didInsert groups: [Group]) {}
+    func databaseController(_ databaseController: Database, didUpdate link: Link) {}
+    func databaseController(_ databaseController: Database, didUpdate links: [Link]) {}
+    func databaseController(_ databaseController: Database, didUpdate group: Group) {}
+    func databaseController(_ databaseController: Database, didUpdate groups: [Group]) {}
+    func databaseController(_ databaseController: Database, didUpdate tag: Tag) {}
+    func databaseController(_ databaseController: Database, didUpdate tags: [Tag]) {}
+    func databaseController(_ databaseController: Database, didDelete link: Link) {}
+    func databaseController(_ databaseController: Database, didDelete links: [Link]) {}
+    func databaseController(_ databaseController: Database, didDelete group: Group) {}
+    func databaseController(_ databaseController: Database, didDelete groups: [Group]) {}
+    func databaseController(_ databaseController: Database, didDelete tag: Tag) {}
+    func databaseController(_ databaseController: Database, didDelete tags: [Tag]) {}
 }
 
 public final class Database {
     var db: FMDatabase
+    weak var delegate: DatabaseControllerDelegate?
     static var shared: Database = Database()
     
     public init(inMemory: Bool = false) {
@@ -53,24 +90,21 @@ public final class Database {
         try! self.db.executeStatements(
             """
             -- Activate foreign keys
-            drop table if exists category;
-            create table category(
+            create table if not exists category(
                 id      text unique,
                 name    varchar(50) not null unique,
                 icon    varchar(50) not null,
                 color   char(6) not null
             );
 
-            drop table if exists tag;
-            create table tag(
+            create table if not exists tag(
                 id            text unique,
                 name          varchar(50) not null unique,
                 description   text,
                 color         char(6) not null
             );
 
-            drop table if exists link;
-            create table link(
+            create table if not exists link(
                 id              text unique,
                 url             text not null,
                 starred         bool not null,
@@ -86,20 +120,19 @@ public final class Database {
                 updated_at      integer not null
             );
 
-            drop table if exists category_link;
-            create table category_link(
+            create table if not exists category_link(
                 link_id       text not null references link(id) on delete cascade,
                 category_id     text not null references category(id) on delete cascade,
                 primary key (link_id, category_id)
             );
 
-            drop table if exists tag_link;
-            create table tag_link(
+            create table if not exists tag_link(
                 link_id       text not null references link(id) on delete cascade,
                 tag_id        text not null references tag(id) on delete cascade,
                 primary key (link_id, tag_id)
             );
-            """)
+            """
+        )
     }
     
     // MARK: - CREATE
@@ -116,6 +149,7 @@ public final class Database {
                 values: [tag.id, tag.name, tag.description_, tag.colorHex]
             )
             self.db.commit()
+            delegate?.databaseController(self, didInsert: tag)
             return true
         } catch {
             os_log(.error, "encountered error while inserting tag, error was: @%", error as CVarArg)
@@ -138,6 +172,7 @@ public final class Database {
                 )
             }
             self.db.commit()
+            delegate?.databaseController(self, didInsert: tags)
             return true
         } catch {
             os_log(.error, "encountered error while inserting tag, error was: @%", error as CVarArg)
@@ -158,6 +193,7 @@ public final class Database {
                 values: [group.id, group.name, group.iconName, group.colorHex]
             )
             self.db.commit()
+            delegate?.databaseController(self, didInsert: group)
             return true
         } catch {
             os_log(.error, "encountered error while inserting category, error was: @%", error as CVarArg)
@@ -180,6 +216,7 @@ public final class Database {
                 )
             }
             self.db.commit()
+            delegate?.databaseController(self, didInsert: groups)
             return true
         } catch {
             os_log(.error, "encountered error while inserting batch category, error was: @%", error as CVarArg)
@@ -223,6 +260,7 @@ public final class Database {
             }
             
             self.db.commit()
+            delegate?.databaseController(self, didInsert: link)
             return true
         } catch {
             os_log(.error, "encountered error while inserting link, error was: @%", error as CVarArg)
@@ -268,6 +306,7 @@ public final class Database {
             }
             
             self.db.commit()
+            delegate?.databaseController(self, didInsert: links)
             return true
         } catch {
             os_log(.error, "encountered error while inserting link, error was: %@", error as CVarArg)
@@ -293,25 +332,105 @@ public final class Database {
             return []
         }
     }
+   
+    public func getAllStarredLinksUUID() -> [String] {
+        do {
+            var uuids = [String]()
+            let res = try self.db.executeQuery(
+                """
+                select id
+                from link
+                where starred = true
+                """,
+                values: nil
+            )
+            while res.next() {
+                if let uuid = res.string(forColumn: "id") {
+                    uuids.append(uuid)
+                }
+            }
+            return uuids
+        } catch {
+            os_log(.error, "encountered error while getting starred links: error was %@", error as CVarArg)
+            return []
+        }
+    }
+    
+    public func getAllUnreadLinksUUID() -> [String] {
+        do {
+            var uuids = [String]()
+            let res = try self.db.executeQuery(
+                """
+                select id
+                from link
+                where unread = true
+                """,
+                values: nil
+            )
+            while res.next() {
+                if let uuid = res.string(forColumn: "id") {
+                    uuids.append(uuid)
+                }
+            }
+            return uuids
+        } catch {
+            os_log(.error, "encountered error while getting unread links: error was %@", error as CVarArg)
+            return []
+        }
+    }
+    
+    public func getAllLinksUUID(in group: Group) -> [String] {
+        do {
+            var uuids = [String]()
+            let res = try self.db.executeQuery(
+                """
+                select link_id
+                from category_link
+                where category_id = ?
+                """,
+                values: [group.id]
+            )
+            while res.next() {
+                if let uuid = res.string(forColumn: "id") {
+                    uuids.append(uuid)
+                }
+            }
+            return uuids
+        } catch {
+            os_log(.error, "encountered error while getting links in group %@: error was %@", group.name, error as CVarArg)
+            return []
+        }
+    }
+    
+    public func getAllLinksUUID(in tag: Tag) -> [String] {
+        do {
+            var uuids = [String]()
+            let res = try self.db.executeQuery(
+                """
+                select link_id
+                from tag_link
+                where tag_id = ?
+                """,
+                values: [tag.id]
+            )
+            while res.next() {
+                if let uuid = res.string(forColumn: "id") {
+                    uuids.append(uuid)
+                }
+            }
+            return uuids
+        } catch {
+            os_log(.error, "encountered error while getting links in tag %@: error was %@", tag.name, error as CVarArg)
+            return []
+        }
+    }
     
     public func getAllLinks() -> [Link] {
         do {
             var links = [Link]()
             let res = try self.db.executeQuery(
                 """
-                select
-                    id,
-                    url,
-                    starred,
-                    unread,
-                    note,
-                    color,
-                    image,
-                    ogImage,
-                    ogDescription,
-                    ogImageUrl,
-                    created_at,
-                    updated_at
+                select *
                 from link
                 """,
                 values: nil
@@ -392,6 +511,50 @@ public final class Database {
                 """
                 select count(*)
                 from link
+                """,
+                values: nil
+            )
+            if res.next() {
+                count = Int(res.int(forColumnIndex: 0))
+            }
+            res.close()
+            return count
+        } catch {
+            os_log(.error, "could not count links in group: %@", error as CVarArg)
+            return 0
+        }
+    }
+    
+    public func countStarredLinks() -> Int {
+        do {
+            var count: Int = 0
+            let res = try self.db.executeQuery(
+                """
+                select count(*)
+                from link
+                where starred = true
+                """,
+                values: nil
+            )
+            if res.next() {
+                count = Int(res.int(forColumnIndex: 0))
+            }
+            res.close()
+            return count
+        } catch {
+            os_log(.error, "could not count links in group: %@", error as CVarArg)
+            return 0
+        }
+    }
+    
+    public func countUnreadLinks() -> Int {
+        do {
+            var count: Int = 0
+            let res = try self.db.executeQuery(
+                """
+                select count(*)
+                from link
+                where unread = true
                 """,
                 values: nil
             )
@@ -552,6 +715,7 @@ public final class Database {
             }
             
             self.db.commit()
+            delegate?.databaseController(self, didUpdate: link)
             return true
         } catch {
             os_log(.error, "encountered error while updateing link, error was: @%", error as CVarArg)
@@ -571,6 +735,7 @@ public final class Database {
                 values: [tag.name, tag.description_, tag.colorHex, tag.id]
             )
             self.db.commit()
+            delegate?.databaseController(self, didUpdate: tag)
             return true
         } catch {
             os_log(.error, "encountered error while inserting tag, error was: @%", error as CVarArg)
@@ -590,6 +755,7 @@ public final class Database {
                 values: [group.name, group.iconName, group.colorHex, group.id]
             )
             self.db.commit()
+            delegate?.databaseController(self, didUpdate: group)
             return true
         } catch {
             os_log(.error, "encountered error while inserting group, error was: @%", error as CVarArg)
@@ -602,13 +768,16 @@ public final class Database {
     
     public func delete(_ link: Link) {
         self.db.executeUpdate("delete from link where id = ?", withArgumentsIn: [link.id])
+        delegate?.databaseController(self, didDelete: link)
     }
     
     public func delete(_ group: Group) {
         self.db.executeUpdate("delete from category where id = ?", withArgumentsIn: [group.id])
+        delegate?.databaseController(self, didDelete: group)
     }
     
     public func delete(_ tag: Tag) {
         self.db.executeUpdate("delete from tag where id = ?", withArgumentsIn: [tag.id])
+        delegate?.databaseController(self, didDelete: tag)
     }
 }

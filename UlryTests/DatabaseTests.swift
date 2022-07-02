@@ -16,6 +16,7 @@ class DatabaseTests: XCTestCase {
         self.database.db.executeStatements(
             """
             PRAGMA foreign_keys = ON;
+            PRAGMA user_version = 1;
 
             create table category(
                 id      text unique,
@@ -81,13 +82,6 @@ class DatabaseTests: XCTestCase {
                 _ = self.database.insert(link)
             }
         }
-    }
-    
-    func testPerformanceBatchLinkInsert() {
-        var links = [Link]()
-        for i in 0..<1000 {
-            links.append(Link(url: "https://batch-\(i).com", note: ""))
-        }
         
         // fast
         measure {
@@ -119,6 +113,10 @@ class DatabaseTests: XCTestCase {
         
         XCTAssertEqual(n_tag?.colorHex, "#ffaaff")
         XCTAssertEqual(n_tag?.description_, "this is a new tag")
+    }
+    
+    func testDbSpeed() {
+        
     }
     
     override func tearDown() {

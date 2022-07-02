@@ -94,16 +94,5 @@ public class Link: Hashable {
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
-        hasher.combine(starred)
-        hasher.combine(unread)
-        hasher.combine(url)
-        hasher.combine(note)
-        hasher.combine(imageData)
-        hasher.combine(colorHex)
-        hasher.combine(ogTitle)
-        hasher.combine(ogDescription)
-        hasher.combine(ogImageUrl)
-        hasher.combine(group)
-        hasher.combine(tags)
     }
 }
