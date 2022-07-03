@@ -50,7 +50,7 @@ public class Link: Hashable {
         self.colorHex = res.string(forColumn: "color")!
         self.ogTitle = res.string(forColumn: "ogTitle")
         self.ogDescription = res.string(forColumn: "ogDescription")
-        self.ogImageUrl = res.string(forColumn: "ogImage")
+        self.ogImageUrl = res.string(forColumn: "ogImageUrl")
         self.createdAt = Int32(Date.now.timeIntervalSince1970)
         self.updatedAt = Int32(Date.now.timeIntervalSince1970)
         self.group = nil
@@ -89,7 +89,16 @@ public class Link: Hashable {
     }()
     
     public static func == (lhs: Link, rhs: Link) -> Bool {
-        lhs.id == rhs.id
+        lhs.id == rhs.id &&
+        lhs.unread == rhs.unread &&
+        lhs.starred == rhs.starred &&
+        lhs.note == rhs.note &&
+        lhs.ogTitle == rhs.ogTitle &&
+        lhs.ogDescription == rhs.ogDescription &&
+        lhs.ogImageUrl == rhs.ogImageUrl &&
+        lhs.imageData == rhs.imageData &&
+        lhs.colorHex == rhs.colorHex &&
+        lhs.url == rhs.url
     }
     
     public func hash(into hasher: inout Hasher) {

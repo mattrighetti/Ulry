@@ -90,7 +90,8 @@ class ActionViewController: UIViewController {
         link.ogImageUrl = imageUrl
         link.group = nil
         link.tags = nil
-        database.insert(link)
+        
+        _ = database.insert(link)
         
         guard let imageUrl = imageUrl else {
             self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)

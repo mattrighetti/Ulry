@@ -92,6 +92,8 @@
 		C9CE80F027A76FA4005D1005 /* AddToUlryActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE80EF27A76FA4005D1005 /* AddToUlryActionViewController.swift */; };
 		C9CE80F127A76FA4005D1005 /* AddToUlryActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE80EF27A76FA4005D1005 /* AddToUlryActionViewController.swift */; };
 		C9D0574227A8C539006BD331 /* +NSMutableAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D0574127A8C539006BD331 /* +NSMutableAttributedString.swift */; };
+		C9D2188428719F110038F8A2 /* MetaDataFetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D2188328719F110038F8A2 /* MetaDataFetcherTests.swift */; };
+		C9D218862871FACA0038F8A2 /* MetadataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D218852871FACA0038F8A2 /* MetadataProvider.swift */; };
 		C9D37C5E2798297E0084F188 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C5D2798297E0084F188 /* SettingsViewController.swift */; };
 		C9D37C60279830EB0084F188 /* AppearanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C5F279830EB0084F188 /* AppearanceViewController.swift */; };
 		C9D37C622798361C0084F188 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C612798361C0084F188 /* AboutViewController.swift */; };
@@ -209,6 +211,8 @@
 		C9CE80ED27A76F20005D1005 /* GroupCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCodable.swift; sourceTree = "<group>"; };
 		C9CE80EF27A76FA4005D1005 /* AddToUlryActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToUlryActionViewController.swift; sourceTree = "<group>"; };
 		C9D0574127A8C539006BD331 /* +NSMutableAttributedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+NSMutableAttributedString.swift"; sourceTree = "<group>"; };
+		C9D2188328719F110038F8A2 /* MetaDataFetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaDataFetcherTests.swift; sourceTree = "<group>"; };
+		C9D218852871FACA0038F8A2 /* MetadataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataProvider.swift; sourceTree = "<group>"; };
 		C9D37C5D2798297E0084F188 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		C9D37C5F279830EB0084F188 /* AppearanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceViewController.swift; sourceTree = "<group>"; };
 		C9D37C612798361C0084F188 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
@@ -366,6 +370,7 @@
 			isa = PBXGroup;
 			children = (
 				C9D7FE85278AFFA100016B04 /* DatabaseTests.swift */,
+				C9D2188328719F110038F8A2 /* MetaDataFetcherTests.swift */,
 			);
 			path = UlryTests;
 			sourceTree = "<group>";
@@ -419,6 +424,7 @@
 				C9F4F9082789C2BD00887A3E /* Model */,
 				C96016432798B29700675DC5 /* DataFetcher.swift */,
 				C94055AD27D1241500F982E4 /* Database.swift */,
+				C9D218852871FACA0038F8A2 /* MetadataProvider.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -732,6 +738,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9D2188428719F110038F8A2 /* MetaDataFetcherTests.swift in Sources */,
 				C9D7FE86278AFFA100016B04 /* DatabaseTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -757,6 +764,7 @@
 				C99C14D6278C678200936D27 /* Representable.swift in Sources */,
 				C9C56973279C1EEF0064D8EB /* JSONDumpHelper.swift in Sources */,
 				C94055AE27D1241500F982E4 /* Database.swift in Sources */,
+				C9D218862871FACA0038F8A2 /* MetadataProvider.swift in Sources */,
 				C97467A32799882C00B53B8C /* UrlTextFieldAccessoryView.swift in Sources */,
 				C96016442798B29700675DC5 /* DataFetcher.swift in Sources */,
 				C9F4F95B278A40F200887A3E /* UIImageCircleTableViewCell.swift in Sources */,

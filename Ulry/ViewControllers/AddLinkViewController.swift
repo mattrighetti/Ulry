@@ -262,9 +262,9 @@ class AddLinkViewController: UIViewController {
                 let link = Link(url: url, note: self.noteTextView.text)
                 link.group = self.selectedFolder
                 link.tags = Set(self.selectedTags)
-                dataFetcher.fetchData(for: link) {
-                    _ = self.database.insert(link)
-                }
+                _ = database.insert(link)
+                
+                MetadataProvider.shared.fetchLinkMetadata(link: link)
             }
             
             self.dismiss(animated: true)
@@ -316,7 +316,7 @@ class AddLinkViewController: UIViewController {
             selection: .init(
                 get: { self.selectedFolder },
                 set: { group in self.selectedFolder = group }
-            ), items: [] // TODO this is not empty
+            ), items: database.getAllGroups()
         )
         
         navigationController?.pushViewController(UIHostingController(rootView: view), animated: true)
@@ -324,7 +324,7 @@ class AddLinkViewController: UIViewController {
     
     @objc private func showTagsMultiselectionList() {
         let view = MultipleSelectionList(
-            items: [], selections: selectedTags, // TODO [] was not empty
+            items: database.getAllTags(), selections: selectedTags,
             selectedTags: .init(
                 get: { self.selectedTags },
                 set: { tags in self.selectedTags = tags }

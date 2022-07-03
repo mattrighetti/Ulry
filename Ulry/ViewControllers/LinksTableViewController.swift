@@ -226,14 +226,14 @@ extension LinksTableViewController: UITableViewDelegate {
             self?.onStarPressed(link: link)
             completionHandler(true)
         }
-        //star.backgroundColor = .systemYellow
+        star.backgroundColor = .systemYellow
         
         let readActionTitle = link.unread ? "Read" : "Unread"
         let read = UIContextualAction(style: .destructive, title: readActionTitle) { [weak self] (action, view, completionHandler) in
             self?.onReadPressed(link: link)
             completionHandler(true)
         }
-        //read.backgroundColor = .systemBlue
+        read.backgroundColor = .systemBlue
         
         return UISwipeActionsConfiguration(actions: [star, read])
     }

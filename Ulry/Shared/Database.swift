@@ -58,19 +58,19 @@ public final class Database {
     
     public init(inMemory: Bool = false) {
         if inMemory {
-            self.db = FMDatabase(path: "/tmp/tmp-\(UUID()).db")
+            self.db = FMDatabase()
             self.db.open()
-            return
+            self.runMigrations_v2()
+        } else {
+            let fileURL = try! FileManager.default
+                .url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+                .appendingPathComponent("ulry.sqlite")
+            
+            self.db = FMDatabase(url: fileURL)
+            self.db.open()
+            
+            runMigrations_v2()
         }
-        
-        let fileURL = try! FileManager.default
-            .url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-            .appendingPathComponent("ulry.sqlite")
-        
-        self.db = FMDatabase(url: fileURL)
-        self.db.open()
-        
-        runMigrations_v2()
     }
     
     func runMigration_v1() {
@@ -87,7 +87,7 @@ public final class Database {
     }
     
     func runMigrations_v2() {
-        try! self.db.executeStatements(
+        self.db.executeStatements(
             """
             -- Activate foreign keys
             create table if not exists category(
@@ -110,10 +110,9 @@ public final class Database {
                 starred         bool not null,
                 unread          bool not null,
                 note            text,
-                color           char(6) not null,
+                color           varchar(7) not null,
                 image           text,
                 ogTitle         text,
-                ogImage         text,
                 ogDescription   text,
                 ogImageUrl      text,
                 created_at      integer not null,
@@ -152,7 +151,7 @@ public final class Database {
             delegate?.databaseController(self, didInsert: tag)
             return true
         } catch {
-            os_log(.error, "encountered error while inserting tag, error was: @%", error as CVarArg)
+            os_log(.error, "encountered error while inserting tag, error was: %@", error as CVarArg)
             self.db.rollback()
             return false
         }
@@ -175,7 +174,7 @@ public final class Database {
             delegate?.databaseController(self, didInsert: tags)
             return true
         } catch {
-            os_log(.error, "encountered error while inserting tag, error was: @%", error as CVarArg)
+            os_log(.error, "encountered error while inserting tag, error was: %@", error as CVarArg)
             self.db.rollback()
             return false
         }
@@ -196,7 +195,7 @@ public final class Database {
             delegate?.databaseController(self, didInsert: group)
             return true
         } catch {
-            os_log(.error, "encountered error while inserting category, error was: @%", error as CVarArg)
+            os_log(.error, "encountered error while inserting category, error was: %@", error as CVarArg)
             self.db.rollback()
             return false
         }
@@ -219,7 +218,7 @@ public final class Database {
             delegate?.databaseController(self, didInsert: groups)
             return true
         } catch {
-            os_log(.error, "encountered error while inserting batch category, error was: @%", error as CVarArg)
+            os_log(.error, "encountered error while inserting batch category, error was: %@", error as CVarArg)
             self.db.rollback()
             return false
         }
@@ -263,7 +262,7 @@ public final class Database {
             delegate?.databaseController(self, didInsert: link)
             return true
         } catch {
-            os_log(.error, "encountered error while inserting link, error was: @%", error as CVarArg)
+            os_log(.error, "encountered error while inserting link, error was: %@", error as CVarArg)
             self.db.rollback()
             return false
         }
@@ -575,8 +574,8 @@ public final class Database {
             let res = try self.db.executeQuery(
                 """
                 select count(*)
-                from category
-                where id = ?
+                from category_link
+                where category_id = ?
                 """,
                 values: [group.id]
             )
@@ -597,8 +596,8 @@ public final class Database {
             let res = try self.db.executeQuery(
                 """
                 select count(*)
-                from tag
-                where id = ?
+                from tag_link
+                where tag_id = ?
                 """,
                 values: [tag.id]
             )
@@ -704,10 +703,16 @@ public final class Database {
             try self.db.executeUpdate(
                 """
                 update link
-                set url = ?, starred = ?, unread = ?, color = ?, updated_at = ?
+                set url = ?, starred = ?, unread = ?, color = ?, note = ?,
+                    updated_at = ?, ogTitle = ?, ogImageUrl = ?, ogDescription = ?
                 where id = ?
                 """,
-                values: [link.url, link.starred, link.unread, link.color, Int32(Date.now.timeIntervalSince1970), link.id]
+                values: [
+                    link.url, link.starred, link.unread,
+                    link.colorHex, link.note as Any, Int32(Date.now.timeIntervalSince1970),
+                    link.ogTitle as Any, link.ogImageUrl as Any, link.ogDescription as Any,
+                    link.id
+                ]
             )
             
             if let note = link.note {
@@ -718,7 +723,7 @@ public final class Database {
             delegate?.databaseController(self, didUpdate: link)
             return true
         } catch {
-            os_log(.error, "encountered error while updateing link, error was: @%", error as CVarArg)
+            os_log(.error, "encountered error while updateing link, error was: %@", error as CVarArg)
             self.db.rollback()
             return false
         }
@@ -738,7 +743,7 @@ public final class Database {
             delegate?.databaseController(self, didUpdate: tag)
             return true
         } catch {
-            os_log(.error, "encountered error while inserting tag, error was: @%", error as CVarArg)
+            os_log(.error, "encountered error while inserting tag, error was: %@", error as CVarArg)
             self.db.rollback()
             return false
         }
@@ -758,7 +763,7 @@ public final class Database {
             delegate?.databaseController(self, didUpdate: group)
             return true
         } catch {
-            os_log(.error, "encountered error while inserting group, error was: @%", error as CVarArg)
+            os_log(.error, "encountered error while inserting group, error was: %@", error as CVarArg)
             self.db.rollback()
             return false
         }
