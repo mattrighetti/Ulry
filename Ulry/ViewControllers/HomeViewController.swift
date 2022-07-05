@@ -124,7 +124,6 @@ class HomeViewController: UIViewController {
         navigationItem.leftBarButtonItems = [settingsButton]
         
         tableView.delegate = self
-        database.delegate = self
         
         view.addSubview(tableView)
         addSections()
@@ -138,6 +137,7 @@ class HomeViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        database.delegate = self
         reloadSections()
         
         // Fade the table deselection as the view controller is popped
@@ -196,9 +196,9 @@ class HomeViewController: UIViewController {
     private func handleMoveToTrash(category: Category) {
         switch category {
         case .group(let group):
-            database.delete(group)
+            _ = database.delete(group)
         case .tag(let tag):
-            database.delete(tag)
+            _ = database.delete(tag)
         default:
             return
         }

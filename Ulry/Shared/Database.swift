@@ -53,8 +53,9 @@ extension DatabaseControllerDelegate {
 
 public final class Database {
     var db: FMDatabase
-    weak var delegate: DatabaseControllerDelegate?
-    static var shared: Database = Database()
+    
+    weak var delegate: DatabaseControllerDelegate?    
+    static var shared = Database()
     
     public init(inMemory: Bool = false) {
         if inMemory {
@@ -89,28 +90,27 @@ public final class Database {
     func runMigrations_v2() {
         self.db.executeStatements(
             """
-            -- Activate foreign keys
             create table if not exists category(
-                id      text unique,
+                id      text not null unique,
                 name    varchar(50) not null unique,
                 icon    varchar(50) not null,
                 color   char(6) not null
             );
 
             create table if not exists tag(
-                id            text unique,
+                id            text not null unique,
                 name          varchar(50) not null unique,
                 description   text,
                 color         char(6) not null
             );
 
             create table if not exists link(
-                id              text unique,
-                url             text not null,
+                id              text not null unique,
+                url             text not null unique,
                 starred         bool not null,
                 unread          bool not null,
                 note            text,
-                color           varchar(7) not null,
+                color           char(7) not null,
                 image           text,
                 ogTitle         text,
                 ogDescription   text,
@@ -121,13 +121,13 @@ public final class Database {
 
             create table if not exists category_link(
                 link_id       text not null references link(id) on delete cascade,
-                category_id     text not null references category(id) on delete cascade,
+                category_id   text not null references category(id) on delete cascade,
                 primary key (link_id, category_id)
             );
 
             create table if not exists tag_link(
-                link_id       text not null references link(id) on delete cascade,
-                tag_id        text not null references tag(id) on delete cascade,
+                link_id   text not null references link(id) on delete cascade,
+                tag_id    text not null references tag(id) on delete cascade,
                 primary key (link_id, tag_id)
             );
             """
@@ -258,6 +258,28 @@ public final class Database {
                 )
             }
             
+            if let group = link.group {
+                try self.db.executeUpdate(
+                    """
+                    insert into category_link(link_id, category_id)
+                    values (?, ?)
+                    """,
+                    values: [link.id, group.id]
+                )
+            }
+            
+            if let tags = link.tags {
+                for t in tags {
+                    try self.db.executeUpdate(
+                        """
+                        insert into tag_link(link_id, tag_id)
+                        values (?, ?)
+                        """,
+                        values: [link.id, t.id]
+                    )
+                }
+            }
+            
             self.db.commit()
             delegate?.databaseController(self, didInsert: link)
             return true
@@ -301,6 +323,28 @@ public final class Database {
                         """,
                         values: [base64Image, link.id]
                     )
+                }
+                
+                if let group = link.group {
+                    try self.db.executeUpdate(
+                        """
+                        insert into category_link(link_id, category_id)
+                        values (?, ?)
+                        """,
+                        values: [link.id, group.id]
+                    )
+                }
+                
+                if let tags = link.tags {
+                    for t in tags {
+                        try self.db.executeUpdate(
+                            """
+                            insert into tag_link(link_id, tag_id)
+                            values (?, ?)
+                            """,
+                            values: [link.id, t.id]
+                        )
+                    }
                 }
             }
             
@@ -390,7 +434,7 @@ public final class Database {
                 values: [group.id]
             )
             while res.next() {
-                if let uuid = res.string(forColumn: "id") {
+                if let uuid = res.string(forColumn: "link_id") {
                     uuids.append(uuid)
                 }
             }
@@ -413,7 +457,7 @@ public final class Database {
                 values: [tag.id]
             )
             while res.next() {
-                if let uuid = res.string(forColumn: "id") {
+                if let uuid = res.string(forColumn: "link_id") {
                     uuids.append(uuid)
                 }
             }
@@ -664,6 +708,22 @@ public final class Database {
         }
     }
     
+    public func getGroups(with ids: [UUID]) -> [Group] {
+        do {
+            var groups = [Group]()
+            for id in ids {
+                let res = try self.db.executeQuery("select * from category where id = ?", values: [id])
+                if res.next(), let group = Group(from: res) {
+                    groups.append(group)
+                }
+            }
+            return groups
+        } catch {
+            os_log(.error, "error retrieving groups: %@", error as CVarArg)
+            return []
+        }
+    }
+    
     public func getAllTags() -> [Tag] {
         do {
             var tags = [Tag]()
@@ -694,11 +754,64 @@ public final class Database {
         }
     }
     
+    public func getTags(with ids: [UUID]) -> [Tag] {
+        do {
+            var tags = [Tag]()
+            for id in ids {
+                let res = try self.db.executeQuery("select * from tag where id = ?", values: [id])
+                if res.next(), let tag = Tag(from: res) {
+                    tags.append(tag)
+                }
+            }
+            return tags
+        } catch {
+            os_log(.error, "error retrieving group: %@", error as CVarArg)
+            return []
+        }
+    }
+    
+    public func getTags(of link: Link) -> [Tag] {
+        do {
+            var tags = [Tag]()
+            let res = try self.db.executeQuery(
+                """
+                select * from tag where id in (select tag_id from tag_link where link_id = ?)
+                """,
+                values: [link.id]
+            )
+            while res.next() {
+                tags.append(Tag(from: res)!)
+            }
+            return tags
+        } catch {
+            os_log(.error, "encountered error while retrieving tags of link, error was: %@", error as CVarArg)
+            return []
+        }
+    }
+    
+    public func getGroups(of link: Link) -> [Group] {
+        do {
+            var groups = [Group]()
+            let res = try self.db.executeQuery(
+                """
+                select * from category where id in (select category_id from category_link where link_id = ?)
+                """,
+                values: [link.id]
+            )
+            while res.next() {
+                groups.append(Group(from: res)!)
+            }
+            return groups
+        } catch {
+            os_log(.error, "encountered error while retrieving tags of link, error was: %@", error as CVarArg)
+            return []
+        }
+    }
+    
     // MARK: - UPDATE
     
     public func update(_ link: Link) -> Bool {
         self.db.beginTransaction()
-        
         do {
             try self.db.executeUpdate(
                 """
@@ -719,6 +832,42 @@ public final class Database {
                 try self.db.executeUpdate("update link set note = ? where id = ?", values: [note, link.id])
             }
             
+            
+            // Delete all tags entries, the only
+            // source of truth is the current link
+            try self.db.executeUpdate(
+                """
+                delete from tag_link
+                where link_id = ?
+                """, values: [link.id]
+            )
+            
+            // Delete all groups entries, the only
+            // source of truth is the current link
+            try self.db.executeUpdate(
+                """
+                delete from category_link
+                where link_id = ?
+                """,
+                values: [link.id]
+            )
+            
+            if let tags = link.tags {
+                for t in tags {
+                    try self.db.executeUpdate("insert into tag_link (link_id, tag_id) values (?, ?)", values: [link.id, t.id])
+                }
+            }
+            
+            if let group = link.group {
+                try self.db.executeUpdate(
+                    """
+                    insert into category_link (link_id, category_id)
+                    values (?, ?)
+                    """,
+                    values: [link.id, group.id]
+                )
+            }
+            
             self.db.commit()
             delegate?.databaseController(self, didUpdate: link)
             return true
@@ -730,6 +879,7 @@ public final class Database {
     }
     
     public func update(_ tag: Tag) -> Bool {
+        self.db.beginTransaction()
         do {
             try self.db.executeUpdate(
                 """
@@ -750,6 +900,7 @@ public final class Database {
     }
     
     public func update(_ group: Group) -> Bool {
+        self.db.beginTransaction()
         do {
             try self.db.executeUpdate(
                 """
@@ -771,18 +922,49 @@ public final class Database {
     
     // MARK: - DELETE
     
-    public func delete(_ link: Link) {
-        self.db.executeUpdate("delete from link where id = ?", withArgumentsIn: [link.id])
-        delegate?.databaseController(self, didDelete: link)
+    public func delete(_ link: Link) -> Bool {
+        self.db.beginTransaction()
+        do {
+            try self.db.executeUpdate("delete from link where id = ?", values: [link.id])
+            try self.db.executeUpdate("delete from category_link where link_id = ?", values: [link.id])
+            try self.db.executeUpdate("delete from tag_link where link_id = ?", values: [link.id])
+            self.db.commit()
+            delegate?.databaseController(self, didDelete: link)
+            return true
+        } catch {
+            os_log(.error, "encountered error while deleting link, error was: %@", error as CVarArg)
+            self.db.rollback()
+            return false
+        }
     }
     
-    public func delete(_ group: Group) {
-        self.db.executeUpdate("delete from category where id = ?", withArgumentsIn: [group.id])
-        delegate?.databaseController(self, didDelete: group)
+    public func delete(_ group: Group) -> Bool {
+        self.db.beginTransaction()
+        do {
+            try self.db.executeUpdate("delete from category where id = ?", values: [group.id])
+            try self.db.executeUpdate("delete from category_link where category_id = ?", values: [group.id])
+            self.db.commit()
+            delegate?.databaseController(self, didDelete: group)
+            return true
+        } catch {
+            os_log(.error, "encountered error while deleting group, error was: %@", error as CVarArg)
+            self.db.rollback()
+            return false
+        }
     }
     
-    public func delete(_ tag: Tag) {
-        self.db.executeUpdate("delete from tag where id = ?", withArgumentsIn: [tag.id])
-        delegate?.databaseController(self, didDelete: tag)
+    public func delete(_ tag: Tag) -> Bool {
+        self.db.beginTransaction()
+        do {
+            try self.db.executeUpdate("delete from tag where id = ?", values: [tag.id])
+            try self.db.executeUpdate("delete from tag_link where tag_id = ?", values: [tag.id])
+            self.db.commit()
+            delegate?.databaseController(self, didDelete: tag)
+            return true
+        } catch {
+            os_log(.error, "encountered error while deleting tag, error was: %@", error as CVarArg)
+            self.db.rollback()
+            return false
+        }
     }
 }

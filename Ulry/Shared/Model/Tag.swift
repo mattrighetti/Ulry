@@ -36,9 +36,5 @@ public class Tag: Hashable, Representable {
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
-        hasher.combine(colorHex)
-        hasher.combine(description_)
-        hasher.combine(name)
-        hasher.combine(links)
     }
 }

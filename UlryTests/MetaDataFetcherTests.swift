@@ -19,8 +19,6 @@ class MetaDataFetcherTests: XCTestCase {
             XCTAssertNil(error)
             XCTAssertNotNil(metadata)
             
-            print("METADATA", metadata!.debugDescription)
-            
             XCTAssertEqual(metadata!.title, "mattrighetti")
             XCTAssertEqual(metadata!.originalURL!.absoluteString, "https://mattrighetti.com")
             XCTAssertEqual(metadata!.url!.absoluteString, "https://mattrighetti.com/")

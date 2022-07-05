@@ -18,20 +18,24 @@ class MetadataProvider: NSObject {
         
         let lp = LPMetadataProvider()
         lp.startFetchingMetadata(for: url) { metadata, error in
-            guard error == nil else { return }
+            guard error == nil, metadata != nil else { return }
             
             link.ogTitle = metadata?.title
             link.ogDescription = metadata?.value(forKey: "summary") as? String
             
-//            guard let imageProvider = metadata!.imageProvider else {
-//                return
+            _ = Database.shared.update(link)
+            
+//            var image: UIImage?
+//            if let imageProvider = metadata!.imageProvider {
+//                imageProvider.loadObject(ofClass: UIImage.self) { img, error in
+//                     image = img as? UIImage
+//                }
 //            }
 //
-//            imageProvider.loadObject(ofClass: UIImage.self) { image, error in
-//                link.imageData = (image as? UIImage)?.pngData()!
-//            }
-            
-            _ = Database.shared.update(link)
+//            let s = image?.pngData()
+//            print("LEN: ", s!.count)
+//
+//            _ = Database.shared.update(link)
         }
     }
 }

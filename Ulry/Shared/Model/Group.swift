@@ -36,9 +36,5 @@ public class Group: Hashable, Representable {
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
-        hasher.combine(colorHex)
-        hasher.combine(iconName)
-        hasher.combine(name)
-        hasher.combine(links)
     }
 }

@@ -91,6 +91,11 @@ class LinksTableViewController: UIViewController {
         tableview.frame = view.bounds
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        database.delegate = self
+    }
+    
     // MARK: - Core Data Requests
     private func orderByName() {
         //coreDataController.fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(Link.ogTitle), ascending: true)]
@@ -124,7 +129,7 @@ class LinksTableViewController: UIViewController {
     // MARK: - Data managment
     
     private func onDeletePressed(link: Link) {
-        database.delete(link)
+        _ = database.delete(link)
     }
     
     private func onStarPressed(link: Link) {

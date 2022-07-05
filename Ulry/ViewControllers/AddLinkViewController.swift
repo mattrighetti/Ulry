@@ -25,8 +25,8 @@ class AddLinkViewController: UIViewController {
             case .edit(let link):
                 self.urlTextField.text = link.url
                 self.noteTextView.text = link.note
-                self.selectedFolder = link.group
-                self.selectedTags = Array(link.tags!)
+                self.selectedFolder = database.getGroups(of: link).first // TODO not cool looking
+                self.selectedTags = database.getTags(of: link)
             case .new:
                 break
             }
@@ -251,11 +251,13 @@ class AddLinkViewController: UIViewController {
                 editedLink.unread = true
                 editedLink.group = self.selectedFolder
                 editedLink.tags = Set(self.selectedTags)
-                if editedLink.url != url {
-                    editedLink.url = url
-                    dataFetcher.fetchData(for: editedLink) {
-                        _ = self.database.update(editedLink)
-                    }
+                
+                let needUpdate = editedLink.url != url
+                editedLink.url = url
+                _ = database.update(editedLink)
+                
+                if needUpdate {
+                    MetadataProvider.shared.fetchLinkMetadata(link: editedLink)
                 }
                 
             case .new:
