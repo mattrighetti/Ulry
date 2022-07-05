@@ -360,10 +360,22 @@ public final class Database {
     
     // MARK: - READ
     
-    public func getAllLinksUUID() -> [String] {
+    public func getAllLinksUUID(order: OrderBy) -> [String] {
         do {
             var uuids = [String]()
-            let res = try self.db.executeQuery("select id from link", values: [])
+            let res: FMResultSet!
+            
+            switch order {
+            case .name:
+                res = try self.db.executeQuery("select id from link order by ogTitle asc", values: [])
+            case .lastUpdated:
+                res = try self.db.executeQuery("select id from link order by updated_at desc", values: [])
+            case .oldest:
+                res = try self.db.executeQuery("select id from link order by created_at asc", values: [])
+            case .newest:
+                res = try self.db.executeQuery("select id from link order by created_at desc", values: [])
+            }
+            
             while res.next() {
                 if let uuid = res.string(forColumn: "id") {
                     uuids.append(uuid)
@@ -376,17 +388,54 @@ public final class Database {
         }
     }
    
-    public func getAllStarredLinksUUID() -> [String] {
+    public func getAllStarredLinksUUID(order: OrderBy) -> [String] {
         do {
             var uuids = [String]()
-            let res = try self.db.executeQuery(
-                """
-                select id
-                from link
-                where starred = true
-                """,
-                values: nil
-            )
+            let res: FMResultSet!
+            
+            switch order {
+            case .name:
+                res = try self.db.executeQuery(
+                    """
+                    select id
+                    from link
+                    where starred = true
+                    order by ogTitle asc
+                    """,
+                    values: []
+                )
+            case .lastUpdated:
+                res = try self.db.executeQuery(
+                    """
+                    select id
+                    from link
+                    where starred = true
+                    order by updated_at desc
+                    """,
+                    values: []
+                )
+            case .oldest:
+                res = try self.db.executeQuery(
+                    """
+                    select id
+                    from link
+                    where starred = true
+                    order by created_at asc
+                    """,
+                    values: []
+                )
+            case .newest:
+                res = try self.db.executeQuery(
+                    """
+                    select id
+                    from link
+                    where starred = true
+                    order by created_at dasc
+                    """,
+                    values: []
+                )
+            }
+            
             while res.next() {
                 if let uuid = res.string(forColumn: "id") {
                     uuids.append(uuid)
@@ -399,17 +448,54 @@ public final class Database {
         }
     }
     
-    public func getAllUnreadLinksUUID() -> [String] {
+    public func getAllUnreadLinksUUID(order: OrderBy) -> [String] {
         do {
             var uuids = [String]()
-            let res = try self.db.executeQuery(
-                """
-                select id
-                from link
-                where unread = true
-                """,
-                values: nil
-            )
+            let res: FMResultSet!
+            
+            switch order {
+            case .name:
+                res = try self.db.executeQuery(
+                    """
+                    select id
+                    from link
+                    where unread = true
+                    order by ogTitle asc
+                    """,
+                    values: []
+                )
+            case .lastUpdated:
+                res = try self.db.executeQuery(
+                    """
+                    select id
+                    from link
+                    where unread = true
+                    order by updated_at desc
+                    """,
+                    values: []
+                )
+            case .oldest:
+                res = try self.db.executeQuery(
+                    """
+                    select id
+                    from link
+                    where unread = true
+                    order by created_at asc
+                    """,
+                    values: []
+                )
+            case .newest:
+                res = try self.db.executeQuery(
+                    """
+                    select id
+                    from link
+                    where unread = true
+                    order by created_at desc
+                    """,
+                    values: []
+                )
+            }
+            
             while res.next() {
                 if let uuid = res.string(forColumn: "id") {
                     uuids.append(uuid)
@@ -422,17 +508,54 @@ public final class Database {
         }
     }
     
-    public func getAllLinksUUID(in group: Group) -> [String] {
+    public func getAllLinksUUID(in group: Group, order: OrderBy) -> [String] {
         do {
             var uuids = [String]()
-            let res = try self.db.executeQuery(
-                """
-                select link_id
-                from category_link
-                where category_id = ?
-                """,
-                values: [group.id]
-            )
+            let res: FMResultSet!
+            
+            switch order {
+            case .name:
+                res = try self.db.executeQuery(
+                    """
+                    select cl.link_id
+                    from category_link cl inner join link l on l.id = cl.link_id
+                    where category_id = ?
+                    order by l.ogTitle desc
+                    """,
+                    values: [group.id]
+                )
+            case .lastUpdated:
+                res = try self.db.executeQuery(
+                    """
+                    select cl.link_id
+                    from category_link cl inner join link l on l.id = cl.link_id
+                    where category_id = ?
+                    order by l.updated_at desc
+                    """,
+                    values: [group.id]
+                )
+            case .oldest:
+                res = try self.db.executeQuery(
+                    """
+                    select cl.link_id
+                    from category_link cl inner join link l on l.id = cl.link_id
+                    where category_id = ?
+                    order by l.created_at asc
+                    """,
+                    values: [group.id]
+                )
+            case .newest:
+                res = try self.db.executeQuery(
+                    """
+                    select cl.link_id
+                    from category_link cl inner join link l on l.id = cl.link_id
+                    where category_id = ?
+                    order by l.created_at desc
+                    """,
+                    values: [group.id]
+                )
+            }
+            
             while res.next() {
                 if let uuid = res.string(forColumn: "link_id") {
                     uuids.append(uuid)
@@ -445,17 +568,54 @@ public final class Database {
         }
     }
     
-    public func getAllLinksUUID(in tag: Tag) -> [String] {
+    public func getAllLinksUUID(in tag: Tag, order: OrderBy) -> [String] {
         do {
             var uuids = [String]()
-            let res = try self.db.executeQuery(
-                """
-                select link_id
-                from tag_link
-                where tag_id = ?
-                """,
-                values: [tag.id]
-            )
+            let res: FMResultSet!
+            
+            switch order {
+            case .name:
+                res = try self.db.executeQuery(
+                    """
+                    select tg.link_id
+                    from tag_link tg inner join link l on l.id = tg.link_id
+                    where tag_id = ?
+                    order by l.ogTitle desc
+                    """,
+                    values: [tag.id]
+                )
+            case .lastUpdated:
+                res = try self.db.executeQuery(
+                    """
+                    select tg.link_id
+                    from tag_link tg inner join link l on l.id = tg.link_id
+                    where tag_id = ?
+                    order by l.updated_at desc
+                    """,
+                    values: [tag.id]
+                )
+            case .oldest:
+                res = try self.db.executeQuery(
+                    """
+                    select tg.link_id
+                    from tag_link tg inner join link l on l.id = tg.link_id
+                    where tag_id = ?
+                    order by l.created_at asc
+                    """,
+                    values: [tag.id]
+                )
+            case .newest:
+                res = try self.db.executeQuery(
+                    """
+                    select tg.link_id
+                    from tag_link tg inner join link l on l.id = tg.link_id
+                    where tag_id = ?
+                    order by l.created_at desc
+                    """,
+                    values: [tag.id]
+                )
+            }
+            
             while res.next() {
                 if let uuid = res.string(forColumn: "link_id") {
                     uuids.append(uuid)

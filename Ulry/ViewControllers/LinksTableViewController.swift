@@ -39,9 +39,7 @@ class LinksTableViewController: UIViewController {
         }
         set {
             UserDefaults.standard.setValue(newValue.rawValue, forKey: Defaults.orderBy.rawValue)
-            // TODO
-            //coreDataController.fetchRequest.sortDescriptors = newValue.sortDescriptor
-            //try! coreDataController.performFetch()
+            loadLinks()
         }
     }
     
@@ -112,15 +110,15 @@ class LinksTableViewController: UIViewController {
         
         switch category {
         case .all:
-            snapshot.appendItems(database.getAllLinksUUID(), toSection: 0)
+            snapshot.appendItems(database.getAllLinksUUID(order: orderBy), toSection: 0)
         case .unread:
-            snapshot.appendItems(database.getAllUnreadLinksUUID(), toSection: 0)
+            snapshot.appendItems(database.getAllUnreadLinksUUID(order: orderBy), toSection: 0)
         case .starred:
-            snapshot.appendItems(database.getAllStarredLinksUUID(), toSection: 0)
+            snapshot.appendItems(database.getAllStarredLinksUUID(order: orderBy), toSection: 0)
         case .group(let group):
-            snapshot.appendItems(database.getAllLinksUUID(in: group), toSection: 0)
+            snapshot.appendItems(database.getAllLinksUUID(in: group, order: orderBy), toSection: 0)
         case .tag(let tag):
-            snapshot.appendItems(database.getAllLinksUUID(in: tag), toSection: 0)
+            snapshot.appendItems(database.getAllLinksUUID(in: tag, order: orderBy), toSection: 0)
         }
         
         datasource.apply(snapshot, animatingDifferences: true)
@@ -337,7 +335,7 @@ extension LinksTableViewController: UITableViewDelegate {
         
         var lastUpdatedAction: UIAction {
             UIAction(
-                title: "Last updated",
+                title: "Recent",
                 image: UIImage(systemName: "clock"),
                 state: orderBy == .lastUpdated ? .on : .off,
                 handler: { [weak self] action in
@@ -376,6 +374,8 @@ extension LinksTableViewController: DatabaseControllerDelegate {
     }
     
     func databaseController(_ databaseController: Database, didUpdate link: Link) {
+        // TODO if I have order by recent and update a link it is not moved to the top
+        // maybe I should just recall loadLinks() every time?
         var snapshot = datasource.snapshot()
         snapshot.reloadItems([link.id.uuidString])
         datasource.apply(snapshot, animatingDifferences: true)
@@ -397,28 +397,5 @@ extension LinksTableViewController: DatabaseControllerDelegate {
         var snapshot = datasource.snapshot()
         snapshot.deleteItems(links.map(\.id.uuidString))
         datasource.apply(snapshot, animatingDifferences: true)
-    }
-}
-
-extension LinksTableViewController {
-    enum OrderBy: String {
-        case name
-        case lastUpdated
-        case oldest
-        case newest
-        
-        var sortDescriptor: [NSSortDescriptor] {
-            return []
-//            switch self {
-//            case .name:
-//                return [NSSortDescriptor(key: #keyPath(Link.ogTitle), ascending: true)]
-//            case .lastUpdated:
-//                return [NSSortDescriptor(key: #keyPath(Link.updatedAt), ascending: true)]
-//            case .newest:
-//                return [NSSortDescriptor(key: #keyPath(Link.createdAt), ascending: false)]
-//            case .oldest:
-//                return [NSSortDescriptor(key: #keyPath(Link.createdAt), ascending: true)]
-//            }
-        }
     }
 }

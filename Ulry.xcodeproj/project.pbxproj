@@ -122,6 +122,9 @@
 		C9F4F957278A17FA00887A3E /* +UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F956278A17FA00887A3E /* +UIImage.swift */; };
 		C9F4F959278A187D00887A3E /* +UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F958278A187D00887A3E /* +UIColor.swift */; };
 		C9F4F95B278A40F200887A3E /* UIImageCircleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F95A278A40F200887A3E /* UIImageCircleTableViewCell.swift */; };
+		C9FD74632874F45400273CC1 /* OrderBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FD74622874F45400273CC1 /* OrderBy.swift */; };
+		C9FD74642874F57A00273CC1 /* OrderBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FD74622874F45400273CC1 /* OrderBy.swift */; };
+		C9FD74652874F57A00273CC1 /* OrderBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FD74622874F45400273CC1 /* OrderBy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -243,6 +246,7 @@
 		C9F4F956278A17FA00887A3E /* +UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UIImage.swift"; sourceTree = "<group>"; };
 		C9F4F958278A187D00887A3E /* +UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UIColor.swift"; sourceTree = "<group>"; };
 		C9F4F95A278A40F200887A3E /* UIImageCircleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageCircleTableViewCell.swift; sourceTree = "<group>"; };
+		C9FD74622874F45400273CC1 /* OrderBy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderBy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -432,6 +436,7 @@
 		C9F4F9032789C2BD00887A3E /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				C9FD74622874F45400273CC1 /* OrderBy.swift */,
 				C9F4F9042789C2BD00887A3E /* SFSymbols.swift */,
 				C9F4F9062789C2BD00887A3E /* MetaFetcher.swift */,
 				C99C14D5278C678200936D27 /* Representable.swift */,
@@ -698,6 +703,7 @@
 				C9179A3127973BD4008A82DD /* Category.swift in Sources */,
 				C9179A2227972F07008A82DD /* Intents.intentdefinition in Sources */,
 				C9179A2827973BD1008A82DD /* +Color.swift in Sources */,
+				C9FD74652874F57A00273CC1 /* OrderBy.swift in Sources */,
 				C90A2A1127D2CEB200C40BAA /* Database.swift in Sources */,
 				C9CE80EA27A75FA9005D1005 /* AddURLIntentHandler.swift in Sources */,
 				C9179A2A27973BD1008A82DD /* +UIScreen.swift in Sources */,
@@ -731,6 +737,7 @@
 				C99C14CF278C675E00936D27 /* +UIColor.swift in Sources */,
 				C90A2A1027D2CEB200C40BAA /* Database.swift in Sources */,
 				C91053B4278E465D005AC807 /* +URL.swift in Sources */,
+				C9FD74642874F57A00273CC1 /* OrderBy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -786,6 +793,7 @@
 				C9F4F9222789C2D600887A3E /* SceneDelegate.swift in Sources */,
 				C9F4F91C2789C2BD00887A3E /* Link.swift in Sources */,
 				C9F4F953278A07A100887A3E /* HomeViewController.swift in Sources */,
+				C9FD74632874F45400273CC1 /* OrderBy.swift in Sources */,
 				C9267F40279A40EF0041B94A /* UIStaticTableView.swift in Sources */,
 				C9F4F9172789C2BD00887A3E /* +Color.swift in Sources */,
 				C97467A527999A5B00B53B8C /* GeneralSettingsViewController.swift in Sources */,
