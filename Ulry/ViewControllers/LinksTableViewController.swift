@@ -15,8 +15,6 @@ private var reuseIdentifier = "LinkCell"
 class LinksTableViewController: UIViewController {
     let database = Database.shared
     
-    lazy var dataFetcher = DataFetcher()
-    
     lazy var tableview: UITableView = {
         let tableview = UITableView()
         tableview.backgroundColor = .clear

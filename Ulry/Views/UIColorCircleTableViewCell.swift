@@ -31,7 +31,7 @@ class UIColorCircleTableViewCell: UITableViewCell {
     lazy var coloredCircle: UIView = {
         let view = UIView()
         view.backgroundColor = color ?? .black
-        view.layer.cornerRadius = 15
+        view.layer.cornerRadius = 10
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()

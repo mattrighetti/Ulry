@@ -5,6 +5,7 @@
 //  Created by Mattia Righetti on 7/3/22.
 //
 
+import os
 import UIKit
 import LinkPresentation
 
@@ -25,17 +26,19 @@ class MetadataProvider: NSObject {
             
             _ = Database.shared.update(link)
             
-//            var image: UIImage?
-//            if let imageProvider = metadata!.imageProvider {
-//                imageProvider.loadObject(ofClass: UIImage.self) { img, error in
-//                     image = img as? UIImage
-//                }
-//            }
-//
-//            let s = image?.pngData()
-//            print("LEN: ", s!.count)
-//
-//            _ = Database.shared.update(link)
+            if let imageProvider = metadata!.imageProvider {
+                imageProvider.loadObject(ofClass: UIImage.self) { img, error in
+                    guard
+                        let image = img as? UIImage,
+                        let path = ImageStorage.shared.storeImage(image, filename: "\(link.id).jpeg")
+                    else { return }
+                    
+                    link.ogImageUrl = path
+                    _ = Database.shared.update(link)
+                }
+            }
         }
     }
+    
+    
 }

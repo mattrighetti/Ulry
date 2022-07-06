@@ -116,7 +116,6 @@ struct LinkDetailView_Previews: PreviewProvider {
         link.ogImageUrl = nil
         link.ogTitle = "Little title"
         link.ogDescription = "Random description that will for sure surpass"
-        link.imageData = nil
         
         return LinkDetailView(link: link)
             .preferredColorScheme(.dark)

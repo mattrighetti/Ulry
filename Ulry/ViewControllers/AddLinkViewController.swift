@@ -17,8 +17,6 @@ class AddLinkViewController: UIViewController {
     
     let database = Database.shared
     
-    lazy var dataFetcher = DataFetcher()
-    
     var configuration: Configuration = .new {
         didSet {
             switch configuration {

@@ -55,8 +55,7 @@ struct JSONDumpHelper {
     func loadFromFile(
         with filemanager: FileManager = .default,
         from url: URL,
-        decoder: JSONDecoder = JSONDecoder(),
-        dataFetcher: DataFetcher = DataFetcher()
+        decoder: JSONDecoder = JSONDecoder()
     ) {
         os_signpost(.begin, log: JSONDumpHelper.pointsOfInterest, name: "loadFromFile")
         
@@ -101,10 +100,5 @@ struct JSONDumpHelper {
         _ = Database.shared.batchInsert(links)
         _ = Database.shared.batchInsert(groups)
         _ = Database.shared.batchInsert(tags)
-        
-        dataFetcher.fetchData(for: links, completion: {
-            delegate?.helper(self, didFinishFetching: links)
-            os_signpost(.end, log: JSONDumpHelper.pointsOfInterest, name: "loadFromFile")
-        })
     }
 }

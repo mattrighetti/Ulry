@@ -59,16 +59,16 @@ public final class Database {
     
     public init(inMemory: Bool = false) {
         if inMemory {
-            self.db = FMDatabase()
-            self.db.open()
-            self.runMigrations_v2()
+            db = FMDatabase()
+            db.open()
+            runMigrations_v2()
         } else {
             let fileURL = try! FileManager.default
                 .url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
                 .appendingPathComponent("ulry.sqlite")
             
-            self.db = FMDatabase(url: fileURL)
-            self.db.open()
+            db = FMDatabase(url: fileURL)
+            db.open()
             
             runMigrations_v2()
         }
@@ -111,7 +111,6 @@ public final class Database {
                 unread          bool not null,
                 note            text,
                 color           char(7) not null,
-                image           text,
                 ogTitle         text,
                 ogDescription   text,
                 ogImageUrl      text,

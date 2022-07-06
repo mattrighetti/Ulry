@@ -44,12 +44,12 @@ public class AddURLIntentHandler: NSObject, AddURLIntentHandling {
         
         let link = Link(url: url.absoluteString)
         
-        let dataFetcher = DataFetcher()
-        
-        dataFetcher.fetchData(for: link, completion: {
-            _ = database.insert(link)
-            completion(AddURLIntentResponse(code: .success, userActivity: nil))
-        })
+//        let dataFetcher = DataFetcher()
+//        
+//        dataFetcher.fetchData(for: link, completion: {
+//            _ = database.insert(link)
+//            completion(AddURLIntentResponse(code: .success, userActivity: nil))
+//        })
         
         DispatchQueue.main.asyncAfter(wallDeadline: .now() + 10.0) {
             completion(AddURLIntentResponse(code: .failure, userActivity: nil))

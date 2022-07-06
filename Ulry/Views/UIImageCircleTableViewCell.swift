@@ -41,8 +41,8 @@ class UIImageCircleTableViewCell: UIColorCircleTableViewCell {
         NSLayoutConstraint.activate([
             imgView.centerXAnchor.constraint(equalTo: coloredCircle.centerXAnchor),
             imgView.centerYAnchor.constraint(equalTo: coloredCircle.centerYAnchor),
-            imgView.widthAnchor.constraint(equalToConstant: 17),
-            imgView.heightAnchor.constraint(equalToConstant: 17)
+            imgView.widthAnchor.constraint(equalToConstant: 19),
+            imgView.heightAnchor.constraint(equalToConstant: 19)
         ])
     }
     

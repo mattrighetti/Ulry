@@ -100,7 +100,7 @@ class ActionViewController: UIViewController {
         
         fetchImage(url: imageUrl) { data in
             if let data = data {
-                link.imageData = data
+                // link.imageData = data
             }
             
             // TODO where shoudl I save data? previously -> CoreDataStack.shared.saveContext()

@@ -17,7 +17,6 @@ public class Link: Hashable {
     public var starred: Bool
     public var unread: Bool
     public var url: String
-    public var imageData: Data?
     public var colorHex: String
     public var ogTitle: String?
     public var ogDescription: String?
@@ -46,7 +45,6 @@ public class Link: Hashable {
         self.unread = res.bool(forColumn: "unread")
         self.url = res.string(forColumn: "url")!
         self.note = res.string(forColumn: "note")
-        self.imageData = res.string(forColumn: "image")?.data(using: .ascii)
         self.colorHex = res.string(forColumn: "color")!
         self.ogTitle = res.string(forColumn: "ogTitle")
         self.ogDescription = res.string(forColumn: "ogDescription")
@@ -80,6 +78,10 @@ public class Link: Hashable {
         formatter.dateFormat = "d MMM yy"
         let date = Date(timeIntervalSince1970: Double(self.createdAt))
         return formatter.string(from: date)
+    }
+    
+    public var imageData: Data? {
+        ImageStorage.shared.getImageData(filename: "\(self.id).jpeg")
     }
     
     var needsUpdate: Bool = false
