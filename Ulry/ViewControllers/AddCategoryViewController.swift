@@ -79,7 +79,7 @@ class AddCategoryViewController: UIViewController {
         }
     }
     
-    let context = CoreDataStack.shared.managedContext
+    let database = Database.shared
     var configuration: PickerMode? = .tag
     
     var color: UIColor = UIColor.random {
@@ -228,31 +228,24 @@ class AddCategoryViewController: UIViewController {
             
             switch configuration {
             case .group:
-                let group = Group(context: context)
-                group.setValue(UUID(), forKey: "id")
-                group.setValue(text, forKey: "name")
-                group.setValue(color.toHex!, forKey: "colorHex")
-                group.setValue(glyph, forKey: "iconName")
-                
+                let group = Group(colorHex: color.toHex!, iconName: glyph, name: text, links: nil)
+                _ = database.insert(group)
             case .editGroup(let group):
-                group.setValue(text, forKey: "name")
-                group.setValue(color.toHex!, forKey: "colorHex")
-                group.setValue(glyph, forKey: "iconName")
-                
+                group.name = text
+                group.colorHex = color.toHex!
+                group.iconName = glyph
+                _ = database.update(group)
             case .tag:
-                let tag = Tag(context: context)
-                tag.setValue(UUID(), forKey: "id")
-                tag.setValue(text, forKey: "name")
-                tag.setValue(color.toHex!, forKey: "colorHex")
-                
+                let tag = Tag(colorHex: color.toHex!, description: "TODO", name: text)
+                _ = database.insert(tag)
             case .editTag(let tag):
-                tag.setValue(text, forKey: "name")
-                tag.setValue(color.toHex!, forKey: "colorHex")
+                tag.name = text
+                tag.colorHex = color.toHex!
+                _ = database.update(tag)
+                
             case .none:
                 break
             }
-            
-            CoreDataStack.shared.saveContext()
             
             self.dismiss(animated: true)
         })

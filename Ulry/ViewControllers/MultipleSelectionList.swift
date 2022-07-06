@@ -10,8 +10,7 @@ import SwiftUI
 struct MultipleSelectionList: View {
     @Environment(\.managedObjectContext) private var managedObjectContext
     
-    @FetchRequest(entity: Tag.entity(), sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)])
-    var items: FetchedResults<Tag>
+    var items: [Tag] = Database.shared.getAllTags()
     
     @State var isSheetShown: Bool = false
     @State var selections: [Tag]

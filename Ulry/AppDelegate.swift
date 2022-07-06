@@ -7,18 +7,22 @@
 
 import UIKit
 import CoreData
+import FMDB
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+       
+        Database.shared = Database()
         
         UserDefaults.standard.register(defaults: [
             Defaults.openInApp.rawValue : false,
             Defaults.readMode.rawValue : false,
             Defaults.markReadOnOpen.rawValue: false,
             Defaults.theme.rawValue : Theme.system.rawValue,
-            Defaults.orderBy.rawValue : LinksTableViewController.OrderBy.newest.rawValue,
+            Defaults.orderBy.rawValue : OrderBy.newest.rawValue,
             Defaults.isPremium.rawValue : false
         ])
         

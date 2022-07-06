@@ -1,12 +1,30 @@
 {
   "pins" : [
     {
+      "identity" : "fmdb",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ccgus/fmdb",
+      "state" : {
+        "revision" : "61e51fde7f7aab6554f30ab061cc588b28a97d04",
+        "version" : "2.7.7"
+      }
+    },
+    {
+      "identity" : "fmdbmigrationmanager",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mattrighetti/FMDBMigrationManager",
+      "state" : {
+        "branch" : "master",
+        "revision" : "43a846f64d9862aef7277b75c050caa977672c18"
+      }
+    },
+    {
       "identity" : "swiftsoup",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/scinfu/SwiftSoup",
       "state" : {
-        "revision" : "45a7566f7ec2de0b977f28e825f8df874f210327",
-        "version" : "2.3.6"
+        "revision" : "6778575285177365cbad3e5b8a72f2a20583cfec",
+        "version" : "2.4.3"
       }
     }
   ],

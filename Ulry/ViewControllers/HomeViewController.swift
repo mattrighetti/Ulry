@@ -29,7 +29,8 @@ fileprivate var categoryColorCell = "CategoryColorCell"
 fileprivate var categoryImageCell = "CategoryImageCell"
 
 class HomeViewController: UIViewController {
-    let context = CoreDataStack.shared.managedContext
+    let database = Database.shared
+    
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.register(UIColorCircleTableViewCell.self, forCellReuseIdentifier: categoryColorCell)
@@ -37,33 +38,6 @@ class HomeViewController: UIViewController {
         tableView.cellLayoutMarginsFollowReadableWidth = true
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
-    }()
-    
-    lazy var tagsFRC: NSFetchedResultsController<Tag> = {
-        NSFetchedResultsController(
-            fetchRequest: Tag.Request.all.fetchRequest,
-            managedObjectContext: CoreDataStack.shared.managedContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-    }()
-    
-    lazy var groupsFRC: NSFetchedResultsController<Group> = {
-        NSFetchedResultsController(
-            fetchRequest: Group.Request.all.fetchRequest,
-            managedObjectContext: CoreDataStack.shared.managedContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-    }()
-    
-    lazy var linksFRC: NSFetchedResultsController<Link> = {
-        NSFetchedResultsController(
-            fetchRequest: Link.Request.all.fetchRequest,
-            managedObjectContext: CoreDataStack.shared.managedContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
     }()
     
     lazy var datasource: HomeDiffableDataSource = {
@@ -149,23 +123,10 @@ class HomeViewController: UIViewController {
         navigationItem.rightBarButtonItems = [addLinkButton]
         navigationItem.leftBarButtonItems = [settingsButton]
         
-        tagsFRC.delegate = self
-        groupsFRC.delegate = self
-        linksFRC.delegate = self
-        
         tableView.delegate = self
         
         view.addSubview(tableView)
-        
-        do {
-            try tagsFRC.performFetch()
-            try groupsFRC.performFetch()
-            try linksFRC.performFetch()
-        } catch let error as NSError {
-            print("Unresolved error \(error), \(error.userInfo)")
-        }
-        
-        addCategories()
+        addSections()
     }
     
     override func viewDidLayoutSubviews() {
@@ -176,6 +137,9 @@ class HomeViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        database.delegate = self
+        reloadSections()
+        
         // Fade the table deselection as the view controller is popped
         if let selectedIndexPath = tableView.indexPathForSelectedRow, let transitionCoordinator = transitionCoordinator {
             transitionCoordinator.animate { context in
@@ -188,19 +152,26 @@ class HomeViewController: UIViewController {
         }
     }
     
-    private func addCategories() {
+    private func addSections() {
         var snapshot = NSDiffableDataSourceSnapshot<Int, Category>()
         
         snapshot.appendSections([0])
         snapshot.appendItems([.all, .unread, .starred], toSection: 0)
         
         snapshot.appendSections([1])
-        snapshot.appendItems(groupsFRC.fetchedObjects!.map { .group($0) }, toSection: 1)
+        snapshot.appendItems(database.getAllGroups().map { .group($0) }, toSection: 1)
         
         snapshot.appendSections([2])
-        snapshot.appendItems(tagsFRC.fetchedObjects!.map { .tag($0) }, toSection: 2)
+        snapshot.appendItems(database.getAllTags().map { .tag($0) }, toSection: 2)
         
         datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    private func reloadSections() {
+        // Useful to reload basic data in case underlying data changes
+        var snapshot = datasource.snapshot()
+        snapshot.reloadSections([0,1,2])
+        datasource.apply(snapshot, animatingDifferences: false)
     }
     
     @objc private func addLinkPressed() {
@@ -209,7 +180,6 @@ class HomeViewController: UIViewController {
     }
     
     @objc private func addGroupPressed() {
-        // let view = AddCategoryView(mode: .group).environment(\.managedObjectContext, context)
         let view = AddCategoryViewController()
         view.configuration = .group
         let vc = UINavigationController(rootViewController: view)
@@ -217,7 +187,6 @@ class HomeViewController: UIViewController {
     }
     
     @objc private func addTagPressed() {
-        // let view = AddCategoryView(mode: .tag).environment(\.managedObjectContext, context)
         let view = AddCategoryViewController()
         view.configuration = .tag
         let vc = UINavigationController(rootViewController: view)
@@ -227,20 +196,9 @@ class HomeViewController: UIViewController {
     private func handleMoveToTrash(category: Category) {
         switch category {
         case .group(let group):
-            context.delete(group)
-            do {
-                try context.save()
-            } catch {
-                print(error)
-            }
-            
+            _ = database.delete(group)
         case .tag(let tag):
-            context.delete(tag)
-            do {
-                try context.save()
-            } catch {
-                print(error)
-            }
+            _ = database.delete(tag)
         default:
             return
         }
@@ -279,7 +237,7 @@ extension HomeViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 43.0
+        return 47.0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -320,54 +278,71 @@ extension HomeViewController: UITableViewDelegate {
     }
 }
 
-extension HomeViewController: NSFetchedResultsControllerDelegate {
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        var snapshot = datasource.snapshot()
-        var shouldAnimate = false
-        
-        switch type {
-        case .insert:
-            shouldAnimate = true
-            if let group = anObject as? Group {
-                snapshot.appendItems([.group(group)], toSection: 1)
-            } else if let tag = anObject as? Tag {
-                snapshot.appendItems([.tag(tag)], toSection: 2)
-            } else if let link = anObject as? Link {
-                var reconfigureItemsCategories: [Category] = [.all, .unread, .starred]
-                reconfigureItemsCategories.append(contentsOf: link.tags?.map { .tag($0) } ?? [])
-                if let group = link.group {
-                    reconfigureItemsCategories.append(.group(group))
-                }
-                snapshot.reconfigureItems(reconfigureItemsCategories)
-            }
-        case .delete:
-            shouldAnimate = true
-            if let group = anObject as? Group {
-                snapshot.deleteItems([.group(group)])
-            } else if let tag = anObject as? Tag {
-                snapshot.deleteItems([.tag(tag)])
-            } else if let link = anObject as? Link {
-                var reconfigureItemsCategories: [Category] = [.all, .unread, .starred]
-                reconfigureItemsCategories.append(contentsOf: link.tags?.map { .tag($0) } ?? [])
-                if let group = link.group {
-                    reconfigureItemsCategories.append(.group(group))
-                }
-                snapshot.reconfigureItems(reconfigureItemsCategories)
-            }
-        case .update:
-            if let group = anObject as? Group {
-                snapshot.reconfigureItems([.group(group)])
-            } else if let tag = anObject as? Tag {
-                snapshot.reconfigureItems([.tag(tag)])
-            }
-        case .move:
-            return
-        @unknown default:
-            fatalError()
-        }
-        
-        // Applying with animatingDiffereces while not being visible fired a strange log message
-        shouldAnimate = shouldAnimate && navigationController?.visibleViewController == self
-        datasource.apply(snapshot, animatingDifferences: shouldAnimate)
+extension HomeViewController: DatabaseControllerDelegate {
+    func databaseController(_ databaseController: Database, didInsert link: Link) {
+        // Maybe reloading every section could be avoidable:
+        // What needs change is:
+        //   1. Tag that links belong to
+        //   2. Group that links belong to
+        //   3. All and unread for sure
+        //   4. Starred maybe
+        reloadSections()
     }
+    
+    func databaseController(_ databaseController: Database, didInsert tag: Tag) {
+        var snapshot = datasource.snapshot()
+        snapshot.appendItems([.tag(tag)], toSection: 2)
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func databaseController(_ databaseController: Database, didInsert group: Group) {
+        var snapshot = datasource.snapshot()
+        snapshot.appendItems([.group(group)], toSection: 1)
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func databaseController(_ databaseController: Database, didUpdate group: Group) {
+        var snapshot = datasource.snapshot()
+        snapshot.reloadItems([.group(group)])
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func databaseController(_ databaseController: Database, didUpdate tag: Tag) {
+        var snapshot = datasource.snapshot()
+        snapshot.reloadItems([.tag(tag)])
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func databaseController(_ databaseController: Database, didDelete link: Link) {
+        // Maybe reloading every section could be avoidable:
+        // What needs change is:
+        //   1. Tag that links belong to
+        //   2. Group that links belong to
+        //   3. All and unread for sure
+        //   4. Starred maybe
+        reloadSections()
+    }
+    
+    func databaseController(_ databaseController: Database, didDelete links: [Link]) {
+        // Maybe reloading every section could be avoidable:
+        // What needs change is:
+        //   1. Tag that links belong to
+        //   2. Group that links belong to
+        //   3. All and unread for sure
+        //   4. Starred maybe
+        reloadSections()
+    }
+    
+    func databaseController(_ databaseController: Database, didDelete group: Group) {
+        var snapshot = datasource.snapshot()
+        snapshot.deleteItems([.group(group)])
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func databaseController(_ databaseController: Database, didDelete tag: Tag) {
+        var snapshot = datasource.snapshot()
+        snapshot.deleteItems([.tag(tag)])
+        datasource.apply(snapshot, animatingDifferences: true)
+    }
+    
 }

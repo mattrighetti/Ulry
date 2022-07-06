@@ -35,22 +35,21 @@ public class AddURLIntentHandler: NSObject, AddURLIntentHandling {
     }
     
     public func handle(intent: AddURLIntent, completion: @escaping (AddURLIntentResponse) -> Void) {
+        let database = Database.shared
+        
         guard let url = intent.url else {
             completion(AddURLIntentResponse(code: .failure, userActivity: nil))
             return
         }
         
-        let link = Link()
-        link.url = url.absoluteString
-        link.group = nil
-        link.tags = nil
+        let link = Link(url: url.absoluteString)
         
-        let dataFetcher = DataFetcher()
-        
-        dataFetcher.fetchData(for: link, completion: {
-            CoreDataStack.shared.saveContext()
-            completion(AddURLIntentResponse(code: .success, userActivity: nil))
-        })
+//        let dataFetcher = DataFetcher()
+//        
+//        dataFetcher.fetchData(for: link, completion: {
+//            _ = database.insert(link)
+//            completion(AddURLIntentResponse(code: .success, userActivity: nil))
+//        })
         
         DispatchQueue.main.asyncAfter(wallDeadline: .now() + 10.0) {
             completion(AddURLIntentResponse(code: .failure, userActivity: nil))

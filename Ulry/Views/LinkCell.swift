@@ -136,6 +136,8 @@ class LinkCell: UITableViewCell {
             tagsDetailLabel.leadingAnchor.constraint(equalTo: dateLabel.trailingAnchor, constant: 10),
             tagsDetailLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             tagsDetailLabel.heightAnchor.constraint(equalToConstant: 12),
+            
+            contentView.bottomAnchor.constraint(greaterThanOrEqualTo: backgroundLabelImage.bottomAnchor, constant: 10),
         ])
     }
     
@@ -164,14 +166,10 @@ class LinkCell: UITableViewCell {
         
         backgroundLabelImage.backgroundColor = UIColor(hex: link.colorHex)
         
-        if let data = link.imageData {
-            if let img = UIImage(data: data) {
-                image.image = img
-                backgroundLabelImage.isHidden = true
-                hostLabel.isHidden = true
-            } else {
-                image.isHidden = true
-            }
+        if let data = link.imageData, let img = UIImage(data: data) {
+            image.image = img
+            backgroundLabelImage.isHidden = true
+            hostLabel.isHidden = true
         } else {
             image.isHidden = true
         }

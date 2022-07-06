@@ -7,9 +7,54 @@
 
 import os
 import SwiftUI
-import CoreData
+import FMDB
 
-public class Link: NSManagedObject {
+public class Link: Hashable {
+    public var id: UUID
+    public var createdAt: Int32
+    public var updatedAt: Int32
+    public var note: String?
+    public var starred: Bool
+    public var unread: Bool
+    public var url: String
+    public var colorHex: String
+    public var ogTitle: String?
+    public var ogDescription: String?
+    public var ogImageUrl: String?
+    public var group: Group?
+    public var tags: Set<Tag>?
+    
+    init(url: String, note: String? = nil) {
+        self.id = UUID()
+        self.createdAt = Int32(Date.now.timeIntervalSince1970)
+        self.updatedAt = Int32(Date.now.timeIntervalSince1970)
+        self.starred = false
+        self.unread = true
+        self.url = url
+        self.colorHex = Color.randomHexColorCode()
+        self.ogTitle = nil
+        self.ogDescription = nil
+        self.ogImageUrl = nil
+        self.group = nil
+        self.tags = nil
+    }
+    
+    init?(from res: FMResultSet) {
+        self.id = UUID(uuidString: res.string(forColumn: "id")!)!
+        self.starred = res.bool(forColumn: "starred")
+        self.unread = res.bool(forColumn: "unread")
+        self.url = res.string(forColumn: "url")!
+        self.note = res.string(forColumn: "note")
+        self.colorHex = res.string(forColumn: "color")!
+        self.ogTitle = res.string(forColumn: "ogTitle")
+        self.ogDescription = res.string(forColumn: "ogDescription")
+        self.ogImageUrl = res.string(forColumn: "ogImageUrl")
+        self.createdAt = Int32(Date.now.timeIntervalSince1970)
+        self.updatedAt = Int32(Date.now.timeIntervalSince1970)
+        self.group = nil
+        self.tags = nil
+    }
+    
     var hostname: String {
         guard
             let url = URL(string: self.url),
@@ -35,58 +80,30 @@ public class Link: NSManagedObject {
         return formatter.string(from: date)
     }
     
+    public var imageData: Data? {
+        ImageStorage.shared.getImageData(filename: "\(self.id).jpeg")
+    }
+    
     var needsUpdate: Bool = false
     
-    convenience init() {
-        self.init(context: CoreDataStack.shared.managedContext)
+    lazy var imageBase64Representation: String? = {
+        self.imageData?.base64EncodedString()
+    }()
+    
+    public static func == (lhs: Link, rhs: Link) -> Bool {
+        lhs.id == rhs.id &&
+        lhs.unread == rhs.unread &&
+        lhs.starred == rhs.starred &&
+        lhs.note == rhs.note &&
+        lhs.ogTitle == rhs.ogTitle &&
+        lhs.ogDescription == rhs.ogDescription &&
+        lhs.ogImageUrl == rhs.ogImageUrl &&
+        lhs.imageData == rhs.imageData &&
+        lhs.colorHex == rhs.colorHex &&
+        lhs.url == rhs.url
     }
-}
-
-extension Link {
-    enum Request {
-        case all
-        case starred
-        case unread
-        case withUuid(uuid: UUID)
-        case group(Group)
-        case tag(Tag)
-        
-        init(from category: Category) {
-            switch category {
-            case .all:
-                self = .all
-            case .unread:
-                self = .unread
-            case .starred:
-                self = .starred
-            case .group(let group):
-                self = .group(group)
-            case .tag(let tag):
-                self = .tag(tag)
-            }
-        }
-        
-        var fetchRequest: NSFetchRequest<Link> {
-            let sort = [NSSortDescriptor(key: "createdAt", ascending: false)]
-            let request: NSFetchRequest<Link>
-            
-            switch self {
-            case .all:
-                request = Link.fetchRequest()
-            case .starred:
-                request = Link.fetchRequest(starred: true)
-            case .unread:
-                request = Link.fetchRequest(unread: true)
-            case .withUuid(uuid: let uuid):
-                request = Link.fetchRequest(withUUID: uuid)
-            case .group(let group):
-                request = Link.fetchRequest(withGroup: group)
-            case .tag(let tag):
-                request = Link.fetchRequest(withTag: tag)
-            }
-            
-            request.sortDescriptors = sort
-            return request
-        }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

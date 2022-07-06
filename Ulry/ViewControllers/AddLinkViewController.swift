@@ -15,8 +15,7 @@ class AddLinkViewController: UIViewController {
         case new
     }
     
-    let context = CoreDataStack.shared.managedContext
-    lazy var dataFetcher = DataFetcher()
+    let database = Database.shared
     
     var configuration: Configuration = .new {
         didSet {
@@ -24,8 +23,8 @@ class AddLinkViewController: UIViewController {
             case .edit(let link):
                 self.urlTextField.text = link.url
                 self.noteTextView.text = link.note
-                self.selectedFolder = link.group
-                self.selectedTags = Array(link.tags!)
+                self.selectedFolder = database.getGroups(of: link).first // TODO not cool looking
+                self.selectedTags = database.getTags(of: link)
             case .new:
                 break
             }
@@ -250,22 +249,22 @@ class AddLinkViewController: UIViewController {
                 editedLink.unread = true
                 editedLink.group = self.selectedFolder
                 editedLink.tags = Set(self.selectedTags)
-                if editedLink.url != url {
-                    editedLink.url = url
-                    dataFetcher.fetchData(for: editedLink) {
-                        CoreDataStack.shared.saveContext()
-                    }
+                
+                let needUpdate = editedLink.url != url
+                editedLink.url = url
+                _ = database.update(editedLink)
+                
+                if needUpdate {
+                    MetadataProvider.shared.fetchLinkMetadata(link: editedLink)
                 }
                 
             case .new:
-                let link = Link()
-                link.url = url
-                link.note = self.noteTextView.text
+                let link = Link(url: url, note: self.noteTextView.text)
                 link.group = self.selectedFolder
                 link.tags = Set(self.selectedTags)
-                dataFetcher.fetchData(for: link) {
-                    CoreDataStack.shared.saveContext()
-                }
+                _ = database.insert(link)
+                
+                MetadataProvider.shared.fetchLinkMetadata(link: link)
             }
             
             self.dismiss(animated: true)
@@ -317,22 +316,20 @@ class AddLinkViewController: UIViewController {
             selection: .init(
                 get: { self.selectedFolder },
                 set: { group in self.selectedFolder = group }
-            )
+            ), items: database.getAllGroups()
         )
-        .environment(\.managedObjectContext, CoreDataStack.shared.managedContext)
         
         navigationController?.pushViewController(UIHostingController(rootView: view), animated: true)
     }
     
     @objc private func showTagsMultiselectionList() {
         let view = MultipleSelectionList(
-            selections: selectedTags,
+            items: database.getAllTags(), selections: selectedTags,
             selectedTags: .init(
                 get: { self.selectedTags },
                 set: { tags in self.selectedTags = tags }
             )
         )
-        .environment(\.managedObjectContext, CoreDataStack.shared.managedContext)
         
         navigationController?.pushViewController(UIHostingController(rootView: view), animated: true)
     }
