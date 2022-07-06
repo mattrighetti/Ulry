@@ -5,6 +5,7 @@
 //  Created by Mattia Righetti on 12/23/21.
 //
 
+import os
 import UIKit
 import CoreData
 import FMDB
@@ -15,8 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
        
-        Database.shared = Database()
-        
         UserDefaults.standard.register(defaults: [
             Defaults.openInApp.rawValue : false,
             Defaults.readMode.rawValue : false,
@@ -25,6 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Defaults.orderBy.rawValue : OrderBy.newest.rawValue,
             Defaults.isPremium.rawValue : false
         ])
+        
+        copyLinkFromExternalDatabase()
         
         return true
     }
@@ -35,5 +36,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when a new scene session is being created.
         // Use this method to select a configuration to create the new scene with.
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    }
+    
+    private func copyLinkFromExternalDatabase() {
+        // Move every link from external database to internal one
+        if Database.external.countLinks() > 0 {
+            let links = Database.external.getAllLinks()
+            os_log(.info, "moving \(links.count) links from external database to internal")
+            
+            _ = Database.shared.batchInsert(links)
+            for link in links {
+                MetadataProvider.shared.fetchLinkMetadata(link: link)
+            }
+            
+            for link in links {
+                _ = Database.external.delete(link)
+            }
+        } else {
+            os_log(.info, "no link found in external database")
+        }
     }
 }

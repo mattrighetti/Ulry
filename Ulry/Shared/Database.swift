@@ -51,26 +51,34 @@ extension DatabaseControllerDelegate {
 }
 
 public final class Database {
-    var db: FMDatabase
+    private var db: FMDatabase
     
-    weak var delegate: DatabaseControllerDelegate?    
-    static var shared = Database()
+    weak var delegate: DatabaseControllerDelegate?
     
-    public init(inMemory: Bool = false) {
+    private(set) static var shared = Database(external: false)
+    private(set) static var external = Database(external: true)
+    
+    public init(external: Bool, inMemory: Bool = false) {
         if inMemory {
             db = FMDatabase()
             db.open()
             runMigrations_v2()
+            return
+        }
+        
+        if external {
+            let url = URL.storeURL(for: "group.com.mattrighetti.Ulry", databaseName: "urly")
+            db = FMDatabase(url: url)
         } else {
-            let fileURL = try! FileManager.default
-                .url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let url = try! FileManager.default
+                .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
                 .appendingPathComponent("ulry.sqlite")
             
-            db = FMDatabase(url: fileURL)
-            db.open()
-            
-            runMigrations_v2()
+            db = FMDatabase(url: url)
         }
+        
+        db.open()
+        runMigrations_v2()
     }
     
 //    func runMigration_v1() {
@@ -226,6 +234,7 @@ public final class Database {
         self.db.beginTransaction()
         
         do {
+            // TODO ogImageUrl, ogDescription and ogTitle are not inserted here
             try self.db.executeUpdate(
                 """
                 insert into link (id, url, starred, unread, color, created_at, updated_at)

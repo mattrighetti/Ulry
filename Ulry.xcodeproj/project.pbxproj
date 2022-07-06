@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		C9044ADE28762D4600F6DD7A /* FMDB in Frameworks */ = {isa = PBXBuildFile; productRef = C9044ADD28762D4600F6DD7A /* FMDB */; };
+		C9044ADF2876313E00F6DD7A /* MetadataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D218852871FACA0038F8A2 /* MetadataProvider.swift */; };
+		C9044AE02876313E00F6DD7A /* MetadataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D218852871FACA0038F8A2 /* MetadataProvider.swift */; };
 		C909E75327D0248A0073CC6E /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C909E75227D0248A0073CC6E /* IAPManager.swift */; };
 		C909E75627D04C6C0073CC6E /* 20220303014811805_v1.0.sql in Resources */ = {isa = PBXBuildFile; fileRef = C909E75527D04C6C0073CC6E /* 20220303014811805_v1.0.sql */; };
 		C90A2A0B27D2C2EF00C40BAA /* FMDB in Frameworks */ = {isa = PBXBuildFile; productRef = C90A2A0A27D2C2EF00C40BAA /* FMDB */; };
@@ -688,6 +690,7 @@
 				C9179A2227972F07008A82DD /* Intents.intentdefinition in Sources */,
 				C9179A2827973BD1008A82DD /* +Color.swift in Sources */,
 				C9FD74652874F57A00273CC1 /* OrderBy.swift in Sources */,
+				C9044AE02876313E00F6DD7A /* MetadataProvider.swift in Sources */,
 				C90A2A1127D2CEB200C40BAA /* Database.swift in Sources */,
 				C9CE80EA27A75FA9005D1005 /* AddURLIntentHandler.swift in Sources */,
 				C9179A2A27973BD1008A82DD /* +UIScreen.swift in Sources */,
@@ -722,6 +725,7 @@
 				C90A2A1027D2CEB200C40BAA /* Database.swift in Sources */,
 				C91053B4278E465D005AC807 /* +URL.swift in Sources */,
 				C9FD74642874F57A00273CC1 /* OrderBy.swift in Sources */,
+				C9044ADF2876313E00F6DD7A /* MetadataProvider.swift in Sources */,
 				C957D1672875D8CD00CEDAF1 /* ImageStorage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
