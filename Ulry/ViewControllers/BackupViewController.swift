@@ -40,8 +40,12 @@ class BackupViewController: UIStaticTableView {
                     isEnabled: true,
                     accessoryType: .accessoryType(.disclosureIndicator, .action({ [weak self] in
                         do {
-                            self?.popupCompletionViewContoller()
-                            try self?.dumpHelper.dumpAllToDocumentFile()
+                            let dbUrl = try FileManager.default
+                                .url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+                                .appendingPathComponent("ulry.sqlite")
+                            
+                            let shareController = UIActivityViewController(activityItems: [dbUrl], applicationActivities: nil)
+                            self?.present(shareController, animated: true)
                         } catch {
                             self?.onDoneAlertNotify?("Ops!", "Something went wrong while importing from file, try again later or report to developer")
                         }
