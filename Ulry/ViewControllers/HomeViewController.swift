@@ -289,6 +289,16 @@ extension HomeViewController: DatabaseControllerDelegate {
         reloadSections()
     }
     
+    func databaseController(_ databaseController: Database, didInsert links: [Link]) {
+        // Maybe reloading every section could be avoidable:
+        // What needs change is:
+        //   1. Tag that links belong to
+        //   2. Group that links belong to
+        //   3. All and unread for sure
+        //   4. Starred maybe
+        reloadSections()
+    }
+    
     func databaseController(_ databaseController: Database, didInsert tag: Tag) {
         var snapshot = datasource.snapshot()
         snapshot.appendItems([.tag(tag)], toSection: 2)

@@ -37,16 +37,16 @@ public class AddURLIntentHandler: NSObject, AddURLIntentHandling {
     public func handle(intent: AddURLIntent, completion: @escaping (AddURLIntentResponse) -> Void) {
         let database = Database.external
         
-        guard let url = intent.url else {
+        guard let urlString = intent.url else {
             completion(AddURLIntentResponse(code: .failure, userActivity: nil))
             return
         }
         
-        let link = Link(url: url.absoluteString)
-        _ = database.insert(link)
+        let link = Link(url: urlString)
+        let ok = database.insert(link)
         
-        DispatchQueue.main.asyncAfter(wallDeadline: .now() + 10.0) {
-            completion(AddURLIntentResponse(code: .failure, userActivity: nil))
+        DispatchQueue.main.async {
+            completion(AddURLIntentResponse(code: ok ? .success : .failure, userActivity: nil))
         }
     }
     

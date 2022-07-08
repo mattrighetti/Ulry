@@ -25,9 +25,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Defaults.isPremium.rawValue : false
         ])
         
-        copyLinkFromExternalDatabase()
+        NotificationCenter.default.addObserver(self, selector: #selector(copyLinkFromExternalDatabase), name: UIApplication.willEnterForegroundNotification, object: nil)
         
         return true
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: UISceneSession Lifecycle
@@ -38,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
     
-    private func copyLinkFromExternalDatabase() {
+    @objc private func copyLinkFromExternalDatabase() {
         // Move every link from external database to internal one
         if Database.external.countLinks() > 0 {
             let links = Database.external.getAllLinks()

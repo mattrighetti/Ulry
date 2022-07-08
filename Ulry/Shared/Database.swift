@@ -55,10 +55,10 @@ public final class Database {
     
     weak var delegate: DatabaseControllerDelegate?
     
-    private(set) static var shared = Database(external: false)
+    private(set) static var shared = Database()
     private(set) static var external = Database(external: true)
     
-    public init(external: Bool, inMemory: Bool = false) {
+    public init(external: Bool = false, inMemory: Bool = false) {
         if inMemory {
             db = FMDatabase()
             db.open()
@@ -66,17 +66,16 @@ public final class Database {
             return
         }
         
+        let url: URL!
         if external {
-            let url = URL.storeURL(for: "group.com.mattrighetti.Ulry", databaseName: "urly")
-            db = FMDatabase(url: url)
+            url = URL.storeURL(for: "group.com.mattrighetti.Ulry", databaseName: "urly")
         } else {
-            let url = try! FileManager.default
+            url = try! FileManager.default
                 .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
                 .appendingPathComponent("ulry.sqlite")
-            
-            db = FMDatabase(url: url)
         }
         
+        db = FMDatabase(url: url)
         db.open()
         runMigrations_v2()
     }

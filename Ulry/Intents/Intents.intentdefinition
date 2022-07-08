@@ -9,11 +9,11 @@
 	<key>INIntentDefinitionNamespace</key>
 	<string>pO2lyR</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>21E5196i</string>
+	<string>21G5046c</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>13C100</string>
+	<string>13F100</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>13.2.1</string>
+	<string>13.4.1</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -32,7 +32,7 @@
 			<key>INIntentKeyParameter</key>
 			<string>url</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>4</integer>
+			<integer>5</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
 				<key>url</key>
@@ -64,8 +64,10 @@
 					<integer>1</integer>
 					<key>INIntentParameterMetadata</key>
 					<dict>
-						<key>INIntentParameterMetadataDefaultValue</key>
-						<string>https://google.com</string>
+						<key>INIntentParameterMetadataCapitalization</key>
+						<string>Sentences</string>
+						<key>INIntentParameterMetadataDefaultValueID</key>
+						<string>FDPK3S</string>
 					</dict>
 					<key>INIntentParameterName</key>
 					<string>url</string>
@@ -95,9 +97,9 @@
 					<key>INIntentParameterSupportsResolution</key>
 					<true/>
 					<key>INIntentParameterTag</key>
-					<integer>4</integer>
+					<integer>5</integer>
 					<key>INIntentParameterType</key>
-					<string>URL</string>
+					<string>String</string>
 					<key>INIntentParameterUnsupportedReasons</key>
 					<array>
 						<dict>
