@@ -213,6 +213,7 @@ class LinkCell: UITableViewCell {
         urlHostnameLabel.text = nil
         descriptionLabel.text = nil
         titleLabel.text = nil
+        titleLabel.font = UIFont.rounded(ofSize: 17, weight: .bold)
         tagsDetailLabel.text = nil
         
         image.isHidden = false

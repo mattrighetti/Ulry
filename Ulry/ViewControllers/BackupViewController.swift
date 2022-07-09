@@ -35,7 +35,7 @@ class BackupViewController: UIStaticTableView {
         cells = [
             [
                 CellContent(
-                    title: "Export to file",
+                    title: "Export database",
                     icon: "arrow.up.doc.fill",
                     isEnabled: true,
                     accessoryType: .accessoryType(.disclosureIndicator, .action({ [weak self] in
@@ -47,22 +47,20 @@ class BackupViewController: UIStaticTableView {
                             let shareController = UIActivityViewController(activityItems: [dbUrl], applicationActivities: nil)
                             self?.present(shareController, animated: true)
                         } catch {
-                            self?.onDoneAlertNotify?("Ops!", "Something went wrong while importing from file, try again later or report to developer")
+                            self?.onDoneAlertNotify?("Ops!", "Something went wrong while importing from file, try again later or report to developer. Error was \(error)")
                         }
                     }))
                 ),
-                CellContent(
-                    title: "Load from file",
-                    icon: "arrow.down.doc.fill",
-                    isEnabled: true,
-                    accessoryType: .accessoryType(
-                        .disclosureIndicator,
-                        .action({ [weak self] in
-                            guard let documentPicker = self?.documentPicker else { return }
-                            self?.navigationController?.present(documentPicker, animated: true)
-                        })
-                    )
-                )
+//                CellContent(
+//                    title: "Import database",
+//                    icon: "arrow.down.doc.fill",
+//                    isEnabled: true,
+//                    accessoryType: .accessoryType(.disclosureIndicator, .action({ [weak self] in
+//                            guard let documentPicker = self?.documentPicker else { return }
+//                            self?.navigationController?.present(documentPicker, animated: true)
+//                        })
+//                    )
+//                )
             ]
         ]
     }
@@ -92,8 +90,11 @@ class BackupViewController: UIStaticTableView {
         if let url = urls.first {
             popupCompletionViewContoller()
             
-            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + .milliseconds(500)) {
-                self.dumpHelper.loadFromFile(from: url)
+            if FileManager.default.fileExists(atPath: url.path) {
+                // TODO FileManager.default.copyItem(at: url, to: dburl)
+                // TODO what if user wants to just import data of the database and not overwrite the existing one?
+            } else {
+                
             }
         }
     }
@@ -119,6 +120,7 @@ extension BackupViewController: UIDocumentPickerDelegate {
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        // Runs when user selected a file
         self.initImport(for: urls)
     }
 }
