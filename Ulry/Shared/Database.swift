@@ -834,7 +834,14 @@ public final class Database {
             )
             
             if res.next() {
-                return Link(from: res)
+                if let link = Link(from: res) {
+                    // TODO horrible code
+                    link.group = getGroups(of: link).first
+                    link.tags = Set(getTags(of: link))
+                    return link
+                }
+                
+                return nil
             }
             
             return nil

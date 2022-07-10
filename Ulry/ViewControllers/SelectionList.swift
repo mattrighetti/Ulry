@@ -12,7 +12,7 @@ struct SelectionList: View {
     @State var isSheetShown: Bool = false
     @Binding var selection: Group?
     
-    var items: [Group] = Database.shared.getAllGroups()
+    @State var items: [Group] = Database.shared.getAllGroups()
 
     var body: some View {
         List {
@@ -42,7 +42,12 @@ struct SelectionList: View {
                 }
             }
         }
-        .sheet(isPresented: $isSheetShown) {
+        .sheet(isPresented: $isSheetShown, onDismiss: {
+            withAnimation {
+                // TODO horrible code
+                items = Database.shared.getAllGroups()
+            }
+        }) {
             AddCategoryViewControlleRepresentable(mode: .group)
         }
     }

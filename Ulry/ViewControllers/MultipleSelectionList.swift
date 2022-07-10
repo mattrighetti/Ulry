@@ -8,10 +8,7 @@
 import SwiftUI
 
 struct MultipleSelectionList: View {
-    @Environment(\.managedObjectContext) private var managedObjectContext
-    
-    var items: [Tag] = Database.shared.getAllTags()
-    
+    @State var items: [Tag] = Database.shared.getAllTags()
     @State var isSheetShown: Bool = false
     @State var selections: [Tag]
     @Binding var selectedTags: [Tag]
@@ -43,7 +40,12 @@ struct MultipleSelectionList: View {
                     }
                 }
             }
-        }.sheet(isPresented: $isSheetShown) {
+        }.sheet(isPresented: $isSheetShown, onDismiss: {
+            withAnimation {
+                // TODO horrible code
+                items = Database.shared.getAllTags()
+            }
+        }) {
             AddCategoryViewControlleRepresentable(mode: .tag)
         }
     }
