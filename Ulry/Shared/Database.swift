@@ -7,6 +7,7 @@
 
 import os
 import FMDB
+import FMDBMigrationManager
 
 public protocol DatabaseControllerDelegate: AnyObject {
     func databaseController(_ databaseController: Database, didInsert link: Link)
@@ -62,7 +63,7 @@ public final class Database {
         if inMemory {
             db = FMDatabase()
             db.open()
-            runMigrations_v2()
+            runMigration_v1()
             return
         }
         
@@ -77,66 +78,22 @@ public final class Database {
         
         db = FMDatabase(url: url)
         db.open()
-        runMigrations_v2()
+        print("User version is \(db.userVersion)")
+        //runMigrations_v2()
+        runMigration_v1()
     }
     
-//    func runMigration_v1() {
-//        let manager = FMDBMigrationManager(database: self.db, migrationsBundle: .main)!
-//        if !manager.hasMigrationsTable {
-//            try! manager.createMigrationsTable()
-//        }
-//        
-//        do {
-//            try manager.migrateDatabase(toVersion: UInt64.max, progress: { _ in })
-//        } catch {
-//            fatalError("encountered error while running migrations, error was: \(error)")
-//        }
-//    }
-    
-    func runMigrations_v2() {
-        self.db.executeStatements(
-            """
-            create table if not exists category(
-                id      text not null unique,
-                name    varchar(50) not null unique,
-                icon    varchar(50) not null,
-                color   char(6) not null
-            );
-
-            create table if not exists tag(
-                id            text not null unique,
-                name          varchar(50) not null unique,
-                description   text,
-                color         char(6) not null
-            );
-
-            create table if not exists link(
-                id              text not null unique,
-                url             text not null unique,
-                starred         bool not null,
-                unread          bool not null,
-                note            text,
-                color           char(7) not null,
-                ogTitle         text,
-                ogDescription   text,
-                ogImageUrl      text,
-                created_at      integer not null,
-                updated_at      integer not null
-            );
-
-            create table if not exists category_link(
-                link_id       text not null references link(id) on delete cascade,
-                category_id   text not null references category(id) on delete cascade,
-                primary key (link_id, category_id)
-            );
-
-            create table if not exists tag_link(
-                link_id   text not null references link(id) on delete cascade,
-                tag_id    text not null references tag(id) on delete cascade,
-                primary key (link_id, tag_id)
-            );
-            """
-        )
+    func runMigration_v1() {
+        let manager = FMDBMigrationManager(database: self.db, migrationsBundle: .main)!
+        if !manager.hasMigrationsTable {
+            try! manager.createMigrationsTable()
+        }
+        
+        do {
+            try manager.migrateDatabase(toVersion: UInt64.max, progress: { _ in })
+        } catch {
+            fatalError("encountered error while running migrations, error was: \(error)")
+        }
     }
     
     // MARK: - CREATE
@@ -147,10 +104,10 @@ public final class Database {
         do {
             try self.db.executeUpdate(
                 """
-                insert into tag (id, name, description, color)
+                insert into tag (id, name, color)
                 values (?, ?, ?, ?)
                 """,
-                values: [tag.id, tag.name, tag.description_, tag.colorHex]
+                values: [tag.id, tag.name, tag.colorHex]
             )
             self.db.commit()
             delegate?.databaseController(self, didInsert: tag)
@@ -169,10 +126,10 @@ public final class Database {
             for tag in tags {
                 try self.db.executeUpdate(
                     """
-                    insert into tag (id, name, description, color)
+                    insert into tag (id, name, color)
                     values (?, ?, ?, ?)
                     """,
-                    values: [tag.id, tag.name, tag.description_, tag.colorHex]
+                    values: [tag.id, tag.name, tag.colorHex]
                 )
             }
             self.db.commit()
@@ -1057,10 +1014,10 @@ public final class Database {
             try self.db.executeUpdate(
                 """
                 update tag
-                set name = ?, description = ?, color = ?
+                set name = ?, color = ?
                 where id = ?
                 """,
-                values: [tag.name, tag.description_, tag.colorHex, tag.id]
+                values: [tag.name, tag.colorHex, tag.id]
             )
             self.db.commit()
             delegate?.databaseController(self, didUpdate: tag)

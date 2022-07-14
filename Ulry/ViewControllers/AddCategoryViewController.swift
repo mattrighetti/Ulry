@@ -236,7 +236,7 @@ class AddCategoryViewController: UIViewController {
                 group.iconName = glyph
                 _ = database.update(group)
             case .tag:
-                let tag = Tag(colorHex: color.toHex!, description: "TODO", name: text)
+                let tag = Tag(colorHex: color.toHex!, name: text)
                 _ = database.insert(tag)
             case .editTag(let tag):
                 tag.name = text

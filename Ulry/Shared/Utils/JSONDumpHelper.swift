@@ -65,7 +65,7 @@ struct JSONDumpHelper {
         var tags: [Tag] = []
         if let tagsCodable = dump.tags {
             for tagCodable in tagsCodable {
-                let tag = Tag(id: tagCodable.id, colorHex: tagCodable.colorHex, description: "", name: tagCodable.name)
+                let tag = Tag(id: tagCodable.id, colorHex: tagCodable.colorHex, name: tagCodable.name)
                 tags.append(tag)
             }
         }

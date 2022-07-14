@@ -11,14 +11,12 @@ import FMDB
 public class Tag: Hashable, Representable {
     public var id: UUID
     public var colorHex: String
-    public var description_: String
     public var name: String
     public var links: Set<Link>? = nil
     
-    init(id: UUID = UUID(), colorHex: String, description: String, name: String) {
+    init(id: UUID = UUID(), colorHex: String, name: String) {
         self.id = id
         self.colorHex = colorHex
-        self.description_ = description
         self.name = name
         self.links = nil
     }
@@ -26,7 +24,6 @@ public class Tag: Hashable, Representable {
     init?(from res: FMResultSet) {
         self.id = UUID(uuidString: res.string(forColumn: "id")!)!
         self.colorHex = res.string(forColumn: "color")!
-        self.description_ = res.string(forColumn: "description")!
         self.name = res.string(forColumn: "name")!
     }
     

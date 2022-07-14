@@ -11,7 +11,7 @@
 		C9044ADF2876313E00F6DD7A /* MetadataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D218852871FACA0038F8A2 /* MetadataProvider.swift */; };
 		C9044AE02876313E00F6DD7A /* MetadataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D218852871FACA0038F8A2 /* MetadataProvider.swift */; };
 		C909E75327D0248A0073CC6E /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C909E75227D0248A0073CC6E /* IAPManager.swift */; };
-		C909E75627D04C6C0073CC6E /* 20220303014811805_v1.0.sql in Resources */ = {isa = PBXBuildFile; fileRef = C909E75527D04C6C0073CC6E /* 20220303014811805_v1.0.sql */; };
+		C909E75627D04C6C0073CC6E /* 0001_base.sql in Resources */ = {isa = PBXBuildFile; fileRef = C909E75527D04C6C0073CC6E /* 0001_base.sql */; };
 		C90A2A0B27D2C2EF00C40BAA /* FMDB in Frameworks */ = {isa = PBXBuildFile; productRef = C90A2A0A27D2C2EF00C40BAA /* FMDB */; };
 		C90A2A0D27D2C2F400C40BAA /* FMDB in Frameworks */ = {isa = PBXBuildFile; productRef = C90A2A0C27D2C2F400C40BAA /* FMDB */; };
 		C90A2A1027D2CEB200C40BAA /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94055AD27D1241500F982E4 /* Database.swift */; };
@@ -99,6 +99,7 @@
 		C9D7FE7C278AF66D00016B04 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D7FE7B278AF66D00016B04 /* Category.swift */; };
 		C9D7FE7E278AFA1300016B04 /* FaviconHostnameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D7FE7D278AFA1300016B04 /* FaviconHostnameView.swift */; };
 		C9D7FE86278AFFA100016B04 /* DatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D7FE85278AFFA100016B04 /* DatabaseTests.swift */; };
+		C9E1414C287AEEE900864094 /* FMDBMigrationManager in Frameworks */ = {isa = PBXBuildFile; productRef = C9E1414B287AEEE900864094 /* FMDBMigrationManager */; };
 		C9F4F8F12789C28B00887A3E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9F4F8EF2789C28B00887A3E /* LaunchScreen.storyboard */; };
 		C9F4F8F92789C2AB00887A3E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F8F82789C2AB00887A3E /* AppDelegate.swift */; };
 		C9F4F9142789C2BD00887A3E /* SFSymbols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9042789C2BD00887A3E /* SFSymbols.swift */; };
@@ -164,7 +165,7 @@
 
 /* Begin PBXFileReference section */
 		C909E75227D0248A0073CC6E /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
-		C909E75527D04C6C0073CC6E /* 20220303014811805_v1.0.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = 20220303014811805_v1.0.sql; sourceTree = "<group>"; };
+		C909E75527D04C6C0073CC6E /* 0001_base.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = 0001_base.sql; sourceTree = "<group>"; };
 		C90C0A202795E36C004FABDD /* AddLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLinkViewController.swift; sourceTree = "<group>"; };
 		C90C0A2227964CBE004FABDD /* AddCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCategoryViewController.swift; sourceTree = "<group>"; };
 		C91053B2278E4659005AC807 /* +URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+URL.swift"; sourceTree = "<group>"; };
@@ -278,6 +279,7 @@
 			files = (
 				C96D597F27A0BDFA00A990B3 /* CloudKit.framework in Frameworks */,
 				C9044ADE28762D4600F6DD7A /* FMDB in Frameworks */,
+				C9E1414C287AEEE900864094 /* FMDBMigrationManager in Frameworks */,
 				C96D597D27A0BDED00A990B3 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -288,7 +290,7 @@
 		C909E75427D0479D0073CC6E /* migrations */ = {
 			isa = PBXGroup;
 			children = (
-				C909E75527D04C6C0073CC6E /* 20220303014811805_v1.0.sql */,
+				C909E75527D04C6C0073CC6E /* 0001_base.sql */,
 			);
 			path = migrations;
 			sourceTree = "<group>";
@@ -579,6 +581,7 @@
 			name = Ulry;
 			packageProductDependencies = (
 				C9044ADD28762D4600F6DD7A /* FMDB */,
+				C9E1414B287AEEE900864094 /* FMDBMigrationManager */,
 			);
 			productName = Ulry;
 			productReference = C9F4F8DE2789C28A00887A3E /* Ulry.app */;
@@ -669,7 +672,7 @@
 			files = (
 				C9F4F8F12789C28B00887A3E /* LaunchScreen.storyboard in Resources */,
 				C9F4F9512789C4F600887A3E /* Assets.xcassets in Resources */,
-				C909E75627D04C6C0073CC6E /* 20220303014811805_v1.0.sql in Resources */,
+				C909E75627D04C6C0073CC6E /* 0001_base.sql in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -846,7 +849,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Ulry/IntentsExtension/UlryIntents.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Ulry/IntentsExtension/Info.plist;
@@ -858,7 +861,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.3;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Ulry.UlryIntents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -873,7 +876,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Ulry/IntentsExtension/UlryIntents.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Ulry/IntentsExtension/Info.plist;
@@ -885,7 +888,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.3;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Ulry.UlryIntents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -902,7 +905,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = ExtensionAppIcon;
 				CODE_SIGN_ENTITLEMENTS = Ulry/AddToUlryAction/AddToUlryAction.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -915,7 +918,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.3;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Ulry.AddToUlryAction;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -932,7 +935,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = ExtensionAppIcon;
 				CODE_SIGN_ENTITLEMENTS = Ulry/AddToUlryAction/AddToUlryAction.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -945,7 +948,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.3;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Ulry.AddToUlryAction;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1117,7 +1120,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Ulry/Ulry.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Ulry/Info.plist;
@@ -1132,7 +1135,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.3;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Ulry;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1152,7 +1155,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Ulry/Ulry.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Ulry/Info.plist;
@@ -1167,7 +1170,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.3;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.Ulry;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1291,6 +1294,11 @@
 			productName = FMDBMigrationManager;
 		};
 		C90A2A1427D2CEC500C40BAA /* FMDBMigrationManager */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C940559C27D0F82C00F982E4 /* XCRemoteSwiftPackageReference "FMDBMigrationManager" */;
+			productName = FMDBMigrationManager;
+		};
+		C9E1414B287AEEE900864094 /* FMDBMigrationManager */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C940559C27D0F82C00F982E4 /* XCRemoteSwiftPackageReference "FMDBMigrationManager" */;
 			productName = FMDBMigrationManager;
