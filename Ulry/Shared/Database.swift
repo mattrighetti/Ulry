@@ -105,7 +105,7 @@ public final class Database {
             try self.db.executeUpdate(
                 """
                 insert into tag (id, name, color)
-                values (?, ?, ?, ?)
+                values (?, ?, ?)
                 """,
                 values: [tag.id, tag.name, tag.colorHex]
             )
@@ -127,7 +127,7 @@ public final class Database {
                 try self.db.executeUpdate(
                     """
                     insert into tag (id, name, color)
-                    values (?, ?, ?, ?)
+                    values (?, ?, ?)
                     """,
                     values: [tag.id, tag.name, tag.colorHex]
                 )
