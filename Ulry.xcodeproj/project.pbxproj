@@ -87,7 +87,6 @@
 		C9CE80EA27A75FA9005D1005 /* AddURLIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE80E727A75DAD005D1005 /* AddURLIntentHandler.swift */; };
 		C9CE80EC27A76F0F005D1005 /* LinkCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE80EB27A76F0F005D1005 /* LinkCodable.swift */; };
 		C9CE80EE27A76F20005D1005 /* GroupCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE80ED27A76F20005D1005 /* GroupCodable.swift */; };
-		C9CE80F027A76FA4005D1005 /* AddToUlryActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE80EF27A76FA4005D1005 /* AddToUlryActionViewController.swift */; };
 		C9CE80F127A76FA4005D1005 /* AddToUlryActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE80EF27A76FA4005D1005 /* AddToUlryActionViewController.swift */; };
 		C9D0574227A8C539006BD331 /* +NSMutableAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D0574127A8C539006BD331 /* +NSMutableAttributedString.swift */; };
 		C9D2188428719F110038F8A2 /* MetaDataFetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D2188328719F110038F8A2 /* MetaDataFetcherTests.swift */; };
@@ -95,6 +94,8 @@
 		C9D37C5E2798297E0084F188 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C5D2798297E0084F188 /* SettingsViewController.swift */; };
 		C9D37C60279830EB0084F188 /* AppearanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C5F279830EB0084F188 /* AppearanceViewController.swift */; };
 		C9D37C622798361C0084F188 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C612798361C0084F188 /* AboutViewController.swift */; };
+		C9D380852889F769009A69DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9F4F9502789C4F600887A3E /* Assets.xcassets */; };
+		C9D380862889F76A009A69DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9F4F9502789C4F600887A3E /* Assets.xcassets */; };
 		C9D56E2A27978003001C789B /* ButtonClose.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D56E2927978003001C789B /* ButtonClose.swift */; };
 		C9D7FE7C278AF66D00016B04 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D7FE7B278AF66D00016B04 /* Category.swift */; };
 		C9D7FE7E278AFA1300016B04 /* FaviconHostnameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D7FE7D278AFA1300016B04 /* FaviconHostnameView.swift */; };
@@ -646,6 +647,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9D380862889F76A009A69DA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -655,6 +657,7 @@
 			files = (
 				C99C14B4278C66FC00936D27 /* Media.xcassets in Resources */,
 				C9437013278CAFF2009143A7 /* GetURL.js in Resources */,
+				C9D380852889F769009A69DA /* Assets.xcassets in Resources */,
 				C99C14B9278C66FC00936D27 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -770,7 +773,6 @@
 				C9F4F91D2789C2BD00887A3E /* Group.swift in Sources */,
 				C972BAFE27A22201005B6312 /* AppIconsViewController.swift in Sources */,
 				C9ABF9E52794451700F1B1F1 /* +Dictionary.swift in Sources */,
-				C9CE80F027A76FA4005D1005 /* AddToUlryActionViewController.swift in Sources */,
 				C9F4F9142789C2BD00887A3E /* SFSymbols.swift in Sources */,
 				C92A0BA6279B4DC500ED0D13 /* ThemeController.swift in Sources */,
 				C9F4F9152789C2BD00887A3E /* +UIScreen.swift in Sources */,
@@ -1129,7 +1131,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1164,7 +1166,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
