@@ -113,7 +113,6 @@
 		C9F4F93B2789C2DE00887A3E /* LinkDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9282789C2DE00887A3E /* LinkDetailView.swift */; };
 		C9F4F9402789C2DE00887A3E /* MultipleSelectionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F92D2789C2DE00887A3E /* MultipleSelectionList.swift */; };
 		C9F4F9412789C2DE00887A3E /* SelectionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F92E2789C2DE00887A3E /* SelectionList.swift */; };
-		C9F4F9462789C2DE00887A3E /* AwareBackgroundColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F9352789C2DE00887A3E /* AwareBackgroundColor.swift */; };
 		C9F4F9512789C4F600887A3E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9F4F9502789C4F600887A3E /* Assets.xcassets */; };
 		C9F4F953278A07A100887A3E /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F952278A07A100887A3E /* HomeViewController.swift */; };
 		C9F4F955278A0FAD00887A3E /* UIColorCircleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F954278A0FAD00887A3E /* UIColorCircleTableViewCell.swift */; };
@@ -236,7 +235,6 @@
 		C9F4F9282789C2DE00887A3E /* LinkDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkDetailView.swift; sourceTree = "<group>"; };
 		C9F4F92D2789C2DE00887A3E /* MultipleSelectionList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipleSelectionList.swift; sourceTree = "<group>"; };
 		C9F4F92E2789C2DE00887A3E /* SelectionList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionList.swift; sourceTree = "<group>"; };
-		C9F4F9352789C2DE00887A3E /* AwareBackgroundColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AwareBackgroundColor.swift; sourceTree = "<group>"; };
 		C9F4F9502789C4F600887A3E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C9F4F952278A07A100887A3E /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		C9F4F954278A0FAD00887A3E /* UIColorCircleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorCircleTableViewCell.swift; sourceTree = "<group>"; };
@@ -482,7 +480,6 @@
 		C9F4F92F2789C2DE00887A3E /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				C9F4F9312789C2DE00887A3E /* Modifiers */,
 				C9F4F954278A0FAD00887A3E /* UIColorCircleTableViewCell.swift */,
 				C9F4F95A278A40F200887A3E /* UIImageCircleTableViewCell.swift */,
 				C9A142C8278A6B9200B627BF /* LinkCell.swift */,
@@ -491,14 +488,6 @@
 				C97467A22799882C00B53B8C /* UrlTextFieldAccessoryView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		C9F4F9312789C2DE00887A3E /* Modifiers */ = {
-			isa = PBXGroup;
-			children = (
-				C9F4F9352789C2DE00887A3E /* AwareBackgroundColor.swift */,
-			);
-			path = Modifiers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -624,11 +613,8 @@
 			);
 			mainGroup = C9F4F8D52789C28A00887A3E;
 			packageReferences = (
-				C9F4F9492789C35200887A3E /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				C909E75727D054BB0073CC6E /* XCRemoteSwiftPackageReference "fmdb" */,
 				C940559C27D0F82C00F982E4 /* XCRemoteSwiftPackageReference "FMDBMigrationManager" */,
-				C9044ADB28762B8B00F6DD7A /* XCRemoteSwiftPackageReference "FMDBMigrationManager" */,
-				C9044ADC28762BD500F6DD7A /* XCRemoteSwiftPackageReference "fmdb" */,
 			);
 			productRefGroup = C9F4F8DF2789C28A00887A3E /* Products */;
 			projectDirPath = "";
@@ -755,7 +741,6 @@
 				C972BB0027A22383005B6312 /* AppIcon.swift in Sources */,
 				C9F4F9412789C2DE00887A3E /* SelectionList.swift in Sources */,
 				C9D37C60279830EB0084F188 /* AppearanceViewController.swift in Sources */,
-				C9F4F9462789C2DE00887A3E /* AwareBackgroundColor.swift in Sources */,
 				C9D37C5E2798297E0084F188 /* SettingsViewController.swift in Sources */,
 				C9D56E2A27978003001C789B /* ButtonClose.swift in Sources */,
 				C9F4F91E2789C2BD00887A3E /* Tag.swift in Sources */,
@@ -1232,22 +1217,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		C9044ADB28762B8B00F6DD7A /* XCRemoteSwiftPackageReference "FMDBMigrationManager" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/mattrighetti/FMDBMigrationManager";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-		C9044ADC28762BD500F6DD7A /* XCRemoteSwiftPackageReference "fmdb" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ccgus/fmdb";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 		C909E75727D054BB0073CC6E /* XCRemoteSwiftPackageReference "fmdb" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ccgus/fmdb";
@@ -1262,14 +1231,6 @@
 			requirement = {
 				branch = master;
 				kind = branch;
-			};
-		};
-		C9F4F9492789C35200887A3E /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/scinfu/SwiftSoup";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

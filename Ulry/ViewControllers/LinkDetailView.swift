@@ -41,7 +41,7 @@ struct LinkDetailView: View {
                 HStack {
                     Spacer()
                     Text(link.hostname)
-                        .shadow(color: .white, radius: 5, x: 0, y: 0)
+                        .font(.system(size: 18.0, weight: .semibold, design: .rounded))
                     Spacer()
                 }
                 .foregroundColor(.white)
@@ -71,7 +71,6 @@ struct LinkDetailView: View {
                     Spacer()
                 }
                 .padding()
-                .defaultAwareBackgroundColor()
                 .cornerRadius(10)
                 .padding()
             }
