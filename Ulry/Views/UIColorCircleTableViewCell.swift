@@ -79,8 +79,8 @@ class UIColorCircleTableViewCell: UITableViewCell {
     
     private func setupWithImage() {
         NSLayoutConstraint.activate([
-            coloredCircle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             coloredCircle.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            coloredCircle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             coloredCircle.widthAnchor.constraint(equalToConstant: 30),
             coloredCircle.heightAnchor.constraint(equalToConstant: 30),
             label.leadingAnchor.constraint(equalTo: coloredCircle.trailingAnchor, constant: 15),

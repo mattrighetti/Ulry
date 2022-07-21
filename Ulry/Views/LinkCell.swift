@@ -103,13 +103,13 @@ class LinkCell: UITableViewCell {
         contentView.addSubview(tagsDetailLabel)
         
         NSLayoutConstraint.activate([
-            backgroundLabelImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
             backgroundLabelImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            backgroundLabelImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
             backgroundLabelImage.widthAnchor.constraint(equalToConstant: 60),
             backgroundLabelImage.heightAnchor.constraint(equalToConstant: 60),
             
-            image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
             image.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
             image.widthAnchor.constraint(equalToConstant: 60),
             image.heightAnchor.constraint(equalToConstant: 60),
             

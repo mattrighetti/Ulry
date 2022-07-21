@@ -30,9 +30,9 @@ struct JSONDumpHelper {
         with filemanager: FileManager = .default,
         encoder: JSONEncoder = JSONEncoder()
     ) throws {
-        let links = Database.shared.getAllLinks()
-        let groups = Database.shared.getAllGroups()
-        let tags = Database.shared.getAllTags()
+        let links = Database.main.getAllLinks()
+        let groups = Database.main.getAllGroups()
+        let tags = Database.main.getAllTags()
         
         let linksCodable = links.map { LinkCodable(from: $0) }
         let groupsCodable = groups.map { GroupCodable(from: $0) }
@@ -97,8 +97,8 @@ struct JSONDumpHelper {
             }
         }
         
-        _ = Database.shared.batchInsert(links)
-        _ = Database.shared.batchInsert(groups)
-        _ = Database.shared.batchInsert(tags)
+        _ = Database.main.batchInsert(links)
+        _ = Database.main.batchInsert(groups)
+        _ = Database.main.batchInsert(tags)
     }
 }

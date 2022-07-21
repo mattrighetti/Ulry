@@ -13,7 +13,7 @@ import SafariServices
 private var reuseIdentifier = "LinkCell"
 
 class LinksTableViewController: UIViewController {
-    let database = Database.shared
+    let database = Database.main
     
     lazy var tableview: UITableView = {
         let tableview = UITableView()

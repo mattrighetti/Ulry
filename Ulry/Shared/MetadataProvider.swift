@@ -24,7 +24,7 @@ class MetadataProvider: NSObject {
             link.ogTitle = metadata?.title
             link.ogDescription = metadata?.value(forKey: "summary") as? String
             
-            _ = Database.shared.update(link)
+            _ = Database.main.update(link)
             
             if let imageProvider = metadata!.imageProvider {
                 imageProvider.loadObject(ofClass: UIImage.self) { img, error in
@@ -34,7 +34,7 @@ class MetadataProvider: NSObject {
                     else { return }
                     
                     link.ogImageUrl = path
-                    _ = Database.shared.update(link)
+                    _ = Database.main.update(link)
                 }
             }
         }

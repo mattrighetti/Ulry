@@ -79,7 +79,7 @@ class AddCategoryViewController: UIViewController {
         }
     }
     
-    let database = Database.shared
+    let database = Database.main
     var configuration: PickerMode? = .tag
     
     var color: UIColor = UIColor.random {

@@ -29,7 +29,7 @@ fileprivate var categoryColorCell = "CategoryColorCell"
 fileprivate var categoryImageCell = "CategoryImageCell"
 
 class HomeViewController: UIViewController {
-    let database = Database.shared
+    let database = Database.main
     
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)

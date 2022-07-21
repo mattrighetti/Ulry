@@ -48,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let links = Database.external.getAllLinks()
             os_log(.info, "moving \(links.count) links from external database to internal")
             
-            _ = Database.shared.batchInsert(links)
+            _ = Database.main.batchInsert(links)
             for link in links {
                 MetadataProvider.shared.fetchLinkMetadata(link: link)
             }

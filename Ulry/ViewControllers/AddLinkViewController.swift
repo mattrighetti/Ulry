@@ -15,7 +15,7 @@ class AddLinkViewController: UIViewController {
         case new
     }
     
-    let database = Database.shared
+    let database = Database.main
     
     var configuration: Configuration = .new {
         didSet {

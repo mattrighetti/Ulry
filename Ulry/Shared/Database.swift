@@ -56,7 +56,7 @@ public final class Database {
     
     weak var delegate: DatabaseControllerDelegate?
     
-    private(set) static var shared = Database()
+    private(set) static var main = Database()
     private(set) static var external = Database(external: true)
     
     public init(external: Bool = false, inMemory: Bool = false) {
