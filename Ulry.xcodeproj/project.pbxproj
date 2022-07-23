@@ -8,14 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		C9044ADE28762D4600F6DD7A /* FMDB in Frameworks */ = {isa = PBXBuildFile; productRef = C9044ADD28762D4600F6DD7A /* FMDB */; };
-		C9044ADF2876313E00F6DD7A /* MetadataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D218852871FACA0038F8A2 /* MetadataProvider.swift */; };
-		C9044AE02876313E00F6DD7A /* MetadataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D218852871FACA0038F8A2 /* MetadataProvider.swift */; };
 		C909E75327D0248A0073CC6E /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C909E75227D0248A0073CC6E /* IAPManager.swift */; };
 		C909E75627D04C6C0073CC6E /* 0001_base.sql in Resources */ = {isa = PBXBuildFile; fileRef = C909E75527D04C6C0073CC6E /* 0001_base.sql */; };
 		C90A2A0B27D2C2EF00C40BAA /* FMDB in Frameworks */ = {isa = PBXBuildFile; productRef = C90A2A0A27D2C2EF00C40BAA /* FMDB */; };
 		C90A2A0D27D2C2F400C40BAA /* FMDB in Frameworks */ = {isa = PBXBuildFile; productRef = C90A2A0C27D2C2F400C40BAA /* FMDB */; };
-		C90A2A1027D2CEB200C40BAA /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94055AD27D1241500F982E4 /* Database.swift */; };
-		C90A2A1127D2CEB200C40BAA /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94055AD27D1241500F982E4 /* Database.swift */; };
 		C90A2A1327D2CEC100C40BAA /* FMDBMigrationManager in Frameworks */ = {isa = PBXBuildFile; productRef = C90A2A1227D2CEC100C40BAA /* FMDBMigrationManager */; };
 		C90A2A1527D2CEC500C40BAA /* FMDBMigrationManager in Frameworks */ = {isa = PBXBuildFile; productRef = C90A2A1427D2CEC500C40BAA /* FMDBMigrationManager */; };
 		C90C0A212795E36C004FABDD /* AddLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90C0A202795E36C004FABDD /* AddLinkViewController.swift */; };
@@ -41,6 +37,8 @@
 		C9179A3127973BD4008A82DD /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D7FE7B278AF66D00016B04 /* Category.swift */; };
 		C9179A3227973BD4008A82DD /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F90F2789C2BD00887A3E /* Tag.swift */; };
 		C9179A3627973BD4008A82DD /* Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4F90D2789C2BD00887A3E /* Link.swift */; };
+		C91B265D288C691200C6D5A5 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94055AD27D1241500F982E4 /* Database.swift */; };
+		C91B265E288C691300C6D5A5 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94055AD27D1241500F982E4 /* Database.swift */; };
 		C9267F3D279A2C170041B94A /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9267F3C279A2C170041B94A /* Defaults.swift */; };
 		C9267F40279A40EF0041B94A /* UIStaticTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9267F3F279A40EF0041B94A /* UIStaticTableView.swift */; };
 		C9267F42279A52A50041B94A /* TipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9267F41279A52A50041B94A /* TipsViewController.swift */; };
@@ -90,12 +88,12 @@
 		C9CE80F127A76FA4005D1005 /* AddToUlryActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CE80EF27A76FA4005D1005 /* AddToUlryActionViewController.swift */; };
 		C9D0574227A8C539006BD331 /* +NSMutableAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D0574127A8C539006BD331 /* +NSMutableAttributedString.swift */; };
 		C9D2188428719F110038F8A2 /* MetaDataFetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D2188328719F110038F8A2 /* MetaDataFetcherTests.swift */; };
-		C9D218862871FACA0038F8A2 /* MetadataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D218852871FACA0038F8A2 /* MetadataProvider.swift */; };
 		C9D37C5E2798297E0084F188 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C5D2798297E0084F188 /* SettingsViewController.swift */; };
 		C9D37C60279830EB0084F188 /* AppearanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C5F279830EB0084F188 /* AppearanceViewController.swift */; };
 		C9D37C622798361C0084F188 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D37C612798361C0084F188 /* AboutViewController.swift */; };
 		C9D380852889F769009A69DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9F4F9502789C4F600887A3E /* Assets.xcassets */; };
 		C9D380862889F76A009A69DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9F4F9502789C4F600887A3E /* Assets.xcassets */; };
+		C9D38088288A0580009A69DA /* LinkPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D38087288A0580009A69DA /* LinkPipeline.swift */; };
 		C9D56E2A27978003001C789B /* ButtonClose.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D56E2927978003001C789B /* ButtonClose.swift */; };
 		C9D7FE7C278AF66D00016B04 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D7FE7B278AF66D00016B04 /* Category.swift */; };
 		C9D7FE7E278AFA1300016B04 /* FaviconHostnameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D7FE7D278AFA1300016B04 /* FaviconHostnameView.swift */; };
@@ -212,10 +210,10 @@
 		C9CE80EF27A76FA4005D1005 /* AddToUlryActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToUlryActionViewController.swift; sourceTree = "<group>"; };
 		C9D0574127A8C539006BD331 /* +NSMutableAttributedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+NSMutableAttributedString.swift"; sourceTree = "<group>"; };
 		C9D2188328719F110038F8A2 /* MetaDataFetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaDataFetcherTests.swift; sourceTree = "<group>"; };
-		C9D218852871FACA0038F8A2 /* MetadataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataProvider.swift; sourceTree = "<group>"; };
 		C9D37C5D2798297E0084F188 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		C9D37C5F279830EB0084F188 /* AppearanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceViewController.swift; sourceTree = "<group>"; };
 		C9D37C612798361C0084F188 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
+		C9D38087288A0580009A69DA /* LinkPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPipeline.swift; sourceTree = "<group>"; };
 		C9D56E2927978003001C789B /* ButtonClose.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonClose.swift; sourceTree = "<group>"; };
 		C9D7FE7B278AF66D00016B04 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		C9D7FE7D278AFA1300016B04 /* FaviconHostnameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaviconHostnameView.swift; sourceTree = "<group>"; };
@@ -419,7 +417,7 @@
 				C9F4F9032789C2BD00887A3E /* Utils */,
 				C9F4F9082789C2BD00887A3E /* Model */,
 				C94055AD27D1241500F982E4 /* Database.swift */,
-				C9D218852871FACA0038F8A2 /* MetadataProvider.swift */,
+				C9D38087288A0580009A69DA /* LinkPipeline.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -682,8 +680,6 @@
 				C9179A2227972F07008A82DD /* Intents.intentdefinition in Sources */,
 				C9179A2827973BD1008A82DD /* +Color.swift in Sources */,
 				C9FD74652874F57A00273CC1 /* OrderBy.swift in Sources */,
-				C9044AE02876313E00F6DD7A /* MetadataProvider.swift in Sources */,
-				C90A2A1127D2CEB200C40BAA /* Database.swift in Sources */,
 				C9CE80EA27A75FA9005D1005 /* AddURLIntentHandler.swift in Sources */,
 				C9179A2A27973BD1008A82DD /* +UIScreen.swift in Sources */,
 				C957D1682875D8CD00CEDAF1 /* ImageStorage.swift in Sources */,
@@ -692,6 +688,7 @@
 				C9179A1A27972E2B008A82DD /* IntentHandler.swift in Sources */,
 				C9179A2E27973BD1008A82DD /* +UIImage.swift in Sources */,
 				C9179A2D27973BD1008A82DD /* Representable.swift in Sources */,
+				C91B265E288C691300C6D5A5 /* Database.swift in Sources */,
 				C9179A2C27973BD1008A82DD /* +UIFont.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -706,6 +703,7 @@
 				C99C14CE278C675E00936D27 /* +Color.swift in Sources */,
 				C99C14CB278C675700936D27 /* Link.swift in Sources */,
 				C99C14D0278C675E00936D27 /* +UIFont.swift in Sources */,
+				C91B265D288C691200C6D5A5 /* Database.swift in Sources */,
 				C99C14D1278C675E00936D27 /* SFSymbols.swift in Sources */,
 				C99C14C9278C675700936D27 /* Category.swift in Sources */,
 				C99C14D3278C675E00936D27 /* +UIScreen.swift in Sources */,
@@ -714,10 +712,8 @@
 				C99C14D7278C678500936D27 /* Representable.swift in Sources */,
 				C99C14D2278C675E00936D27 /* +UIViewController.swift in Sources */,
 				C99C14CF278C675E00936D27 /* +UIColor.swift in Sources */,
-				C90A2A1027D2CEB200C40BAA /* Database.swift in Sources */,
 				C91053B4278E465D005AC807 /* +URL.swift in Sources */,
 				C9FD74642874F57A00273CC1 /* OrderBy.swift in Sources */,
-				C9044ADF2876313E00F6DD7A /* MetadataProvider.swift in Sources */,
 				C957D1672875D8CD00CEDAF1 /* ImageStorage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -751,7 +747,6 @@
 				C99C14D6278C678200936D27 /* Representable.swift in Sources */,
 				C9C56973279C1EEF0064D8EB /* JSONDumpHelper.swift in Sources */,
 				C94055AE27D1241500F982E4 /* Database.swift in Sources */,
-				C9D218862871FACA0038F8A2 /* MetadataProvider.swift in Sources */,
 				C97467A32799882C00B53B8C /* UrlTextFieldAccessoryView.swift in Sources */,
 				C9F4F95B278A40F200887A3E /* UIImageCircleTableViewCell.swift in Sources */,
 				C92A0BA8279B8D7000ED0D13 /* LinkSharer.swift in Sources */,
@@ -774,6 +769,7 @@
 				C9FD74632874F45400273CC1 /* OrderBy.swift in Sources */,
 				C9267F40279A40EF0041B94A /* UIStaticTableView.swift in Sources */,
 				C9F4F9172789C2BD00887A3E /* +Color.swift in Sources */,
+				C9D38088288A0580009A69DA /* LinkPipeline.swift in Sources */,
 				C97467A527999A5B00B53B8C /* GeneralSettingsViewController.swift in Sources */,
 				C9F4F8F92789C2AB00887A3E /* AppDelegate.swift in Sources */,
 				C9CE80EC27A76F0F005D1005 /* LinkCodable.swift in Sources */,
