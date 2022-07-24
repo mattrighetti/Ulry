@@ -16,18 +16,11 @@ class AddLinkViewController: UIViewController {
     }
     
     let database = Database.main
+    var isEdit = false
     
     var configuration: Configuration = .new {
         didSet {
-            switch configuration {
-            case .edit(let link):
-                self.urlTextField.text = link.url
-                self.noteTextView.text = link.note
-                self.selectedFolder = database.getGroups(of: link).first // TODO not cool looking
-                self.selectedTags = database.getTags(of: link)
-            case .new:
-                break
-            }
+            setup(with: configuration)
         }
     }
     
@@ -75,6 +68,36 @@ class AddLinkViewController: UIViewController {
         textField.keyboardType = .URL
         textField.clearButtonMode = .whileEditing
         textField.placeholder = "Link"
+        textField.backgroundColor = .secondarySystemGroupedBackground
+        textField.rightViewMode = .whileEditing
+        textField.leftView = paddingView
+        textField.leftViewMode = .always
+        textField.delegate = self
+        textField.inputAccessoryView = accessoryView
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
+    
+    lazy var ogTitleTextFieldLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Title"
+        label.font = UIFont.rounded(ofSize: 17, weight: .semibold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var ogTitleTextField: UITextField = {
+        let textField = UITextField()
+        let accessoryView = UrlTextFieldAccessoryView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth, height: 50))
+        
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textField.frame.size.height))
+        paddingView.backgroundColor = .black.withAlphaComponent(0.2)
+        
+        textField.layer.cornerRadius = 10
+        textField.layer.borderColor = UIColor.clear.cgColor
+        textField.keyboardType = .default
+        textField.clearButtonMode = .whileEditing
+        textField.placeholder = "Title"
         textField.backgroundColor = .secondarySystemGroupedBackground
         textField.rightViewMode = .whileEditing
         textField.leftView = paddingView
@@ -246,6 +269,7 @@ class AddLinkViewController: UIViewController {
             switch self.configuration {
             case .edit(let editedLink):
                 editedLink.note = self.noteTextView.text
+                editedLink.ogTitle = self.ogTitleTextField.text
                 editedLink.unread = true
                 editedLink.group = self.selectedFolder
                 editedLink.tags = Set(self.selectedTags)
@@ -276,8 +300,18 @@ class AddLinkViewController: UIViewController {
         
         view.backgroundColor = .systemGroupedBackground
         
+        setup()
+    }
+    
+    private func setup() {
         view.addSubview(urlTextFieldLabel)
         view.addSubview(urlTextField)
+        
+        if isEdit {
+            view.addSubview(ogTitleTextFieldLabel)
+            view.addSubview(ogTitleTextField)
+        }
+        
         view.addSubview(noteTextViewLabel)
         view.addSubview(noteTextView)
         view.addSubview(groupsLabel)
@@ -292,7 +326,25 @@ class AddLinkViewController: UIViewController {
             urlTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
             urlTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
             urlTextField.heightAnchor.constraint(equalToConstant: 50),
-            noteTextViewLabel.topAnchor.constraint(equalTo: urlTextField.bottomAnchor, constant: 20),
+        ])
+        
+        if isEdit {
+            NSLayoutConstraint.activate([
+                ogTitleTextFieldLabel.topAnchor.constraint(equalTo: urlTextField.bottomAnchor, constant: 10),
+                ogTitleTextFieldLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+                ogTitleTextField.topAnchor.constraint(equalTo: ogTitleTextFieldLabel.bottomAnchor, constant: 10),
+                ogTitleTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+                ogTitleTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+                ogTitleTextField.heightAnchor.constraint(equalToConstant: 50),
+                noteTextViewLabel.topAnchor.constraint(equalTo: ogTitleTextField.bottomAnchor, constant: 20),
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                noteTextViewLabel.topAnchor.constraint(equalTo: urlTextField.bottomAnchor, constant: 20),
+            ])
+        }
+        
+        NSLayoutConstraint.activate([
             noteTextViewLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
             noteTextView.topAnchor.constraint(equalTo: noteTextViewLabel.bottomAnchor, constant: 10),
             noteTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
@@ -332,6 +384,20 @@ class AddLinkViewController: UIViewController {
         )
         
         navigationController?.pushViewController(UIHostingController(rootView: view), animated: true)
+    }
+    
+    private func setup(with configuration: Configuration) {
+        switch configuration {
+        case .edit(let link):
+            self.isEdit = true
+            self.urlTextField.text = link.url
+            self.noteTextView.text = link.note
+            self.ogTitleTextField.text = link.ogTitle
+            self.selectedFolder = database.getGroups(of: link).first // TODO not cool looking
+            self.selectedTags = database.getTags(of: link)
+        case .new:
+            break
+        }
     }
 }
 
