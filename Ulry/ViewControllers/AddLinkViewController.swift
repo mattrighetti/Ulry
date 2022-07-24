@@ -303,6 +303,11 @@ class AddLinkViewController: UIViewController {
         setup()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        autoPasteFromClipboard()
+    }
+    
     private func setup() {
         view.addSubview(urlTextFieldLabel)
         view.addSubview(urlTextField)
@@ -397,6 +402,20 @@ class AddLinkViewController: UIViewController {
             self.selectedTags = database.getTags(of: link)
         case .new:
             break
+        }
+    }
+    
+    private func autoPasteFromClipboard() {
+        if UIPasteboard.general.hasStrings {
+            guard
+                let value = UIPasteboard.general.string,
+                let ok = self.urlTextField.text?.isEmpty,
+                ok == true
+            else { return }
+            
+            if value.starts(with: "https://") || value.starts(with: "http://") {
+                self.urlTextField.text?.append(contentsOf: value)
+            }
         }
     }
 }
