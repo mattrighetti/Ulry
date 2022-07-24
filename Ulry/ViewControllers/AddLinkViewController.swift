@@ -10,7 +10,7 @@ import Combine
 import SwiftUI
 
 class AddLinkViewController: UIViewController {
-    public enum Configuration {
+    public enum Configuration: Equatable {
         case edit(Link)
         case new
     }
@@ -216,30 +216,14 @@ class AddLinkViewController: UIViewController {
     }()
     
     var selectedTagsStringValue: String {
-        guard !selectedTags.isEmpty else { return "None" }
+        if selectedTags.isEmpty {
+            return "None"
+        }
         return selectedTags.map { $0.name }.joined(separator: ", ")
     }
     
     var selectedFolderStringValue: String {
         selectedFolder == nil ? "None" : selectedFolder!.name
-    }
-    
-    var navigationBarTitle: String {
-        switch configuration {
-        case .edit(_):
-            return "Update URL"
-        case .new:
-            return "New URL"
-        }
-    }
-    
-    var buttonText: String {
-        switch configuration {
-        case .edit(_):
-            return "Update URL"
-        case .new:
-            return "Add URL"
-        }
     }
     
     private var selectedFolder: Group? = nil {
@@ -273,14 +257,7 @@ class AddLinkViewController: UIViewController {
                 editedLink.unread = true
                 editedLink.group = self.selectedFolder
                 editedLink.tags = Set(self.selectedTags)
-                
-                let needUpdate = editedLink.url != url
-                editedLink.url = url
                 _ = database.update(editedLink)
-                
-                if needUpdate {
-                    MetadataProvider.shared.fetchLinkMetadata(link: editedLink)
-                }
                 
             case .new:
                 let link = Link(url: url, note: self.noteTextView.text)
@@ -309,12 +286,12 @@ class AddLinkViewController: UIViewController {
     }
     
     private func setup() {
-        view.addSubview(urlTextFieldLabel)
-        view.addSubview(urlTextField)
-        
         if isEdit {
             view.addSubview(ogTitleTextFieldLabel)
             view.addSubview(ogTitleTextField)
+        } else {
+            view.addSubview(urlTextFieldLabel)
+            view.addSubview(urlTextField)
         }
         
         view.addSubview(noteTextViewLabel)
@@ -324,18 +301,9 @@ class AddLinkViewController: UIViewController {
         view.addSubview(tagsLabel)
         view.addSubview(tagsButton)
         
-        NSLayoutConstraint.activate([
-            urlTextFieldLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            urlTextFieldLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
-            urlTextField.topAnchor.constraint(equalTo: urlTextFieldLabel.bottomAnchor, constant: 10),
-            urlTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-            urlTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
-            urlTextField.heightAnchor.constraint(equalToConstant: 50),
-        ])
-        
         if isEdit {
             NSLayoutConstraint.activate([
-                ogTitleTextFieldLabel.topAnchor.constraint(equalTo: urlTextField.bottomAnchor, constant: 10),
+                ogTitleTextFieldLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
                 ogTitleTextFieldLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
                 ogTitleTextField.topAnchor.constraint(equalTo: ogTitleTextFieldLabel.bottomAnchor, constant: 10),
                 ogTitleTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
@@ -345,6 +313,12 @@ class AddLinkViewController: UIViewController {
             ])
         } else {
             NSLayoutConstraint.activate([
+                urlTextFieldLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+                urlTextFieldLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+                urlTextField.topAnchor.constraint(equalTo: urlTextFieldLabel.bottomAnchor, constant: 10),
+                urlTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+                urlTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+                urlTextField.heightAnchor.constraint(equalToConstant: 50),
                 noteTextViewLabel.topAnchor.constraint(equalTo: urlTextField.bottomAnchor, constant: 20),
             ])
         }
@@ -400,22 +374,15 @@ class AddLinkViewController: UIViewController {
             self.ogTitleTextField.text = link.ogTitle
             self.selectedFolder = database.getGroups(of: link).first // TODO not cool looking
             self.selectedTags = database.getTags(of: link)
-        case .new:
-            break
+        case .new: break
         }
     }
     
     private func autoPasteFromClipboard() {
+        guard self.configuration == .new else { return }
         if UIPasteboard.general.hasStrings {
-            guard
-                let value = UIPasteboard.general.string,
-                let ok = self.urlTextField.text?.isEmpty,
-                ok == true
-            else { return }
-            
-            if value.starts(with: "https://") || value.starts(with: "http://") {
-                self.urlTextField.text?.append(contentsOf: value)
-            }
+            guard let value = UIPasteboard.general.url else { return }
+            self.urlTextField.text?.append(contentsOf: value.absoluteString)
         }
     }
 }
