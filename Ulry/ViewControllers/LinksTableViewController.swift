@@ -21,6 +21,7 @@ class LinksTableViewController: UIViewController {
         tableview.register(LinkCell.self, forCellReuseIdentifier: reuseIdentifier)
         tableview.estimatedRowHeight = 200
         tableview.rowHeight = UITableView.automaticDimension
+        tableview.translatesAutoresizingMaskIntoConstraints = false
         return tableview
     }()
     

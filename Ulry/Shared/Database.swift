@@ -811,7 +811,7 @@ public final class Database {
     public func getAllGroups() -> [Group] {
         do {
             var groups = [Group]()
-            let res = try self.db.executeQuery("select * from category", values: nil)
+            let res = try self.db.executeQuery("select * from category order by name asc", values: nil)
             while res.next() {
                 if let category = Group(from: res) {
                     groups.append(category)
@@ -857,7 +857,7 @@ public final class Database {
     public func getAllTags() -> [Tag] {
         do {
             var tags = [Tag]()
-            let res = try self.db.executeQuery("select * from tag", values: nil)
+            let res = try self.db.executeQuery("select * from tag order by name asc", values: nil)
             while res.next() {
                 if let tag = Tag(from: res) {
                     tags.append(tag)

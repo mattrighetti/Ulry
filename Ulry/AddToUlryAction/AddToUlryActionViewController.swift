@@ -68,47 +68,16 @@ class ActionViewController: UIViewController {
     }
     
     private func handleData(dict: NSDictionary) {
-        var title: String
-        var description: String?
-        var imageUrl: String?
-        
         let urlString = dict["url"] as! String
-        
-        
-        let dictData = dict["dictData"] as? [String:String]
-        
-        title = dictData?.findFirstValue(keys: URL.titleMeta) ?? ""
-        if title.isEmpty {
-            title = dict["title"] as? String ?? ""
-        }
-        
-        description = dictData?.findFirstValue(keys: URL.descriptionMeta)
-        imageUrl = dictData?.findFirstValue(keys: URL.imageMeta)
-        
         let link = Link(url: urlString)
-        link.ogTitle = title
-        link.ogDescription = description
-        link.ogImageUrl = imageUrl
-        
-        _ = database.insert(link)
+        let valid = database.insert(link)
         
         DispatchQueue.main.async {
-            self.titleLabel.text = "Saved correctly"
+            self.titleLabel.text = valid ? "Saved correctly" : "Already stored in the past"
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
                 self.extensionContext!.completeRequest(returningItems: [], completionHandler: nil)
             })
         }
-    }
-    
-    private func fetchImage(url: String, completion: @escaping (Data?) -> Void) {
-        let sessionConfig = URLSessionConfiguration.default
-        sessionConfig.timeoutIntervalForRequest = 10.0
-        sessionConfig.timeoutIntervalForResource = 20.0
-        
-        let task = URLSession(configuration: sessionConfig).dataTask(with: URL(string: url)!) { data, response, error in
-            completion(data)
-        }
-        task.resume()
     }
 }
