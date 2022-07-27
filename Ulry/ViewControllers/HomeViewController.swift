@@ -5,6 +5,7 @@
 //  Created by Mattia Righetti on 1/8/22.
 //
 
+import os
 import UIKit
 import CoreData
 import Combine
@@ -286,7 +287,10 @@ extension HomeViewController: DatabaseControllerDelegate {
         //   2. Group that links belong to
         //   3. All and unread for sure
         //   4. Starred maybe
-        reloadSections()
+        DispatchQueue.main.async {
+            os_log(.debug, "DID INSERT")
+            self.reloadSections()
+        }
     }
     
     func databaseController(_ databaseController: Database, didInsert links: [Link]) {
@@ -296,31 +300,41 @@ extension HomeViewController: DatabaseControllerDelegate {
         //   2. Group that links belong to
         //   3. All and unread for sure
         //   4. Starred maybe
-        reloadSections()
+        DispatchQueue.main.async {
+            self.reloadSections()
+        }
     }
     
     func databaseController(_ databaseController: Database, didInsert tag: Tag) {
-        var snapshot = datasource.snapshot()
-        snapshot.appendItems([.tag(tag)], toSection: 2)
-        datasource.apply(snapshot, animatingDifferences: true)
+        DispatchQueue.main.async {
+            var snapshot = self.datasource.snapshot()
+            snapshot.appendItems([.tag(tag)], toSection: 2)
+            self.datasource.apply(snapshot, animatingDifferences: true)
+        }
     }
     
     func databaseController(_ databaseController: Database, didInsert group: Group) {
-        var snapshot = datasource.snapshot()
-        snapshot.appendItems([.group(group)], toSection: 1)
-        datasource.apply(snapshot, animatingDifferences: true)
+        DispatchQueue.main.async {
+            var snapshot = self.datasource.snapshot()
+            snapshot.appendItems([.group(group)], toSection: 1)
+            self.datasource.apply(snapshot, animatingDifferences: true)
+        }
     }
     
     func databaseController(_ databaseController: Database, didUpdate group: Group) {
-        var snapshot = datasource.snapshot()
-        snapshot.reloadItems([.group(group)])
-        datasource.apply(snapshot, animatingDifferences: true)
+        DispatchQueue.main.async {
+            var snapshot = self.datasource.snapshot()
+            snapshot.reloadItems([.group(group)])
+            self.datasource.apply(snapshot, animatingDifferences: true)
+        }
     }
     
     func databaseController(_ databaseController: Database, didUpdate tag: Tag) {
-        var snapshot = datasource.snapshot()
-        snapshot.reloadItems([.tag(tag)])
-        datasource.apply(snapshot, animatingDifferences: true)
+        DispatchQueue.main.async {
+            var snapshot = self.datasource.snapshot()
+            snapshot.reloadItems([.tag(tag)])
+            self.datasource.apply(snapshot, animatingDifferences: true)
+        }
     }
     
     func databaseController(_ databaseController: Database, didDelete link: Link) {
@@ -330,7 +344,9 @@ extension HomeViewController: DatabaseControllerDelegate {
         //   2. Group that links belong to
         //   3. All and unread for sure
         //   4. Starred maybe
-        reloadSections()
+        DispatchQueue.main.async {
+            self.reloadSections()
+        }
     }
     
     func databaseController(_ databaseController: Database, didDelete links: [Link]) {
@@ -340,19 +356,24 @@ extension HomeViewController: DatabaseControllerDelegate {
         //   2. Group that links belong to
         //   3. All and unread for sure
         //   4. Starred maybe
-        reloadSections()
+        DispatchQueue.main.async {
+            self.reloadSections()
+        }
     }
     
     func databaseController(_ databaseController: Database, didDelete group: Group) {
-        var snapshot = datasource.snapshot()
-        snapshot.deleteItems([.group(group)])
-        datasource.apply(snapshot, animatingDifferences: true)
+        DispatchQueue.main.async {
+            var snapshot = self.datasource.snapshot()
+            snapshot.deleteItems([.group(group)])
+            self.datasource.apply(snapshot, animatingDifferences: true)
+        }
     }
     
     func databaseController(_ databaseController: Database, didDelete tag: Tag) {
-        var snapshot = datasource.snapshot()
-        snapshot.deleteItems([.tag(tag)])
-        datasource.apply(snapshot, animatingDifferences: true)
+        DispatchQueue.main.async {
+            var snapshot = self.datasource.snapshot()
+            snapshot.deleteItems([.tag(tag)])
+            self.datasource.apply(snapshot, animatingDifferences: true)
+        }
     }
-    
 }

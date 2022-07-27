@@ -257,15 +257,15 @@ class AddLinkViewController: UIViewController {
                 editedLink.unread = true
                 editedLink.group = self.selectedFolder
                 editedLink.tags = Set(self.selectedTags)
-                _ = database.update(editedLink)
+
+                LinkPipeline.main.save(link: editedLink)
                 
             case .new:
                 let link = Link(url: url, note: self.noteTextView.text)
                 link.group = self.selectedFolder
                 link.tags = Set(self.selectedTags)
-                _ = database.insert(link)
                 
-                MetadataProvider.shared.fetchLinkMetadata(link: link)
+                LinkPipeline.main.save(link: link)
             }
             
             self.dismiss(animated: true)

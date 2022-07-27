@@ -5,6 +5,7 @@
 //  Created by Mattia Righetti on 1/8/22.
 //
 
+import os
 import UIKit
 import CoreData
 import SwiftUI
@@ -262,13 +263,17 @@ extension LinksTableViewController: UITableViewDelegate {
                 self.showInfoViewController(for: link)
             }
             
+            let reloadAction = UIAction(title: "Reload", image: UIImage(systemName: "arrow.clockwise.circle")) { _ in
+                LinkPipeline.main.save(link: link)
+            }
+            
             let deleteMenu = UIMenu(title: "", options: .displayInline, children: [
                 UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
                     self.onDeletePressed(link: link)
                 }
             ])
             
-            return UIMenu(title: "", children: [infoAction, editAction, shareAction, deleteMenu])
+            return UIMenu(title: "", children: [infoAction, editAction, shareAction, reloadAction, deleteMenu])
         }
     }
     
@@ -361,40 +366,53 @@ extension LinksTableViewController: UITableViewDelegate {
 
 extension LinksTableViewController: DatabaseControllerDelegate {
     func databaseController(_ databaseController: Database, didInsert link: Link) {
-        var snapshot = datasource.snapshot()
-        snapshot.appendItems([link.id.uuidString])
-        datasource.apply(snapshot, animatingDifferences: true)
+        DispatchQueue.main.async {
+            os_log(.debug, "DID INSERT NOTIFICATION")
+            var snapshot = self.datasource.snapshot()
+            snapshot.appendItems([link.id.uuidString])
+            self.datasource.apply(snapshot, animatingDifferences: true)
+        }
     }
     
     func databaseController(_ databaseController: Database, didInsert links: [Link]) {
-        var snapshot = datasource.snapshot()
-        snapshot.appendItems(links.map(\.id.uuidString))
-        datasource.apply(snapshot, animatingDifferences: true)
+        DispatchQueue.main.async {
+            var snapshot = self.datasource.snapshot()
+            snapshot.appendItems(links.map(\.id.uuidString))
+            self.datasource.apply(snapshot, animatingDifferences: true)
+        }
     }
     
     func databaseController(_ databaseController: Database, didUpdate link: Link) {
         // TODO if I have order by recent and update a link it is not moved to the top
         // maybe I should just recall loadLinks() every time?
-        var snapshot = datasource.snapshot()
-        snapshot.reloadItems([link.id.uuidString])
-        datasource.apply(snapshot, animatingDifferences: true)
+        DispatchQueue.main.async {
+            var snapshot = self.datasource.snapshot()
+            snapshot.reloadItems([link.id.uuidString])
+            self.datasource.apply(snapshot, animatingDifferences: true)
+        }
     }
     
     func databaseController(_ databaseController: Database, didUpdate links: [Link]) {
-        var snapshot = datasource.snapshot()
-        snapshot.reloadItems(links.map(\.id.uuidString))
-        datasource.apply(snapshot, animatingDifferences: true)
+        DispatchQueue.main.async {
+            var snapshot = self.datasource.snapshot()
+            snapshot.reloadItems(links.map(\.id.uuidString))
+            self.datasource.apply(snapshot, animatingDifferences: true)
+        }
     }
     
     func databaseController(_ databaseController: Database, didDelete link: Link) {
-        var snapshot = datasource.snapshot()
-        snapshot.deleteItems([link.id.uuidString])
-        datasource.apply(snapshot, animatingDifferences: true)
+        DispatchQueue.main.async {
+            var snapshot = self.datasource.snapshot()
+            snapshot.deleteItems([link.id.uuidString])
+            self.datasource.apply(snapshot, animatingDifferences: true)
+        }
     }
     
     func databaseController(_ databaseController: Database, didDelete links: [Link]) {
-        var snapshot = datasource.snapshot()
-        snapshot.deleteItems(links.map(\.id.uuidString))
-        datasource.apply(snapshot, animatingDifferences: true)
+        DispatchQueue.main.async {
+            var snapshot = self.datasource.snapshot()
+            snapshot.deleteItems(links.map(\.id.uuidString))
+            self.datasource.apply(snapshot, animatingDifferences: true)
+        }
     }
 }

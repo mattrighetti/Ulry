@@ -56,6 +56,7 @@ public final class Database {
     
     weak var delegate: DatabaseControllerDelegate?
     
+    private var queue: FMDatabaseQueue!
     private(set) static var main = Database()
     private(set) static var external = Database(external: true)
     
@@ -77,9 +78,15 @@ public final class Database {
         }
         
         db = FMDatabase(url: url)
-        db.open()
+        
+        if !external {
+            self.queue = FMDatabaseQueue(path: db.databasePath)
+        }
+        
+        /// SQLite Flags: https://sqlite.org/c3ref/c_open_autoproxy.html
+        db.open(withFlags: 0x00000002|0x00010000)
+        
         print("User version is \(db.userVersion)")
-        //runMigrations_v2()
         runMigration_v1()
     }
     
@@ -97,6 +104,94 @@ public final class Database {
     }
     
     // MARK: - CREATE
+    
+    public func insertInQueue(_ link: Link) {
+        self.queue.inDatabase { db in
+            db.beginTransaction()
+            do {
+                // TODO ogImageUrl, ogDescription and ogTitle are not inserted here
+                try db.executeUpdate(
+                    """
+                    insert into link (id, url, starred, unread, color, created_at, updated_at)
+                    values (?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    values: [link.id, link.url, link.starred, link.unread, link.colorHex, link.createdAt, link.updatedAt]
+                )
+                
+                if let ogTitle = link.ogTitle {
+                    try db.executeUpdate(
+                        """
+                        update link
+                        set ogTitle = ?
+                        where id = ?
+                        """,
+                        values: [ogTitle, link.id]
+                    )
+                }
+                
+                if let ogDescription = link.ogDescription {
+                    try db.executeUpdate(
+                        """
+                        update link
+                        set ogDescription = ?
+                        where id = ?
+                        """,
+                        values: [ogDescription, link.id]
+                    )
+                }
+                
+                if let note = link.note {
+                    try db.executeUpdate(
+                        """
+                        update link
+                        set note = ?
+                        where id = ?
+                        """,
+                        values: [note, link.id]
+                    )
+                }
+                
+                if let imagePath = link.ogImageUrl {
+                    try db.executeUpdate(
+                        """
+                        update link
+                        set ogImageUrl = ?
+                        where id = ?
+                        """,
+                        values: [imagePath, link.id]
+                    )
+                }
+                
+                if let group = link.group {
+                    try db.executeUpdate(
+                        """
+                        insert into category_link(link_id, category_id)
+                        values (?, ?)
+                        """,
+                        values: [link.id, group.id]
+                    )
+                }
+                
+                if let tags = link.tags {
+                    for t in tags {
+                        try db.executeUpdate(
+                            """
+                            insert into tag_link(link_id, tag_id)
+                            values (?, ?)
+                            """,
+                            values: [link.id, t.id]
+                        )
+                    }
+                }
+                
+                db.commit()
+                delegate?.databaseController(self, didInsert: link)
+            } catch {
+                os_log(.error, "encountered error while inserting link, error was: %@", error as CVarArg)
+                db.rollback()
+            }
+        }
+    }
     
     public func insert(_ tag: Tag) -> Bool {
         self.db.beginTransaction()
@@ -210,14 +305,14 @@ public final class Database {
                 )
             }
             
-            if let base64Image = link.imageBase64Representation {
+            if let imagePath = link.ogImageUrl {
                 try self.db.executeUpdate(
                     """
                     update link
-                    set image = ?
+                    set ogImageUrl = ?
                     where id = ?
                     """,
-                    values: [base64Image, link.id]
+                    values: [imagePath, link.id]
                 )
             }
             
@@ -274,17 +369,6 @@ public final class Database {
                         where id = ?
                         """,
                         values: [note, link.id]
-                    )
-                }
-                
-                if let base64Image = link.imageBase64Representation {
-                    try self.db.executeUpdate(
-                        """
-                        update link
-                        set image = ?
-                        where id = ?
-                        """,
-                        values: [base64Image, link.id]
                     )
                 }
                 
@@ -779,6 +863,16 @@ public final class Database {
         }
     }
     
+    public func existsLink(with url: String) -> Bool {
+        do {
+            let res = try self.db.executeQuery("select * from link where url = ?", values: [url])
+            return res.next()
+        } catch {
+            os_log(.error, "could not check link existence: %@", error as CVarArg)
+            return false
+        }
+    }
+    
     public func getLink(with id: UUID) -> Link? {
         do {
             let res = try self.db.executeQuery(
@@ -791,14 +885,10 @@ public final class Database {
             )
             
             if res.next() {
-                if let link = Link(from: res) {
-                    // TODO horrible code
-                    link.group = getGroups(of: link).first
-                    link.tags = Set(getTags(of: link))
-                    return link
-                }
-                
-                return nil
+                guard let link = Link(from: res) else { return nil }
+                link.group = getGroups(of: link).first
+                link.tags = Set(getTags(of: link))
+                return link
             }
             
             return nil
@@ -939,6 +1029,74 @@ public final class Database {
     }
     
     // MARK: - UPDATE
+    
+    public func updateInQueue(_ link: Link) {
+        self.queue.inDatabase { db in
+            db.beginTransaction()
+            do {
+                try db.executeUpdate(
+                    """
+                    update link
+                    set url = ?, starred = ?, unread = ?, color = ?, note = ?,
+                        updated_at = ?, ogTitle = ?, ogImageUrl = ?, ogDescription = ?
+                    where id = ?
+                    """,
+                    values: [
+                        link.url, link.starred, link.unread,
+                        link.colorHex, link.note as Any, Int32(Date.now.timeIntervalSince1970),
+                        link.ogTitle as Any, link.ogImageUrl as Any, link.ogDescription as Any,
+                        link.id
+                    ]
+                )
+                
+                if let note = link.note {
+                    try db.executeUpdate("update link set note = ? where id = ?", values: [note, link.id])
+                }
+                
+                
+                // Delete all tags entries, the only
+                // source of truth is the current link
+                try db.executeUpdate(
+                    """
+                    delete from tag_link
+                    where link_id = ?
+                    """, values: [link.id]
+                )
+                
+                // Delete all groups entries, the only
+                // source of truth is the current link
+                try db.executeUpdate(
+                    """
+                    delete from category_link
+                    where link_id = ?
+                    """,
+                    values: [link.id]
+                )
+                
+                if let tags = link.tags {
+                    for t in tags {
+                        try db.executeUpdate("insert into tag_link (link_id, tag_id) values (?, ?)", values: [link.id, t.id])
+                    }
+                }
+                
+                if let group = link.group {
+                    try db.executeUpdate(
+                        """
+                        insert into category_link (link_id, category_id)
+                        values (?, ?)
+                        """,
+                        values: [link.id, group.id]
+                    )
+                }
+                
+                db.commit()
+                delegate?.databaseController(self, didUpdate: link)
+            } catch {
+                os_log(.error, "encountered error while updateing link, error was: %@", error as CVarArg)
+                self.db.rollback()
+            }
+        }
+    }
     
     public func update(_ link: Link) -> Bool {
         self.db.beginTransaction()
