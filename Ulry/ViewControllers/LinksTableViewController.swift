@@ -387,7 +387,7 @@ extension LinksTableViewController: DatabaseControllerDelegate {
         // maybe I should just recall loadLinks() every time?
         DispatchQueue.main.async {
             var snapshot = self.datasource.snapshot()
-            snapshot.reloadItems([link.id.uuidString])
+            snapshot.reconfigureItems([link.id.uuidString])
             self.datasource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -395,7 +395,7 @@ extension LinksTableViewController: DatabaseControllerDelegate {
     func databaseController(_ databaseController: Database, didUpdate links: [Link]) {
         DispatchQueue.main.async {
             var snapshot = self.datasource.snapshot()
-            snapshot.reloadItems(links.map(\.id.uuidString))
+            snapshot.reconfigureItems(links.map(\.id.uuidString))
             self.datasource.apply(snapshot, animatingDifferences: true)
         }
     }

@@ -324,7 +324,7 @@ extension HomeViewController: DatabaseControllerDelegate {
     func databaseController(_ databaseController: Database, didUpdate group: Group) {
         DispatchQueue.main.async {
             var snapshot = self.datasource.snapshot()
-            snapshot.reloadItems([.group(group)])
+            snapshot.reconfigureItems([.group(group)])
             self.datasource.apply(snapshot, animatingDifferences: true)
         }
     }
@@ -332,7 +332,7 @@ extension HomeViewController: DatabaseControllerDelegate {
     func databaseController(_ databaseController: Database, didUpdate tag: Tag) {
         DispatchQueue.main.async {
             var snapshot = self.datasource.snapshot()
-            snapshot.reloadItems([.tag(tag)])
+            snapshot.reconfigureItems([.tag(tag)])
             self.datasource.apply(snapshot, animatingDifferences: true)
         }
     }

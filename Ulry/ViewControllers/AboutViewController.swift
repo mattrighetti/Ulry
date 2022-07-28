@@ -18,7 +18,11 @@ class AboutViewController: UIStaticTableView {
         })))
         
         let website = CellContent(title: "Developer Website", icon: "network", accessoryType: .accessoryType(.disclosureIndicator, .action({
-            UIApplication.shared.open(URL(string: "https://mattrighetti.github.io")!)
+            UIApplication.shared.open(URL(string: "https://mattrighetti.com")!)
+        })))
+        
+        let feedback_page = CellContent(title: "Feedback Page", icon: "exclamationmark.bubble.fill", accessoryType: .accessoryType(.disclosureIndicator, .action({
+            UIApplication.shared.open(URL(string: "https://github.com/mattrighetti/Ulry")!)
         })))
         
         let privacyPolicy = CellContent(title: "Privacy Policy", icon: "hand.raised.fill", isEnabled: false, accessoryType: .accessoryType(.disclosureIndicator, .navigationController({
@@ -27,6 +31,6 @@ class AboutViewController: UIStaticTableView {
             return alert
         })))
         
-        cells = [[contact, website], [privacyPolicy]]
+        cells = [[contact, website, feedback_page], [privacyPolicy]]
     }
 }
