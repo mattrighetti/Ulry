@@ -1,0 +1,37 @@
+.footer {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    background-color: rgb(33, 33, 33);
+    padding: 10px 10px;
+}
+
+.footer p {
+    margin: 0;
+    padding: 10px 20px;
+    color: rgb(245, 245, 245);
+}
+
+@media only screen and (min-width: 920px) {
+    .footer {
+        text-align: center;
+        flex-direction: row;
+        background-color: rgb(10, 10, 10);
+        padding: 60px 10px;
+    }
+
+    .footer p {
+        margin: 0 auto;
+        padding: 10px 20px;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .footer {
+        background-color: rgb(10, 10, 10);
+    }
+
+    .footer p {
+        color: rgba(245, 245, 245, 0.9);
+    }
+}

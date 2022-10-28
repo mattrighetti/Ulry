@@ -1,0 +1,39 @@
+.hero {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 100px;
+    padding-top: 150px;
+    text-align: center;
+    padding: 10px;
+
+    font-family: apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.hero img {
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    margin-top: 150px;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    font-weight: 600;
+    color: rgb(33, 33, 33);
+}
+
+.hero p {
+    font-size: 1.2rem;
+    color: rgba(33, 33, 33, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+    .hero h1 {
+        color: rgb(245, 245, 245);
+    }
+
+    .hero p {
+        color: rgba(245, 245, 245, 0.2);
+    }
+}
