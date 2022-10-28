@@ -4,11 +4,10 @@ export default function Footer() {
     return (
         <>
             <div className={styles.footer}>
-                <p>r/UlryApp</p>
-                <p>GitHub</p>
-                <p>r/UlryAppBeta</p>
-                <p>TestFlight</p>
-                <p>Developer Website</p>
+                <p><a href='https://reddit.com/r/UlryApp'>r/UlryApp</a></p>
+                <p><a href='https://github.com/mattrighetti/Ulry'>GitHub</a></p>
+                <p><a href='https://testflight.apple.com/join/QJVKOkdK'>TestFlight</a></p>
+                <p><a href='https://mattrighetti.com'>Developer Website</a></p>
             </div>
         </>
     )
