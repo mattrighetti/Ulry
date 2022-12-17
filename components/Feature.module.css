@@ -5,7 +5,7 @@
     padding: 10px 0px;
     margin: 30px 10px;
     background: #42424509;
-    max-width: 1300px;
+    max-width: 1500px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -16,6 +16,10 @@
 
 .feature img {
     margin: 10px auto;
+    max-width: 300px;
+}
+
+.feature .larger img {
     max-width: 300px;
 }
 
