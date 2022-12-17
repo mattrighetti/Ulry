@@ -53,13 +53,12 @@
     .feature {
         padding: 100px 30px;
         margin: 30px auto;
-        max-width: 920px;
+        max-width: 1000px;
         flex-direction: row;
     }
 
     .feature img {
         margin: 10px auto;
-        max-width: 400px;
     }
 
     .text {

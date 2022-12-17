@@ -19,7 +19,7 @@ const Home: NextPage = () => {
             <Feature img="/images/list-image.png" title="All in a single place" body="Find all your favourite links in a single place. You can order your links, you can star them and you can also check which you've read and which you haven't and much more..." odd={false} />
             <Feature img="/images/detail-image.png" title="Need more details?" body="Ulry can show you more info about a particular link, you can even add notes to every single one so that you won't forget what you wanted to do with it." odd={true} />
             <Feature img="/images/add-group-image.png" title="Highly customisable" body="Everything that you see in Ulry is under your control, you can change group icons and colors, same goes for tags." odd={false} />
-            <Feature img="/images/url-redirector-image.png" title="Redirections" body="Are you tired of paywalled articles or website that require you to sign in? Ulry got you covered! With redirections you can tell Ulry which websites you would like to be redirected to for specific websites" odd={true} />
+            <Feature img="/images/url-redirector-image.png" title="Redirections" body="Are you tired of paywalled articles or websites that require you to sign in? Ulry got you covered! With redirections you can tell Ulry which websites you would like to be redirected to for specific websites" odd={true} />
             <Footer />
         </>
     )
