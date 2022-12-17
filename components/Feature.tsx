@@ -31,7 +31,7 @@ function FlipInnerFeature({ img, title, body }) {
         <div className={styles.text}>
             <h1>{title}</h1>
             <p>{body}</p>
-        </div> 
+        </div>
         <img src={img} />
         </>
     )

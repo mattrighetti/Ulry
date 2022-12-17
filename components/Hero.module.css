@@ -5,8 +5,6 @@
     padding-top: 150px;
     text-align: center;
     padding: 10px;
-
-    font-family: apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .hero img {
@@ -14,17 +12,17 @@
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 10px;
-    margin-top: 150px;
+    margin-top: 100px;
 }
 
 .hero h1 {
-    font-size: 4rem;
-    font-weight: 600;
+    font-size: 4.4rem;
+    font-weight: 900;
     color: rgb(33, 33, 33);
 }
 
 .hero p {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: rgba(33, 33, 33, 0.3);
 }
 
