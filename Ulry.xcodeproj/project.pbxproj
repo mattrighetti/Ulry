@@ -268,6 +268,7 @@
 		5F5D1FFF29ED8CC0006F0096 /* +UICollectionLayoutListConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UICollectionLayoutListConfiguration.swift"; sourceTree = "<group>"; };
 		5F5D200129ED9FE7006F0096 /* UlryInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UlryInfoViewController.swift; sourceTree = "<group>"; };
 		5F5ED8F329450A1000CE0E9B /* UlryShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = UlryShareExtension.entitlements; sourceTree = "<group>"; };
+		5F60B90E2A65F8A700A4EABB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		5F6EEEB429D1C226002BFB28 /* WeeklyAddedLinksGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyAddedLinksGraph.swift; sourceTree = "<group>"; };
 		5F7A398129A771E70068CD93 /* +UIActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UIActivityViewController.swift"; sourceTree = "<group>"; };
 		5F7C2DBF29E1631B003CFAD0 /* +Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+Data.swift"; sourceTree = "<group>"; };
@@ -603,6 +604,7 @@
 		C9F4F8D52789C28A00887A3E = {
 			isa = PBXGroup;
 			children = (
+				5F60B90E2A65F8A700A4EABB /* README.md */,
 				C9F4F8FD2789C2BD00887A3E /* Shared */,
 				C9F4F8E02789C28A00887A3E /* Ulry */,
 				5FC57C552919E23000DD9B1A /* LinksMetadata */,
