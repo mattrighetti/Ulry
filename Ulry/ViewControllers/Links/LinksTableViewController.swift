@@ -154,6 +154,7 @@ class LinksTableViewController: UIViewController {
             let cell = tableview.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! LinkCell
             cell.link = link
             cell.action = { [unowned self] in self.presentFloatingInfoViewController(for: link) }
+            cell.layoutIfNeeded()
             return cell
         }
         
