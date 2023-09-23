@@ -1,5 +1,13 @@
 [
     {
+        "version": "1.0.5",
+        "description": "Fixed bug that caused a bad rendering of the links list"
+    },
+    {
+        "version": "1.0.4",
+        "description": "Bug fixes and improvements, plus, Ulry is now open source! You can find it in Settings > About > UlryApp GitHub"
+    },
+    {
         "version": "1.0.0",
         "description": "Welcome to the very first version of Ulry 🎉"
     }

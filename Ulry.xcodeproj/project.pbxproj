@@ -1160,7 +1160,7 @@
 				INFOPLIST_FILE = UlryShareExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = UlryShareExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 Mattia Righetti. All rights reserved.";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1188,7 +1188,7 @@
 				INFOPLIST_FILE = UlryShareExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = UlryShareExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 Mattia Righetti. All rights reserved.";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1330,6 +1330,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.UlryTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1351,6 +1352,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H89RFW5UZ6;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattrighetti.UlryTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
