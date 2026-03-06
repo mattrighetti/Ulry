@@ -34,28 +34,30 @@ class HomeCollectionView: UIViewController {
 
     lazy var addTagButton: UIButton = {
         let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 20, weight: .bold)
-        
+
         var configuration = UIButton.Configuration.plain()
         configuration.baseForegroundColor = .systemBlue
         configuration.attributedTitle = AttributedString(NSAttributedString(string: "Add tag", attributes: [.font: UIFont.rounded(ofSize: 14, weight: .bold)]))
         configuration.image = UIImage(systemName: "plus.circle.fill", withConfiguration: imageConfiguration)?.withTintColor(.systemBlue)
         configuration.imagePadding = 5.0
         configuration.imagePlacement = .trailing
-        
+
         let button = UIButton(configuration: configuration, primaryAction: UIAction { [unowned self] _ in self.addTagPressed() })
+        button.sizeToFit()
         return button
     }()
-    
+
     lazy var addGroupButton: UIButton = {
         let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 20, weight: .bold)
-        
+
         var configuration = UIButton.Configuration.plain()
         configuration.baseForegroundColor = .systemTeal
         configuration.attributedTitle = AttributedString(NSAttributedString(string: "Add group", attributes: [.font: UIFont.rounded(ofSize: 14, weight: .bold)]))
         configuration.image = UIImage(systemName: "folder.fill.badge.plus", withConfiguration: imageConfiguration)?.withTintColor(.systemTeal)
         configuration.imagePadding = 7.0
-        
+
         let button = UIButton(configuration: configuration, primaryAction: UIAction { [unowned self] _ in self.addGroupPressed() })
+        button.sizeToFit()
         return button
     }()
     
@@ -86,7 +88,11 @@ class HomeCollectionView: UIViewController {
     }()
     
     private let impactFeedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
-    lazy var activityIndicator =  UIActivityIndicatorView(style: .medium)
+    lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
 
     // MARK: - CollectionView & Layout
     
@@ -189,13 +195,7 @@ class HomeCollectionView: UIViewController {
         navigationController?.isToolbarHidden = false
         navigationItem.title = "Home"
 
-        setToolbarItems([
-            UIBarButtonItem(customView: addGroupButton),
-            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil),
-            UIBarButtonItem(customView: activityIndicator),
-            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil),
-            UIBarButtonItem(customView: addTagButton)
-        ], animated: false)
+        updateToolbar(fetching: false)
                 
         navigationItem.rightBarButtonItems = [addLinkButton]
         navigationItem.leftBarButtonItems = [settingsButton]
@@ -250,12 +250,26 @@ class HomeCollectionView: UIViewController {
         collectionView.frame = view.bounds
     }
     
+    private func updateToolbar(fetching: Bool) {
+        var items: [UIBarButtonItem] = [
+            UIBarButtonItem(customView: addGroupButton),
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+        ]
+        if fetching {
+            activityIndicator.startAnimating()
+            items.append(UIBarButtonItem(customView: activityIndicator))
+            items.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
+        }
+        items.append(UIBarButtonItem(customView: addTagButton))
+        setToolbarItems(items, animated: false)
+    }
+
     @objc private func showFetching() {
-        activityIndicator.startAnimating()
+        updateToolbar(fetching: true)
     }
 
     @objc private func stopFetching() {
-        activityIndicator.stopAnimating()
+        updateToolbar(fetching: false)
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
