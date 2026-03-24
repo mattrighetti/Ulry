@@ -9,108 +9,55 @@
 import Links
 import SwiftUI
 
-fileprivate var maxWidth: CGFloat = {
-    if UIDevice.current.userInterfaceIdiom == .pad {
-        return 600.0
-    } else {
-        return UIScreen.screenWidth - 30
-    }
-}()
-
-fileprivate var maxHeight: CGFloat = {
-    if UIDevice.current.userInterfaceIdiom == .pad {
-        return 800.0
-    } else {
-        return UIScreen.screenHeight * 2 / 3
-    }
-}()
-
-fileprivate var imageMaxHeight: CGFloat = {
-    if UIDevice.current.userInterfaceIdiom == .pad {
-        return 400.0
-    } else {
-        return 300.0
-    }
-}()
-
 struct LinkDetailView: View {
-    @Environment(\.dismiss) var dismiss
-    @State private var favicon: UIImage? = nil
-    
     var link: Links.Link
 
     var body: some View {
         ScrollView(showsIndicators: false) {
-            VStack {
-                VStack {
-                    if
-                        let imgData = ImageStorage.shared.getImageData(for: link),
-                        let uiImage = UIImage(data: imgData)
-                    {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(maxHeight: imageMaxHeight)
-
-                    } else {
-                        HStack {
-                            Spacer()
-                            Text(link.hostname)
-                                .font(.system(size: 18.0, weight: .semibold, design: .rounded))
-                            Spacer()
-                        }
-                        .foregroundColor(.white)
-                        .frame(height: 200)
-                        .background(link.color)
-
-                    }
-                }.overlay(alignment: .topTrailing) {
-                    Button(action: {
-                        dismiss()
-                    }, label: {
-                        Label("", systemImage: "xmark.circle.fill")
-                            .font(.system(size: 25))
-                            .foregroundColor(Color.gray.opacity(0.5))
-                    })
-                    .padding(.top, 15)
-                    .padding(.leading, 25)
-                    .padding(.trailing, 5)
-                }
-
-
-                VStack(alignment: .leading) {
-                    FaviconHostnameView(hostname: link.hostname)
-                    LinkMainInfoView()
-                }
-                .padding(.top, 15)
-
-
-                if let note = link.note, !note.isEmpty {
-                    Divider()
-                        .padding(.vertical, 20)
-
+            VStack(spacing: 0) {
+                if
+                    let imgData = ImageStorage.shared.getImageData(for: link),
+                    let uiImage = UIImage(data: imgData)
+                {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(maxWidth: .infinity, maxHeight: 250)
+                        .clipped()
+                } else {
                     HStack {
+                        Spacer()
+                        Text(link.hostname)
+                            .font(.system(size: 18.0, weight: .semibold, design: .rounded))
+                        Spacer()
+                    }
+                    .foregroundColor(.white)
+                    .frame(height: 160)
+                    .background(link.color)
+                }
+
+                VStack(alignment: .leading, spacing: 12) {
+                    FaviconHostnameView(hostname: link.hostname)
+
+                    LinkMainInfoView()
+
+                    if let note = link.note, !note.isEmpty {
+                        Divider()
+
                         VStack(alignment: .leading) {
                             Text(LocalizedStringKey(stringLiteral: note))
                                 .font(.body)
                                 .foregroundColor(.secondary)
                         }
-                        Spacer()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
                     }
-                    .padding()
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(10)
-                    .padding(.horizontal, 10)
                 }
-
-                Spacer()
+                .padding()
             }
-            .padding(.bottom, 40)
-            .cornerRadius(35)
         }
-        .background(UITraitCollection.current.userInterfaceStyle == .dark ? Color(uiColor: UIColor(named: "bg-color")!) : Color.white)
-        .cornerRadius(35)
-        .frame(maxWidth: maxWidth, maxHeight: maxHeight)
     }
     
     @ViewBuilder
@@ -132,7 +79,6 @@ struct LinkDetailView: View {
                     .lineLimit(5)
             }
         }
-        .padding(.horizontal)
     }
 }
 

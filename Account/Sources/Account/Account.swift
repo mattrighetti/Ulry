@@ -126,6 +126,10 @@ public final class Account {
         return try database.fetchLinkIDs(in: tag, order: order)
     }
 
+    public func fetchLinkIDs(in tags: [Tag], order: OrderBy) throws -> [String] {
+        return try database.fetchLinkIDs(in: tags, order: order)
+    }
+
     public func fetchAllLinkIDs(order: OrderBy) throws -> [String] {
         return try database.fetchAllLinkIDs(order: order)
     }

@@ -8,57 +8,76 @@
 
 import UIKit
 
-
-
 class MainCategoryCollectionViewCell: BouncyCollectionViewCell {
-    
-    lazy var textLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.rounded(ofSize: 17, weight: .semibold)
-        label.textColor = .label
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
+
+    private let gradientLayer = CAGradientLayer()
+
     lazy var sfsymbolImage: UIImageView = {
         let imgview = UIImageView()
-        imgview.layer.cornerRadius = 10
-        imgview.layer.backgroundColor = UIColor.clear.cgColor
-        imgview.tintColor = .label
+        imgview.tintColor = .white
+        imgview.contentMode = .scaleAspectFit
         imgview.translatesAutoresizingMaskIntoConstraints = false
         return imgview
     }()
 
+    lazy var textLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.rounded(ofSize: 15, weight: .bold)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        contentView.addSubview(textLabel)
-        contentView.addSubview(sfsymbolImage)
 
-        layer.borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
-        layer.borderWidth = 2
-        layer.cornerRadius = 15
-        clipsToBounds = true
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 1)
+        gradientLayer.cornerRadius = 22
+        contentView.layer.insertSublayer(gradientLayer, at: 0)
+        contentView.layer.cornerRadius = 22
+        contentView.layer.masksToBounds = true
+
+        contentView.addSubview(sfsymbolImage)
+        contentView.addSubview(textLabel)
 
         NSLayoutConstraint.activate([
-            sfsymbolImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            sfsymbolImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            
-            textLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
-            textLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
+            sfsymbolImage.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            sfsymbolImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: -10),
+            sfsymbolImage.widthAnchor.constraint(equalToConstant: 34),
+            sfsymbolImage.heightAnchor.constraint(equalToConstant: 34),
+
+            textLabel.topAnchor.constraint(equalTo: sfsymbolImage.bottomAnchor, constant: 8),
+            textLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            textLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
         ])
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        gradientLayer.frame = contentView.bounds
+        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: 22).cgPath
+    }
+
     func update(with category: Category) {
-        backgroundColor = category.cellContent.backgroundColor
+        let baseColor = category.cellContent.backgroundColor
+        gradientLayer.colors = baseColor.gradientColors
+
+        layer.shadowColor = baseColor.cgColor
+        layer.shadowOpacity = 0.40
+        layer.shadowOffset = CGSize(width: 0, height: 6)
+        layer.shadowRadius = 12
+
         textLabel.text = category.cellContent.title
-        
+
         if let icon = category.cellContent.icon {
-            sfsymbolImage.image = UIImage(systemName: icon)
+            let config = UIImage.SymbolConfiguration(pointSize: 28, weight: .semibold)
+            sfsymbolImage.image = UIImage(systemName: icon, withConfiguration: config)
         }
     }
 

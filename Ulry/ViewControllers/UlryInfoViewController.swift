@@ -9,197 +9,198 @@
 import UIKit
 import SwiftUI
 import Account
-
-fileprivate enum DataKind: Hashable {
-    case data(String, String)
-    case dataWithImage(String,String,String)
-    case graph([LinkAddedPerDay])
-}
+import LinksDatabase
 
 final class UlryInfoViewController: UIViewController {
 
     var account: Account!
 
-    private var collectionView: UICollectionView = {
-        let layout = UICollectionViewCompositionalLayout { (sectionIndex: Int, layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
-            var configuration: UICollectionLayoutListConfiguration
-
-            switch sectionIndex {
-            case 0:
-                configuration = UICollectionLayoutListConfiguration.withCustomBackground(appearance: .insetGrouped)
-                configuration.headerMode = .supplementary
-                configuration.footerMode = .none
-            case 1:
-                configuration = UICollectionLayoutListConfiguration.withCustomBackground(appearance: .insetGrouped)
-                configuration.headerMode = .supplementary
-                configuration.footerMode = .supplementary
-            case 2:
-                configuration = UICollectionLayoutListConfiguration.withCustomBackground(appearance: .plain)
-                configuration.showsSeparators = false
-                configuration.headerMode = .none
-                configuration.footerMode = .none
-            default:
-                fatalError()
-            }
-
-            return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: layoutEnvironment)
-        }
-
-        let collectionview = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionview.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
-        collectionview.translatesAutoresizingMaskIntoConstraints = false
-        return collectionview
-    }()
-
-    private lazy var datasource: UICollectionViewDiffableDataSource<Int, DataKind> = {
-
-        // MARK: - Cell registrations
-
-        let aboutCellConfiguration = UICollectionView.CellRegistration<UICollectionViewCellCustomBackground, (String, String)> { cell, indexPath, tuple in
-            var configuration = UIListContentConfiguration.valueCell()
-            configuration.text = tuple.0
-            configuration.secondaryText = tuple.1
-            configuration.prefersSideBySideTextAndSecondaryText = true
-            cell.contentConfiguration = configuration
-        }
-
-        let storageCellConfiguration = UICollectionView.CellRegistration<UICollectionViewCellCustomBackground, (String, String, String)> { [weak self] cell, indexPath, tuple in
-            var configuration = UIListContentConfiguration.valueCell()
-            configuration.text = tuple.1
-            configuration.secondaryText = tuple.2
-            configuration.prefersSideBySideTextAndSecondaryText = true
-            configuration.image = UIImage(systemName: tuple.0)
-            configuration.imageProperties.tintColor = .label
-
-            cell.contentConfiguration = configuration
-        }
-
-        let graphCellConfiguration = UICollectionView.CellRegistration<SwiftUICollectionViewCell, [LinkAddedPerDay]> { [weak self] cell, indexPath, data in
-            cell.host(UIHostingController(rootView: WeeklyAddedLinksGraph(sevenDaysStats: data)))
-        }
-
-        var datasource = UICollectionViewDiffableDataSource<Int, DataKind>(collectionView: collectionView) { collectionView, indexPath, dataKind in
-            switch dataKind {
-            case .data(let title, let value):
-                return collectionView.dequeueConfiguredReusableCell(using: aboutCellConfiguration, for: indexPath, item: (title, value))
-            case .dataWithImage(let title, let value, let image):
-                return collectionView.dequeueConfiguredReusableCell(using: storageCellConfiguration, for: indexPath, item: (title, value, image))
-            case .graph(let data):
-                return collectionView.dequeueConfiguredReusableCell(using: graphCellConfiguration, for: indexPath, item: data)
-            }
-        }
-
-        let headerRegistration: UICollectionView.SupplementaryRegistration<UICollectionViewListCell> = .init(elementKind: UICollectionView.elementKindSectionHeader) { [unowned self] supplementaryView, _, indexPath in
-            var config = supplementaryView.defaultContentConfiguration()
-            config.textProperties.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-            config.textProperties.color = .secondaryLabel
-
-            switch indexPath.section {
-            case 0:
-                config.text = "About links"
-            case 1:
-                config.text = "Storage info"
-            default:
-                fatalError("cannot run header registration for this indexPath: \(indexPath)")
-            }
-
-            supplementaryView.contentConfiguration = config
-        }
-
-        let footerRegistration: UICollectionView.SupplementaryRegistration<UICollectionViewListCell> = .init(elementKind: UICollectionView.elementKindSectionFooter) { [unowned self] supplementaryView, _, indexPath in
-            var config = supplementaryView.defaultContentConfiguration()
-            config.textProperties.font = UIFont.preferredFont(for: .caption1, weight: .regular)
-            config.textProperties.color = .secondaryLabel
-
-            switch indexPath.section {
-            case 1:
-                config.text = "Storage info could be different from the app's occupied space that you see if you navigate to Settings > iPhone/iPad Storage."
-            default:
-                fatalError("cannot run header registration for this indexPath: \(indexPath)")
-            }
-
-            supplementaryView.contentConfiguration = config
-        }
-
-        datasource.supplementaryViewProvider = { [weak self] cv, kind, indexPath -> UICollectionReusableView? in
-            if kind == UICollectionView.elementKindSectionHeader {
-                return cv.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
-            } else {
-                return cv.dequeueConfiguredReusableSupplementary(using: footerRegistration, for: indexPath)
-            }
-        }
-
-        return datasource
-    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Info"
-
+        navigationItem.title = "Stats"
         navigationItem.largeTitleDisplayMode = .never
 
-        collectionView.delegate = self
-        view.addSubview(collectionView)
+        let stats = (try? account.fetchStats()) ?? []
+        let weeklyData = computeWeeklyData()
+        let dbSize = account.getDatabaseSize()
+        let imagesSize = ImageStorage.shared.getTotalImageOccupiedStorage()
 
-        setupDatasource()
+        let hostingVC = UIHostingController(rootView: InfoView(
+            stats: stats,
+            databaseSize: dbSize,
+            imagesSize: imagesSize,
+            weeklyData: weeklyData
+        ))
+        hostingVC.view.backgroundColor = UIColor(named: "list-bg-color")
+
+        addChild(hostingVC)
+        hostingVC.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(hostingVC.view)
+        NSLayoutConstraint.activate([
+            hostingVC.view.topAnchor.constraint(equalTo: view.topAnchor),
+            hostingVC.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            hostingVC.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            hostingVC.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
+        hostingVC.didMove(toParent: self)
     }
 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        collectionView.frame = view.bounds
-    }
-
-    private func setupDatasource() {
-        var snapshot = NSDiffableDataSourceSnapshot<Int, DataKind>()
-        snapshot.appendSections([0,1,2])
-
-        let aboutStats = try? account.fetchStats()
-        let lastSevenDays = getvalues()
-
-        snapshot.appendItems([
-            .dataWithImage("cylinder.split.1x2.fill", "Database", account.getDatabaseSize()),
-            .dataWithImage("photo.on.rectangle", "Images", ImageStorage.shared.getTotalImageOccupiedStorage())
-        ], toSection: 1)
-
-        if let aboutStats = aboutStats {
-            snapshot.appendItems(aboutStats.map { .data($0.0.rawValue, String($0.1)) }, toSection: 0)
-        }
-
-        snapshot.appendItems([.graph(lastSevenDays)], toSection: 2)
-
-        datasource.apply(snapshot, animatingDifferences: false)
-    }
-
-    private func getvalues() -> [LinkAddedPerDay] {
+    private func computeWeeklyData() -> [LinkAddedPerDay] {
         guard let dbResult = try? account.fetchLinksAddedInLastSevenDays() else { return [] }
-        var dates = lastSevenDaysStrings().map({ LinkAddedPerDay(date: $0, value: 0) })
-
+        var dates = lastSevenDaysStrings().map { LinkAddedPerDay(date: $0, value: 0) }
         for (j, date) in dates.enumerated() {
             guard let i = dbResult.firstIndex(where: { $0.0 == date.date }) else { continue }
             dates[j].value += dbResult[i].1
         }
-
         return dates
     }
 
     private func lastSevenDaysStrings() -> [String] {
         let calendar = Calendar.current
         let today = Date()
-        let sevenDaysAgo = calendar.date(byAdding: .day, value: 0, to: today)!
         var dates: [String] = []
-
         for i in 0..<7 {
-            let date = calendar.date(byAdding: .day, value: -i, to: sevenDaysAgo)!
+            let date = calendar.date(byAdding: .day, value: -i, to: today)!
             dates.append(date.getFormattedDate(format: "YYYY-MM-dd"))
         }
-
         return dates.reversed()
     }
 }
 
-extension UlryInfoViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return false
+// MARK: - SwiftUI Info View
+
+private struct InfoView: View {
+    let stats: [DbStat]
+    let databaseSize: String
+    let imagesSize: String
+    let weeklyData: [LinkAddedPerDay]
+
+    private let columns = [GridItem(.flexible()), GridItem(.flexible())]
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 6) {
+                sectionHeader("Overview")
+
+                LazyVGrid(columns: columns, spacing: 12) {
+                    ForEach(Array(stats.enumerated()), id: \.offset) { _, stat in
+                        StatCard(stat: stat)
+                    }
+                }
+                .padding(.bottom, 10)
+
+                sectionHeader("This Week")
+
+                WeeklyAddedLinksGraph(sevenDaysStats: weeklyData)
+                    .padding(.bottom, 10)
+
+                sectionHeader("Storage")
+
+                VStack(spacing: 0) {
+                    StorageRow(icon: "cylinder.split.1x2.fill", title: "Database", value: databaseSize)
+                    Divider().padding(.leading, 16)
+                    StorageRow(icon: "photo.on.rectangle", title: "Images", value: imagesSize)
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .padding(.bottom, 6)
+
+                Text("Storage figures may differ from the occupied space shown in Settings > iPhone Storage.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 4)
+                    .padding(.bottom, 24)
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 12)
+        }
+    }
+
+    @ViewBuilder
+    private func sectionHeader(_ text: String) -> some View {
+        Text(text.uppercased())
+            .font(.system(size: 12, weight: .semibold))
+            .foregroundStyle(.secondary)
+            .padding(.horizontal, 4)
+            .padding(.top, 8)
+            .padding(.bottom, 2)
+    }
+}
+
+private struct StatCard: View {
+    let stat: DbStat
+
+    private var gradientColors: [Color] {
+        switch stat.0 {
+        case .countAll:
+            return [Color(decimalRed: 142, green: 118, blue: 212), Color(decimalRed: 88, green: 66, blue: 165)]
+        case .countUnread:
+            return [Color(decimalRed: 212, green: 140, blue: 76), Color(decimalRed: 172, green: 88, blue: 44)]
+        case .countStarred:
+            return [Color(decimalRed: 228, green: 116, blue: 86), Color(decimalRed: 188, green: 66, blue: 66)]
+        case .countArchived:
+            return [Color(decimalRed: 128, green: 133, blue: 158), Color(decimalRed: 88, green: 92, blue: 116)]
+        }
+    }
+
+    private var icon: String {
+        switch stat.0 {
+        case .countAll:      return "tray.full.fill"
+        case .countUnread:   return "circle.fill"
+        case .countStarred:  return "star.fill"
+        case .countArchived: return "archivebox.fill"
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Image(systemName: icon)
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundStyle(.white.opacity(0.85))
+
+            Spacer()
+
+            Text("\(stat.1)")
+                .font(.system(size: 32, weight: .bold, design: .rounded))
+                .foregroundStyle(.white)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+
+            Text(stat.0.rawValue)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(.white.opacity(0.72))
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, minHeight: 108, alignment: .leading)
+        .background(
+            LinearGradient(
+                colors: gradientColors,
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .shadow(color: gradientColors[1].opacity(0.38), radius: 10, y: 5)
+    }
+}
+
+private struct StorageRow: View {
+    let icon: String
+    let title: String
+    let value: String
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 15))
+                .foregroundStyle(.secondary)
+                .frame(width: 28)
+            Text(title)
+            Spacer()
+            Text(value)
+                .foregroundStyle(.secondary)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 13)
+        .background(Color("list-cell-bg-color"))
     }
 }

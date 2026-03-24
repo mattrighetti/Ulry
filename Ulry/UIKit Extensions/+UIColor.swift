@@ -69,6 +69,15 @@ extension UIColor {
         return hex
     }
     
+    /// Returns a two-stop gradient [lighter, darker] derived from this color.
+    var gradientColors: [CGColor] {
+        var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+        let top = UIColor(hue: h, saturation: max(0, s - 0.12), brightness: min(1, b + 0.18), alpha: a)
+        let bottom = UIColor(hue: h, saturation: s > 0 ? min(1, s + 0.06) : 0, brightness: max(0, b - 0.15), alpha: a)
+        return [top.cgColor, bottom.cgColor]
+    }
+
     public static var random: UIColor {
         let randomHex = self.randomHexColorCode()
         return UIColor(hex: randomHex)!

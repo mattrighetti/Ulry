@@ -13,7 +13,6 @@ import SwiftUI
 import SafariServices
 import LinksDatabase
 import Account
-import Lottie
 import LinksMetadata
 
 private var reuseIdentifier = "LinkCell"
@@ -24,7 +23,9 @@ class LinksTableViewController: UIViewController {
     var snapshotCache: NSDiffableDataSourceSnapshot<Int, String>!
     
     var category: Category?
-    
+
+    var selectedFilterTags: Set<Tag> = []
+
     var orderBy: OrderBy {
         get {
             if let orderByValue: String = UserDefaultsWrapper().optionalGet(key: .orderBy) {
@@ -56,10 +57,20 @@ class LinksTableViewController: UIViewController {
         return view
     }()
     
-    var filterButton: UIBarButtonItem {
+    var sortButton: UIBarButtonItem {
         return UIBarButtonItem(
             image: UIImage(systemName: "line.3.horizontal.decrease.circle"),
             menu: filterMenu
+        )
+    }
+
+    var tagFilterButton: UIBarButtonItem {
+        let imageName = selectedFilterTags.isEmpty ? "tag" : "tag.fill"
+        return UIBarButtonItem(
+            image: UIImage(systemName: imageName),
+            style: .plain,
+            target: self,
+            action: #selector(presentTagFilter)
         )
     }
 
@@ -224,7 +235,13 @@ class LinksTableViewController: UIViewController {
         }
         
         if let uuids = uuids {
-            snapshot.appendItems(uuids, toSection: 0)
+            if !selectedFilterTags.isEmpty {
+                let tagFilteredIDs = (try? account.fetchLinkIDs(in: Array(selectedFilterTags), order: orderBy)) ?? []
+                let tagFilteredSet = Set(tagFilteredIDs)
+                snapshot.appendItems(uuids.filter { tagFilteredSet.contains($0) }, toSection: 0)
+            } else {
+                snapshot.appendItems(uuids, toSection: 0)
+            }
         }
 
         if snapshotCache == nil {
@@ -276,11 +293,8 @@ class LinksTableViewController: UIViewController {
     // MARK: - ViewControllers Presentations
     
     private func onEditPressed(link: Links.Link) {
-        let view = AddLinkViewController()
-        view.account = account
-        view.configuration = .edit(link)
-        
-        let vc = UINavigationController(rootViewController: view)
+        let view = AddLinkView(account: account, configuration: .edit(link))
+        let vc = UIHostingController(rootView: view)
         present(vc, animated: true)
     }
 
@@ -473,10 +487,38 @@ extension LinksTableViewController: UITableViewDelegate {
     private func setRightBarButtonItems(animated: Bool) {
         var barButtonItems = [editButtonItem]
         if !isEditing {
-            barButtonItems.append(filterButton)
+            barButtonItems.append(sortButton)
+            barButtonItems.append(tagFilterButton)
         }
-        
+
         navigationItem.setRightBarButtonItems(barButtonItems, animated: animated)
+    }
+
+    @objc private func presentTagFilter() {
+        guard let allTags = try? account.fetchAllTags(), !allTags.isEmpty else { return }
+
+        let viewModel = TagFilterViewModel(allTags: allTags, selectedTags: selectedFilterTags)
+        var filterView = TagFilterView(viewModel: viewModel)
+
+        let hostingController = UIHostingController(rootView: filterView)
+
+        viewModel.onApply = { [weak self] tags in
+            guard let self else { return }
+            self.selectedFilterTags = tags
+            self.setRightBarButtonItems(animated: false)
+            self.loadLinks()
+        }
+        filterView.dismiss = { [weak hostingController] in
+            hostingController?.dismiss(animated: true)
+        }
+
+        hostingController.rootView = filterView
+
+        if let sheet = hostingController.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]
+            sheet.prefersGrabberVisible = true
+        }
+        present(hostingController, animated: true)
     }
 }
 
