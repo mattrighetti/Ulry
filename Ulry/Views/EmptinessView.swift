@@ -7,10 +7,9 @@
 //
 
 import UIKit
-import Lottie
 
 class EmptinessView: UIView {
-    
+
     lazy var vstack: UIStackView = {
         let vstack = UIStackView()
         vstack.axis = .vertical
@@ -20,50 +19,49 @@ class EmptinessView: UIView {
         vstack.translatesAutoresizingMaskIntoConstraints = false
         return vstack
     }()
-    
-    lazy var animationView: LottieAnimationView = {
-        let view = LottieAnimationView(asset: "astronaut")
+
+    lazy var iconView: UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(systemName: "tray.2")
         view.contentMode = .scaleAspectFit
-        view.loopMode = .loop
-        view.animationSpeed = 1
+        view.tintColor = .systemGray3
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
+
     lazy var emptinessLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.preferredFont(for: .title3, weight: .bold)
         label.text = "Nothing to see here"
         return label
     }()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         addSubview(vstack)
-        
-        vstack.addArrangedSubview(animationView)
+
+        vstack.addArrangedSubview(iconView)
         vstack.addArrangedSubview(emptinessLabel)
-        
-        let hc = animationView.heightAnchor.constraint(equalToConstant: 300)
+
+        let hc = iconView.heightAnchor.constraint(equalToConstant: 100)
         hc.priority = .init(999)
         hc.isActive = true
-        
-        let wc = animationView.widthAnchor.constraint(equalToConstant: 300)
+
+        let wc = iconView.widthAnchor.constraint(equalToConstant: 100)
         wc.priority = .init(999)
         wc.isActive = true
-        
+
         let lc = emptinessLabel.heightAnchor.constraint(equalToConstant: 40)
         lc.priority = .init(999)
         lc.isActive = true
-        
+
         NSLayoutConstraint.activate([
             vstack.centerYAnchor.constraint(equalTo: centerYAnchor),
             vstack.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
-        
-        animationView.play()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

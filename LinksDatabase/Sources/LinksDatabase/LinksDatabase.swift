@@ -47,6 +47,10 @@ public final class LinksDatabase {
         return try await linksTable.fetchLinkIDsAsync(in: tag, order: order)
     }
 
+    public func fetchLinkIDs(in tags: [Tag], order: OrderBy) throws -> [String] {
+        return try linksTable.fetchLinkIDs(in: tags, order: order)
+    }
+
     // MARK: Links Unread
 
     public func fetchUnreadLinkIDs(order: OrderBy) throws -> [String] {

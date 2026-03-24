@@ -8,18 +8,24 @@
 
 import Links
 import UIKit
+import SwiftUI
 import Account
 
 protocol MultipleSelectionListDelegate: AnyObject {
     func multipleselectionlist(_ multipleselectionlist: MultipleSelectionList, didUpdateSelectedTags tags: [Tag])
 }
 
+    private enum ListItem: Hashable {
+        case tag(Tag)
+        case button(String)
+    }
+
 class MultipleSelectionList: UIViewController {
     var account: Account!
 
     var selectedTags = Set<Tag>()
     weak var delegate: MultipleSelectionListDelegate?
-    
+
     private lazy var collectionview: UICollectionView = {
         let config = UICollectionLayoutListConfiguration(appearance: .grouped)
         let layout = UICollectionViewCompositionalLayout.list(using: config)
@@ -28,37 +34,38 @@ class MultipleSelectionList: UIViewController {
         collectionview.translatesAutoresizingMaskIntoConstraints = false
         return collectionview
     }()
-    
-    private lazy var datasource: UICollectionViewDiffableDataSource<Int, AnyHashable> = {
+
+    private lazy var datasource: UICollectionViewDiffableDataSource<Int, ListItem> = {
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Tag> { cell, indexPath, item in
             var config = cell.defaultContentConfiguration()
             config.text = item.name
-            
+
             if (self.selectedTags.contains(item)) {
                 let imageview = UIImageView(image: UIImage(systemName: "checkmark.circle.fill")!)
                 cell.accessories = [.customView(configuration: .init(customView: imageview, placement: .trailing()))]
             } else {
                 cell.accessories = []
             }
-            
+
             cell.contentConfiguration = config
         }
-        
+
         let buttonCellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, String> { cell, indexPath, item in
             var config = cell.defaultContentConfiguration()
             config.text = item
             cell.contentConfiguration = config
             cell.accessories = [.disclosureIndicator()]
         }
-        
-        let datasource = UICollectionViewDiffableDataSource<Int, AnyHashable>(collectionView: collectionview) { collectionView, indexPath, itemIdentifier in
-            if indexPath.section == 0 {
-                return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier as? Tag)
-            } else {
-                return collectionView.dequeueConfiguredReusableCell(using: buttonCellRegistration, for: indexPath, item: itemIdentifier as? String)
+
+        let datasource = UICollectionViewDiffableDataSource<Int, ListItem>(collectionView: collectionview) { collectionView, indexPath, itemIdentifier in
+            switch itemIdentifier {
+            case .tag(let tag):
+                return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: tag)
+            case .button(let title):
+                return collectionView.dequeueConfiguredReusableCell(using: buttonCellRegistration, for: indexPath, item: title)
             }
         }
-        
+
         return datasource
     }()
     
@@ -82,41 +89,42 @@ class MultipleSelectionList: UIViewController {
     }
     
     @objc private func setup() {
-        var snapshot = NSDiffableDataSourceSnapshot<Int, AnyHashable>()
-        
+        var snapshot = NSDiffableDataSourceSnapshot<Int, ListItem>()
+
         snapshot.appendSections([0, 1])
         if let tags = try? account.fetchAllTags() {
-            snapshot.appendItems(tags, toSection: 0)
+            snapshot.appendItems(tags.map { .tag($0) }, toSection: 0)
         }
-        snapshot.appendItems(["Add new tag"], toSection: 1)
-        
+        snapshot.appendItems([.button("Add new tag")], toSection: 1)
+
         datasource.apply(snapshot, animatingDifferences: false)
     }
-    
+
     private func update(at indexPath: IndexPath) {
-        guard let tag = datasource.itemIdentifier(for: indexPath) else { return }
-        
+        guard let item = datasource.itemIdentifier(for: indexPath) else { return }
+
         var snapshot = datasource.snapshot()
-        snapshot.reconfigureItems([tag])
-        
+        snapshot.reconfigureItems([item])
+
         datasource.apply(snapshot, animatingDifferences: false)
     }
 }
 
 extension MultipleSelectionList: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            guard let tag = datasource.itemIdentifier(for: indexPath) as? Tag else { return }
+        guard let item = datasource.itemIdentifier(for: indexPath) else { return }
+
+        switch item {
+        case .tag(let tag):
             selectedTags.toggle(tag)
             delegate?.multipleselectionlist(self, didUpdateSelectedTags: Array(selectedTags))
             update(at: indexPath)
-        } else {
-            let view = AddCategoryViewController()
-            view.account = account
-            view.configuration = .tag
-            navigationController?.present(UINavigationController(rootViewController: view), animated: true)
+        case .button:
+            let view = AddCategoryView(account: account, configuration: .tag)
+            let vc = UIHostingController(rootView: view)
+            navigationController?.present(vc, animated: true)
         }
-        
+
         collectionView.deselectItem(at: indexPath, animated: false)
     }
 }

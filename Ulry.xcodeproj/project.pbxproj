@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D3CBCF3A732540BF96867CF1 /* AddLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CBCF3A732540BF96867CF0 /* AddLinkView.swift */; };
+		3BBAD7949D2309AC19E2EC60 /* AddCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FEBE780B7EB6B220504B77 /* AddCategoryView.swift */; };
+		D3CBCF3A732540BF96867CF3 /* TagFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CBCF3A732540BF96867CF2 /* TagFilterView.swift */; };
 		5F05BF5129E4C08F00B59492 /* +ColorsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F05BF5029E4C08F00B59492 /* +ColorsTest.swift */; };
 		5F05BF5329E4C37600B59492 /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F05BF5229E4C37600B59492 /* AppReviewManager.swift */; };
 		5F093AA329ECB5DD007D2245 /* BackgroundSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F093AA229ECB5DD007D2245 /* BackgroundSupplementaryView.swift */; };
@@ -124,8 +127,7 @@
 		C9A204BE290848460045DEFA /* GeneralSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A204BD290848460045DEFA /* GeneralSettingsViewController.swift */; };
 		C9A204C3290869490045DEFA /* GenericCollectionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A204C2290869490045DEFA /* GenericCollectionList.swift */; };
 		C9A204C5290885B30045DEFA /* BackgroundImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A204C4290885B30045DEFA /* BackgroundImage.swift */; };
-		C9A3C21E28FC537A005573F6 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = C9A3C21D28FC537A005573F6 /* Lottie */; };
-		C9A3C22028FC58D7005573F6 /* EmptinessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A3C21F28FC58D7005573F6 /* EmptinessView.swift */; };
+			C9A3C22028FC58D7005573F6 /* EmptinessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A3C21F28FC58D7005573F6 /* EmptinessView.swift */; };
 		C9BE6A7028FF356400DC1592 /* SFSymbolsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BE6A6F28FF356400DC1592 /* SFSymbolsCollectionView.swift */; };
 		C9C536EA29075BEF00B6ECDD /* SingleSelectionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C536E929075BEF00B6ECDD /* SingleSelectionList.swift */; };
 		C9CBCC1B28DF013400D98A13 /* HomeCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9CBCC1A28DF013400D98A13 /* HomeCollectionViewController.swift */; };
@@ -356,6 +358,9 @@
 		C9F4F9052789C2BD00887A3E /* +UIScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "+UIScreen.swift"; sourceTree = "<group>"; };
 		C9F4F9072789C2BD00887A3E /* +Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "+Color.swift"; sourceTree = "<group>"; };
 		C9F4F9212789C2D600887A3E /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		D3CBCF3A732540BF96867CF0 /* AddLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLinkView.swift; sourceTree = "<group>"; };
+		A5FEBE780B7EB6B220504B77 /* AddCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCategoryView.swift; sourceTree = "<group>"; };
+		D3CBCF3A732540BF96867CF2 /* TagFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFilterView.swift; sourceTree = "<group>"; };
 		C9F4F9282789C2DE00887A3E /* LinkDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkDetailView.swift; sourceTree = "<group>"; };
 		C9F4F9502789C4F600887A3E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Ulry/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		C9F4F956278A17FA00887A3E /* +UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UIImage.swift"; sourceTree = "<group>"; };
@@ -399,7 +404,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5FC57C3B2919B7C700DD9B1A /* Account in Frameworks */,
-				C9A3C21E28FC537A005573F6 /* Lottie in Frameworks */,
 				C96D597F27A0BDFA00A990B3 /* CloudKit.framework in Frameworks */,
 				5F7944372930E65A00E49FC8 /* LinksMetadata in Frameworks */,
 				C9044ADE28762D4600F6DD7A /* FMDB in Frameworks */,
@@ -714,6 +718,9 @@
 		C9F4F92F2789C2DE00887A3E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D3CBCF3A732540BF96867CF0 /* AddLinkView.swift */,
+				A5FEBE780B7EB6B220504B77 /* AddCategoryView.swift */,
+				D3CBCF3A732540BF96867CF2 /* TagFilterView.swift */,
 				5F6EEEB429D1C226002BFB28 /* WeeklyAddedLinksGraph.swift */,
 				C9F4F9282789C2DE00887A3E /* LinkDetailView.swift */,
 				C9D7FE7D278AFA1300016B04 /* FaviconHostnameView.swift */,
@@ -829,7 +836,6 @@
 			name = Ulry;
 			packageProductDependencies = (
 				C9044ADD28762D4600F6DD7A /* FMDB */,
-				C9A3C21D28FC537A005573F6 /* Lottie */,
 				5FC57C3A2919B7C700DD9B1A /* Account */,
 				5FC57C3D2919B7C700DD9B1A /* LinksDatabase */,
 				5FC57C412919B93B00DD9B1A /* Links */,
@@ -880,7 +886,6 @@
 			mainGroup = C9F4F8D52789C28A00887A3E;
 			packageReferences = (
 				C909E75727D054BB0073CC6E /* XCRemoteSwiftPackageReference "fmdb" */,
-				C9A3C21C28FC537A005573F6 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			productRefGroup = C9F4F8DF2789C28A00887A3E /* Products */;
 			projectDirPath = "";
@@ -1089,6 +1094,9 @@
 				5F95C5E4291C6CC2002CE31F /* ImageCacheStorage.swift in Sources */,
 				C9064BA928E05B01001570CB /* HomeHeaderCollectionViewCell.swift in Sources */,
 				C9F4F93B2789C2DE00887A3E /* LinkDetailView.swift in Sources */,
+				D3CBCF3A732540BF96867CF1 /* AddLinkView.swift in Sources */,
+				3BBAD7949D2309AC19E2EC60 /* AddCategoryView.swift in Sources */,
+				D3CBCF3A732540BF96867CF3 /* TagFilterView.swift in Sources */,
 				C9D7FE7C278AF66D00016B04 /* Category.swift in Sources */,
 				C9064BAB28E05CB9001570CB /* SymbolCollectionViewCell.swift in Sources */,
 				C91053B3278E4659005AC807 /* +URL.swift in Sources */,
@@ -1631,18 +1639,10 @@
 /* Begin XCRemoteSwiftPackageReference section */
 		C909E75727D054BB0073CC6E /* XCRemoteSwiftPackageReference "fmdb" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ccgus/fmdb";
+			repositoryURL = "git@github.com:ccgus/fmdb.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.0.0;
-			};
-		};
-		C9A3C21C28FC537A005573F6 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/airbnb/lottie-ios";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1672,11 +1672,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C909E75727D054BB0073CC6E /* XCRemoteSwiftPackageReference "fmdb" */;
 			productName = FMDB;
-		};
-		C9A3C21D28FC537A005573F6 /* Lottie */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9A3C21C28FC537A005573F6 /* XCRemoteSwiftPackageReference "lottie-ios" */;
-			productName = Lottie;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -44,6 +44,10 @@ final class LinksTable: DatabaseTable {
         return try await fetchGenericsAsync { sql_fetchLinkIDsInTag(tag, orderBy: order.orderByClause, $0) }
     }
 
+    func fetchLinkIDs(in tags: [Tag], order: OrderBy) throws -> [String] {
+        return try fetchGenerics { sql_fetchLinkIDsInTags(tags, orderBy: order.orderByClause, $0) }
+    }
+
     func fetchUnreadLinkIDs(order: OrderBy) throws -> [String] {
         return try fetchGenerics { sql_fetchLinkIDs(whereClause: "unread = true and archived = false", orderBy: order.orderByClause, $0) }
     }

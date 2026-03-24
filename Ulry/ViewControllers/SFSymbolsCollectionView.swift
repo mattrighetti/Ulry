@@ -113,7 +113,6 @@ extension SFSymbolsCollectionView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let icon = datasource.itemIdentifier(for: indexPath) else { return }
         delegate?.sfsymbolscollectionview(self, didSelect: icon)
-        self.dismiss(animated: true)
     }
 }
 

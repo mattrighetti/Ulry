@@ -20,9 +20,9 @@ fileprivate let imageSize: CGFloat = {
 class LinkCell: UITableViewCell {
     public static let reuseIdentifier = "LinkCell"
 
-    private let titleFont = UIFont.preferredFont(for: .callout, weight: .semibold)
+    private let titleFont = UIFont.rounded(ofSize: 15, weight: .semibold)
     private let descriptionFont = UIFont.preferredFont(forTextStyle: .caption1)
-    private let titleMonospaceFont = UIFont.monospacedSystemFont(ofSize: 13, weight: .regular)
+    private let titleMonospaceFont = UIFont.monospacedSystemFont(ofSize: 12, weight: .regular)
     
     private enum Appearence: String, Hashable, Equatable {
         case complete
@@ -60,7 +60,7 @@ class LinkCell: UITableViewCell {
     
     lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .systemGray
+        label.textColor = .secondaryLabel
         label.numberOfLines = 2
         label.font = descriptionFont
         label.adjustsFontForContentSizeCategory = true
@@ -76,19 +76,21 @@ class LinkCell: UITableViewCell {
     
     lazy var urlHostnameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.monospacedSystemFont(ofSize: 10, weight: .semibold)
-        label.textColor = .systemBlue
+        label.font = UIFont.rounded(ofSize: 11, weight: .medium)
+        label.textColor = .secondaryLabel
         label.adjustsFontForContentSizeCategory = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    lazy var tagsDetailLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.preferredFont(for: .caption2, weight: .bold)
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    lazy var tagsPillContainer: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
+        stackView.alignment = .center
+        stackView.spacing = 5
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
     }()
     
     lazy var verticalStackView: UIStackView = {
@@ -96,7 +98,7 @@ class LinkCell: UITableViewCell {
         stackView.axis = .vertical
         stackView.distribution = .fillProportionally
         stackView.alignment = .leading
-        stackView.spacing = 3
+        stackView.spacing = 5
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -132,13 +134,13 @@ class LinkCell: UITableViewCell {
         verticalStackView.addArrangedSubview(urlHostnameLabel)
         verticalStackView.addArrangedSubview(titleLabel)
         verticalStackView.addArrangedSubview(descriptionLabel)
-        verticalStackView.addArrangedSubview(tagsDetailLabel)
+        verticalStackView.addArrangedSubview(tagsPillContainer)
         
         horizontalStackView.addArrangedSubview(sideImageView)
         horizontalStackView.addArrangedSubview(linkImagePreview)
         horizontalStackView.addArrangedSubview(verticalStackView)
         
-        let widthLs = sideImageView.widthAnchor.constraint(equalToConstant: 12)
+        let widthLs = sideImageView.widthAnchor.constraint(equalToConstant: 16)
         let widthImageConstraint = linkImagePreview.widthAnchor.constraint(equalToConstant: imageSize)
         let heightImageConstraint = linkImagePreview.heightAnchor.constraint(equalToConstant: imageSize)
         
@@ -191,7 +193,7 @@ class LinkCell: UITableViewCell {
     }
     
     private func setupSideLabel() {
-        let largeFont = UIFont.systemFont(ofSize: 10)
+        let largeFont = UIFont.systemFont(ofSize: 13)
         let configuration = UIImage.SymbolConfiguration(font: largeFont)
         
         if link!.starred {
@@ -236,22 +238,44 @@ class LinkCell: UITableViewCell {
     }
     
     private func setupTagsLabel() {
-        if let tags = link!.tags {
-            tagsDetailLabel.isHidden = false
-            tagsDetailLabel.attributedText = NSMutableAttributedString(
-                coloredStrings: tags.map { ($0.name, UIColor(hex: $0.colorHex)!) },
-                separator: " · "
-            )
+        tagsPillContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        if let tags = link!.tags, !tags.isEmpty {
+            tagsPillContainer.isHidden = false
+            for tag in tags.prefix(3) {
+                tagsPillContainer.addArrangedSubview(makePill(name: tag.name, color: UIColor(hex: tag.colorHex)!))
+            }
         } else {
-            tagsDetailLabel.isHidden = true
+            tagsPillContainer.isHidden = true
         }
+    }
+
+    private func makePill(name: String, color: UIColor) -> UIView {
+        let container = UIView()
+        container.backgroundColor = color.withAlphaComponent(0.15)
+        container.layer.cornerRadius = 6
+        container.translatesAutoresizingMaskIntoConstraints = false
+
+        let label = UILabel()
+        label.text = name
+        label.font = UIFont.rounded(ofSize: 10, weight: .semibold)
+        label.textColor = color
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        container.addSubview(label)
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: container.topAnchor, constant: 2),
+            label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -2),
+            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 6),
+            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -6)
+        ])
+        return container
     }
     
     override func prepareForReuse() {
         urlHostnameLabel.text = nil
         descriptionLabel.text = nil
         titleLabel.text = nil
-        tagsDetailLabel.text = nil
+        tagsPillContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
         descriptionLabel.isHidden = false
     }
 }

@@ -42,6 +42,18 @@ func sql_fetchLinks(whereClause: String? = nil, orderBy: (String, String)? = nil
     return mapResultToArray(resultSet, { Link(from: $0) })
 }
 
+/// Fetches link IDs that have ALL of the specified tags and are not archived
+func sql_fetchLinkIDsInTags(_ tags: [Tag], orderBy: (String,String), _ database: FMDatabase) -> [String] {
+    guard !tags.isEmpty else { return [String]() }
+    let placeholders = tags.map { _ in "?" }.joined(separator: ", ")
+    let whereClause = "id in (select link_id from tag_link where tag_id in (\(placeholders)) group by link_id having count(distinct tag_id) = \(tags.count)) and archived = false"
+    let sql = _sql_select("id", from: "link", where: whereClause, orderBy: orderBy)
+    guard let resultSet = database.executeQuery(sql, withArgumentsIn: tags.map { $0.id }) else {
+        return [String]()
+    }
+    return mapResultToArray(resultSet, { $0.string(forColumn: "id") })
+}
+
 /// Fetches link IDs with a specified tag that are not archived
 func sql_fetchLinkIDsInTag(_ tag: Tag, orderBy: (String,String), _ database: FMDatabase) -> [String] {
     let whereClause = "id in (select tg.link_id from tag_link tg inner join link l on l.id = tg.link_id where tag_id = ?) and archived = false"
