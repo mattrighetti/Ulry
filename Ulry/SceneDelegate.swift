@@ -79,15 +79,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     @objc private func processExternalLinks() {
-        let cache = addLinkRequestManger.getCache()
-        guard cache.count > 0 else { return }
-        os_log(.info, "moving \(cache.count) links from external file")
-        let links = cache.values.map { Link(url: $0.url, note: $0.note) }
+        let pending = addLinkRequestManger.pendingLinks
+        guard !pending.isEmpty else { return }
+        os_log(.info, "moving \(pending.count) links from external file")
+        let links = pending.map { Link(url: $0.url, note: $0.note) }
 
         Task {
             await account.insertBatch(links: links)
-            addLinkRequestManger.dropCache()
-            addLinkRequestManger.persistCache()
+            addLinkRequestManger.clearAll()
         }
     }
 }
