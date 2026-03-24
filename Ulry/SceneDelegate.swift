@@ -44,6 +44,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(processExternalLinks), name: UIApplication.willEnterForegroundNotification, object: nil)
 
         self.window = window
+
+        processExternalLinks()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -77,12 +79,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     @objc private func processExternalLinks() {
-        guard addLinkRequestManger.getCache().count > 0 else { return }
-        os_log(.info, "moving \(self.addLinkRequestManger.externalCache.count) links from external file")
-        let links = addLinkRequestManger.externalCache.values.map { Link(url: $0.url, note: $0.note) }
-        
+        let cache = addLinkRequestManger.getCache()
+        guard cache.count > 0 else { return }
+        os_log(.info, "moving \(cache.count) links from external file")
+        let links = cache.values.map { Link(url: $0.url, note: $0.note) }
+
         Task {
             await account.insertBatch(links: links)
+            addLinkRequestManger.dropCache()
             addLinkRequestManger.persistCache()
         }
     }

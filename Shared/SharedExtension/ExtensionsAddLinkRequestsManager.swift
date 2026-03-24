@@ -54,7 +54,7 @@ final class ExtensionsAddLinkRequestsManager: NSObject, Logging {
 
         coordinateFileWrite { url in
             do {
-                let data = try encoder.encode(externalCache)
+                let data = try encoder.encode(Array(externalCache.values))
                 try data.write(to: url)
             } catch {
                 logger.error("Save to disk failed: \(error.localizedDescription, privacy: .public)")
