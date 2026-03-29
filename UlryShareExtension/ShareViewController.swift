@@ -100,14 +100,14 @@ struct ShareCardView: View {
             Color.black.opacity(0.3)
                 .ignoresSafeArea()
 
-            VStack(spacing: 0) {
-                Spacer()
-
-                content
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 16)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    content
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 16)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(maxWidth: .infinity)
             .background(Color(uiColor: .systemBackground))
             .cornerRadius(20, corners: [.topLeft, .topRight])
         }
