@@ -95,16 +95,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private func syncTagsAndGroupsToSharedDefaults() async {
+        print("DEBUG SceneDelegate: Starting sync of tags and groups to shared defaults")
         let defaults = UserDefaults(suiteName: "group.com.mattrighetti.Ulry")
 
-        if let tags = try? await account.fetchAllTags(),
-           let data = try? JSONEncoder().encode(tags) {
-            defaults?.set(data, forKey: "availableTags")
+        do {
+            let tags = try await account.fetchAllTags()
+            print("DEBUG SceneDelegate: Fetched \(tags.count) tags")
+            if let data = try? JSONEncoder().encode(tags) {
+                defaults?.set(data, forKey: "availableTags")
+                print("DEBUG SceneDelegate: Saved tags to UserDefaults, size: \(data.count) bytes")
+            }
+        } catch {
+            print("DEBUG SceneDelegate: Error fetching tags: \(error)")
         }
 
-        if let groups = try? await account.fetchAllGroups(),
-           let data = try? JSONEncoder().encode(groups) {
-            defaults?.set(data, forKey: "availableGroups")
+        do {
+            let groups = try await account.fetchAllGroups()
+            print("DEBUG SceneDelegate: Fetched \(groups.count) groups")
+            if let data = try? JSONEncoder().encode(groups) {
+                defaults?.set(data, forKey: "availableGroups")
+                print("DEBUG SceneDelegate: Saved groups to UserDefaults, size: \(data.count) bytes")
+            }
+        } catch {
+            print("DEBUG SceneDelegate: Error fetching groups: \(error)")
         }
     }
 }
