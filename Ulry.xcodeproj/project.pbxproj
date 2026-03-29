@@ -96,6 +96,8 @@
 		C972481B2F7993BE005B256A /* UlryShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C97248112F7993BE005B256A /* UlryShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C972482D2F799486005B256A /* FMDB in Frameworks */ = {isa = PBXBuildFile; productRef = C972482C2F799486005B256A /* FMDB */; };
 		C972482F2F79948F005B256A /* LinksMetadata in Frameworks */ = {isa = PBXBuildFile; productRef = C972482E2F79948F005B256A /* LinksMetadata */; };
+		C972483B2F7997FC005B256A /* Links in Frameworks */ = {isa = PBXBuildFile; productRef = C972483A2F7997FC005B256A /* Links */; };
+		C972483C2F7997FC005B256A /* Links in Embed Frameworks */ = {isa = PBXBuildFile; productRef = C972483A2F7997FC005B256A /* Links */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C972BAFE27A22201005B6312 /* AppIconsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C972BAFD27A22201005B6312 /* AppIconsViewController.swift */; };
 		C972BB0027A22383005B6312 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C972BAFF27A22383005B6312 /* AppIcon.swift */; };
 		C97467A32799882C00B53B8C /* UrlTextFieldAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97467A22799882C00B53B8C /* UrlTextFieldAccessoryView.swift */; };
@@ -218,6 +220,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C972483C2F7997FC005B256A /* Links in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -383,6 +386,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C972483B2F7997FC005B256A /* Links in Frameworks */,
 				C972482D2F799486005B256A /* FMDB in Frameworks */,
 				C972482F2F79948F005B256A /* LinksMetadata in Frameworks */,
 			);
@@ -770,6 +774,7 @@
 			packageProductDependencies = (
 				C972482C2F799486005B256A /* FMDB */,
 				C972482E2F79948F005B256A /* LinksMetadata */,
+				C972483A2F7997FC005B256A /* Links */,
 			);
 			productName = UlryShareExtension;
 			productReference = C97248112F7993BE005B256A /* UlryShareExtension.appex */;
@@ -1666,6 +1671,10 @@
 		C972482E2F79948F005B256A /* LinksMetadata */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = LinksMetadata;
+		};
+		C972483A2F7997FC005B256A /* Links */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Links;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

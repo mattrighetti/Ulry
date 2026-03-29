@@ -59,6 +59,21 @@ private class ExtensionQueueManager {
     }
 }
 
+// MARK: - Simple Models (to avoid Links framework linking issues)
+
+struct SimpleTag: Decodable {
+    let id: String
+    let name: String
+    let colorHex: String
+}
+
+struct SimpleGroup: Decodable {
+    let id: String
+    let name: String
+    let colorHex: String
+    let iconName: String
+}
+
 // MARK: - Card
 
 private enum LoadState {
@@ -73,6 +88,10 @@ struct ShareCardView: View {
 
     @State private var loadState: LoadState = .loading
     @State private var note = ""
+    @State private var selectedTagIds = Set<String>()
+    @State private var selectedGroupId: String?
+    @State private var availableTags: [SimpleTag] = []
+    @State private var availableGroups: [SimpleGroup] = []
 
     private let requestsManager = ExtensionQueueManager()
 
@@ -94,6 +113,7 @@ struct ShareCardView: View {
         }
         .task {
             await loadContent()
+            loadAvailableTagsAndGroups()
         }
     }
 
@@ -165,6 +185,67 @@ struct ShareCardView: View {
                     .background(Color(uiColor: .tertiarySystemGroupedBackground))
                     .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                     .submitLabel(.done)
+
+                // Tags
+                if !availableTags.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Tags")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .textCase(.uppercase)
+
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                ForEach(availableTags, id: \.id) { tag in
+                                    TagPill(
+                                        tag: tag,
+                                        isSelected: selectedTagIds.contains(tag.id)
+                                    ) {
+                                        if selectedTagIds.contains(tag.id) {
+                                            selectedTagIds.remove(tag.id)
+                                        } else {
+                                            selectedTagIds.insert(tag.id)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Groups
+                if !availableGroups.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Group")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .textCase(.uppercase)
+
+                        Menu {
+                            Button("None") {
+                                selectedGroupId = nil
+                            }
+                            ForEach(availableGroups, id: \.id) { group in
+                                Button(group.name) {
+                                    selectedGroupId = group.id
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                Text(availableGroups.first { $0.id == selectedGroupId }?.name ?? "None")
+                                    .foregroundStyle(.primary)
+                                Spacer()
+                                Image(systemName: "chevron.down")
+                                    .foregroundStyle(.secondary)
+                                    .font(.caption)
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 10)
+                            .background(Color(uiColor: .tertiarySystemGroupedBackground))
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                    }
+                }
 
                 // Save button
                 Button(action: save) {
@@ -268,13 +349,58 @@ struct ShareCardView: View {
         return nil
     }
 
+    private func loadAvailableTagsAndGroups() {
+        let defaults = UserDefaults(suiteName: "group.com.mattrighetti.Ulry")
+
+        if let tagData = defaults?.data(forKey: "availableTags"),
+           let tags = try? JSONDecoder().decode([SimpleTag].self, from: tagData) {
+            self.availableTags = tags.sorted { $0.name < $1.name }
+        }
+
+        if let groupData = defaults?.data(forKey: "availableGroups"),
+           let groups = try? JSONDecoder().decode([SimpleGroup].self, from: groupData) {
+            self.availableGroups = groups.sorted { $0.name < $1.name }
+        }
+    }
+
     // MARK: - Actions
 
     private func save() {
         if case let .ready(url, _, _, _, _) = loadState {
-            requestsManager.add(url.absoluteString, note: note.isEmpty ? nil : note)
+            let tagIds = selectedTagIds.isEmpty ? nil : Array(selectedTagIds)
+            requestsManager.add(url.absoluteString, note: note.isEmpty ? nil : note, tagIds: tagIds, groupId: selectedGroupId)
         }
         extensionContext?.completeRequest(returningItems: nil)
+    }
+}
+
+// MARK: - Tag Pill
+
+private struct TagPill: View {
+    let tag: SimpleTag
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 6) {
+                if isSelected {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.caption2)
+                }
+                Text(tag.name)
+                    .font(.caption)
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(
+                isSelected ?
+                    Color(hex: tag.colorHex) ?? .blue :
+                    Color(uiColor: .tertiarySystemGroupedBackground)
+            )
+            .foregroundStyle(isSelected ? .white : .primary)
+            .clipShape(Capsule())
+        }
     }
 }
 
@@ -297,5 +423,20 @@ private struct CornerRadius: Shape {
 extension View {
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
         clipShape(CornerRadius(radius: radius, corners: corners))
+    }
+}
+
+// MARK: - Color extensions
+
+extension Color {
+    init?(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
+        guard hex.count == 6, let intVal = UInt(hex, radix: 16) else { return nil }
+
+        let r = Double((intVal >> 16) & 0xFF) / 255.0
+        let g = Double((intVal >> 8) & 0xFF) / 255.0
+        let b = Double(intVal & 0xFF) / 255.0
+
+        self.init(red: r, green: g, blue: b)
     }
 }
