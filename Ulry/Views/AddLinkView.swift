@@ -77,8 +77,8 @@ struct AddLinkView: View {
                             .keyboardType(.URL)
                             .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()
-                            .onChange(of: urlText) { newValue in
-                                fetchPreviewDebounced(for: newValue)
+                            .onChange(of: urlText) {
+                                fetchPreviewDebounced(for: urlText)
                             }
                     }
                 }

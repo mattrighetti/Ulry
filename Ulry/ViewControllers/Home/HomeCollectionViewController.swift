@@ -98,7 +98,7 @@ class HomeCollectionView: UIViewController {
         }
 
         let headerRegistration = UICollectionView.SupplementaryRegistration<UICollectionViewCell>(elementKind: UICollectionView.elementKindSectionHeader) { supplementaryView, _, indexPath in
-            var config = UIListContentConfiguration.groupedHeader()
+            var config = UIListContentConfiguration.header()
             config.text = "Groups"
             config.textProperties.font = UIFont.rounded(ofSize: 17, weight: .bold)
             config.textProperties.color = .label

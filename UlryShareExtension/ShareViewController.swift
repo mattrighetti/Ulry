@@ -12,52 +12,32 @@ import LinksMetadata
 import UniformTypeIdentifiers
 
 @objc(ShareExtensionViewController)
-final class ShareViewController: UIHostingController<ShareRootView> {
-
-    required init?(coder: NSCoder) {
-        super.init(coder: coder, rootView: ShareRootView(extensionContext: nil))
-    }
+final class ShareViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
-        rootView = ShareRootView(extensionContext: extensionContext)
     }
-}
 
-// MARK: - Root layout
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
 
-struct ShareRootView: View {
-    let extensionContext: NSExtensionContext?
+        let hc = UIHostingController(rootView: ShareCardView(extensionContext: extensionContext))
+        hc.presentationController?.delegate = self
 
-    var body: some View {
-        if let ctx = extensionContext {
-            ShareCardView(extensionContext: ctx)
+        if let sheet = hc.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]
+            sheet.prefersGrabberVisible = true
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = true
         }
+
+        present(hc, animated: true)
     }
 }
 
-// MARK: - Shapes
-
-private struct TopRoundedRectangle: Shape {
-    let radius: CGFloat
-
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        path.move(to: CGPoint(x: rect.minX, y: rect.maxY))
-        path.addLine(to: CGPoint(x: rect.minX, y: rect.minY + radius))
-        path.addArc(
-            center: CGPoint(x: rect.minX + radius, y: rect.minY + radius),
-            radius: radius, startAngle: .degrees(180), endAngle: .degrees(270), clockwise: false
-        )
-        path.addLine(to: CGPoint(x: rect.maxX - radius, y: rect.minY))
-        path.addArc(
-            center: CGPoint(x: rect.maxX - radius, y: rect.minY + radius),
-            radius: radius, startAngle: .degrees(270), endAngle: .degrees(0), clockwise: false
-        )
-        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
-        path.closeSubpath()
-        return path
+extension ShareViewController: UIAdaptivePresentationControllerDelegate {
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        extensionContext?.cancelRequest(withError: NSError(domain: NSCocoaErrorDomain, code: NSUserCancelledError))
     }
 }
 
@@ -71,7 +51,7 @@ private enum LoadState {
 }
 
 private struct ShareCardView: View {
-    let extensionContext: NSExtensionContext
+    let extensionContext: NSExtensionContext?
 
     @State private var loadState: LoadState = .loading
     @State private var note = ""
@@ -79,24 +59,11 @@ private struct ShareCardView: View {
     private let requestsManager = ExtensionsAddLinkRequestsManager()
 
     var body: some View {
-        VStack(spacing: 0) {
-            Capsule()
-                .fill(Color(uiColor: .tertiaryLabel))
-                .frame(width: 36, height: 4)
-                .padding(.top, 12)
-                .padding(.bottom, 20)
-
-            content
-                .padding(.horizontal, 20)
-                .padding(.bottom, 16)
-        }
-        .frame(maxWidth: .infinity)
-        .background {
-            TopRoundedRectangle(radius: 20)
-                .fill(Color(uiColor: .systemBackground))
-                .ignoresSafeArea(edges: .bottom)
-        }
-        .task { await loadContent() }
+        content
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .task { await loadContent() }
     }
 
     @ViewBuilder
@@ -159,7 +126,7 @@ private struct ShareCardView: View {
                     .multilineTextAlignment(.center)
 
                 Button("Close") {
-                    extensionContext.completeRequest(returningItems: nil)
+                    extensionContext?.completeRequest(returningItems: nil)
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
@@ -179,7 +146,7 @@ private struct ShareCardView: View {
                     .font(.headline)
 
                 Button("Dismiss") {
-                    extensionContext.cancelRequest(withError: NSError(domain: NSCocoaErrorDomain, code: NSUserCancelledError))
+                    extensionContext?.cancelRequest(withError: NSError(domain: NSCocoaErrorDomain, code: NSUserCancelledError))
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
@@ -216,7 +183,7 @@ private struct ShareCardView: View {
     }
 
     private func extractURL() async throws -> String? {
-        guard let attachments = (extensionContext.inputItems.first as? NSExtensionItem)?.attachments,
+        guard let attachments = (extensionContext?.inputItems.first as? NSExtensionItem)?.attachments,
               !attachments.isEmpty else { return nil }
 
         for provider in attachments {
@@ -234,6 +201,6 @@ private struct ShareCardView: View {
         if case let .ready(url, _, _) = loadState {
             requestsManager.add(url.absoluteString, note: note.isEmpty ? nil : note)
         }
-        extensionContext.completeRequest(returningItems: nil)
+        extensionContext?.completeRequest(returningItems: nil)
     }
 }
