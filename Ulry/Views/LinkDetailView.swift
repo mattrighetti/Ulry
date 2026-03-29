@@ -59,7 +59,7 @@ struct LinkDetailView: View {
             }
         }
     }
-    
+
     @ViewBuilder
     private func LinkMainInfoView() -> some View {
         VStack(alignment: .leading, spacing: 5) {

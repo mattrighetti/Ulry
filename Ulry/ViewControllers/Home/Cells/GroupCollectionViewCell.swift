@@ -78,7 +78,6 @@ class GroupCollectionViewCell: BouncyCollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         gradientLayer.frame = contentView.bounds
-        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: 16).cgPath
     }
 
     func update(with category: Category) {
@@ -86,11 +85,6 @@ class GroupCollectionViewCell: BouncyCollectionViewCell {
 
         let baseColor = category.cellContent.backgroundColor
         gradientLayer.colors = baseColor.gradientColors
-
-        layer.shadowColor = baseColor.cgColor
-        layer.shadowOpacity = 0.35
-        layer.shadowOffset = CGSize(width: 0, height: 4)
-        layer.shadowRadius = 8
 
         if let icon = category.cellContent.icon {
             let config = UIImage.SymbolConfiguration(pointSize: 17, weight: .semibold)

@@ -61,17 +61,11 @@ class MainCategoryCollectionViewCell: BouncyCollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         gradientLayer.frame = contentView.bounds
-        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: 22).cgPath
     }
 
     func update(with category: Category) {
         let baseColor = category.cellContent.backgroundColor
         gradientLayer.colors = baseColor.gradientColors
-
-        layer.shadowColor = baseColor.cgColor
-        layer.shadowOpacity = 0.40
-        layer.shadowOffset = CGSize(width: 0, height: 6)
-        layer.shadowRadius = 12
 
         textLabel.text = category.cellContent.title
 
