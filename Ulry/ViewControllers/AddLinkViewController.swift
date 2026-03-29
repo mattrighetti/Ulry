@@ -61,8 +61,9 @@ class AddLinkViewController: UIViewController {
         let textView = UITextView()
         textView.font = UIFont.rounded(ofSize: 17, weight: .regular)
         let screenWidth = UIApplication.shared.connectedScenes
-            .compactMap { $0.windows.first?.bounds.width }
-            .first ?? UIScreen.main.bounds.width
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first?.bounds.width ?? 390
         let accessoryView = UrlTextFieldAccessoryView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: 50), withConfiguration: .plain())
         accessoryView.httpsButton.isHidden = true
         accessoryView.wwwButton.isHidden = true

@@ -38,7 +38,7 @@ class TipsViewController: UIViewController {
     }()
     
     var backgroundViewWidth: CGFloat {
-        let screenWidth = view.window?.windowScene?.screen.bounds.width ?? UIScreen.main.bounds.width
+        let screenWidth = view.window?.windowScene?.screen.bounds.width ?? 390
         if screenWidth < 400 {
             return screenWidth - 60
         } else {
@@ -47,7 +47,7 @@ class TipsViewController: UIViewController {
     }
 
     var backgroundViewHeight: CGFloat {
-        let screenWidth = view.window?.windowScene?.screen.bounds.width ?? UIScreen.main.bounds.width
+        let screenWidth = view.window?.windowScene?.screen.bounds.width ?? 390
         if screenWidth < 400 {
             return screenWidth - 10
         } else {
