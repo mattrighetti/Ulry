@@ -29,11 +29,11 @@ final class ExtensionsAddLinkRequestsManager: Logging {
         return links
     }
 
-    /// Stores given `urlString` and `note` to UserDefaults
-    func add(_ urlString: String, note: String?) {
+    /// Stores given `urlString`, `note`, and optional tags/group to UserDefaults
+    func add(_ urlString: String, note: String?, tagIds: [String]? = nil, groupId: String? = nil) {
         logger.info("saving \(urlString) with note \(note ?? "")")
         var links = pendingLinks
-        links.append(ExtensionsAddLinkRequests(url: urlString, note: note))
+        links.append(ExtensionsAddLinkRequests(url: urlString, note: note, tagIds: tagIds, groupId: groupId))
         if let data = try? JSONEncoder().encode(links) {
             defaults?.set(data, forKey: Self.key)
         }

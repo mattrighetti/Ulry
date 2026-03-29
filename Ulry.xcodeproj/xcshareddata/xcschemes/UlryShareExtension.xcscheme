@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1430"
+   LastUpgradeVersion = "2640"
    wasCreatedForAppExtension = "YES"
    version = "2.0">
    <BuildAction
@@ -15,7 +15,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5F0D20DD2944ABAB000B3C95"
+               BlueprintIdentifier = "C97248102F7993BE005B256A"
                BuildableName = "UlryShareExtension.appex"
                BlueprintName = "UlryShareExtension"
                ReferencedContainer = "container:Ulry.xcodeproj">
@@ -58,9 +58,9 @@
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
       <RemoteRunnable
-         runnableDebuggingMode = "1"
+         runnableDebuggingMode = "0"
          BundleIdentifier = "com.apple.mobilesafari"
-         RemotePath = "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/Applications/MobileSafari.app">
+         RemotePath = "/var/containers/Bundle/Application/A54655CF-FBE0-40E1-9EE9-13F1F58DCCC5/MobileSafari.app">
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference

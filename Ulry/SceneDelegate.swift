@@ -58,6 +58,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        Task {
+            await syncTagsAndGroupsToSharedDefaults()
+        }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
@@ -86,7 +89,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         Task {
             await account.insertBatch(links: links)
+            // TODO: Attach tags and groups from pending.tagIds and pending.groupId
             addLinkRequestManger.clearAll()
+        }
+    }
+
+    private func syncTagsAndGroupsToSharedDefaults() async {
+        let defaults = UserDefaults(suiteName: "group.com.mattrighetti.Ulry")
+
+        if let tags = try? await account.fetchAllTags(),
+           let data = try? JSONEncoder().encode(tags) {
+            defaults?.set(data, forKey: "availableTags")
+        }
+
+        if let groups = try? await account.fetchAllGroups(),
+           let data = try? JSONEncoder().encode(groups) {
+            defaults?.set(data, forKey: "availableGroups")
         }
     }
 }
