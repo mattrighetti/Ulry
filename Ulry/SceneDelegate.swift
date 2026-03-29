@@ -86,9 +86,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard !pendingLinks.isEmpty else { return }
         os_log(.info, "moving \(pendingLinks.count) links from external file")
 
-        var links = [Link]()
+        var links: [Links.Link] = []
         for pendingLink in pendingLinks {
-            var link = Link(url: pendingLink.url, note: pendingLink.note)
+            var link = Links.Link(url: pendingLink.url, note: pendingLink.note)
 
             // Attach tags if provided
             if let tagIds = pendingLink.tagIds {
