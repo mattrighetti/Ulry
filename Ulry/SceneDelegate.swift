@@ -85,39 +85,52 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let pending = addLinkRequestManger.pendingLinks
         guard !pending.isEmpty else { return }
         os_log(.info, "moving \(pending.count) links from external file")
-        let links = pending.map { Link(url: $0.url, note: $0.note) }
+
+        var links = [Link]()
+        for pending in pending {
+            var link = Link(url: pending.url, note: pending.note)
+
+            // Attach tags if provided
+            if let tagIds = pending.tagIds {
+                var tags = Set<Tag>()
+                for tagIdStr in tagIds {
+                    if let uuid = UUID(uuidString: tagIdStr),
+                       let tag = try? account.fetchTag(with: uuid.uuidString) {
+                        tags.insert(tag)
+                    }
+                }
+                if !tags.isEmpty {
+                    link.tags = tags
+                }
+            }
+
+            // Attach group if provided
+            if let groupIdStr = pending.groupId,
+               let uuid = UUID(uuidString: groupIdStr),
+               let group = try? account.fetchGroup(with: uuid.uuidString) {
+                link.group = group
+            }
+
+            links.append(link)
+        }
 
         Task {
             await account.insertBatch(links: links)
-            // TODO: Attach tags and groups from pending.tagIds and pending.groupId
             addLinkRequestManger.clearAll()
         }
     }
 
     private func syncTagsAndGroupsToSharedDefaults() async {
-        print("DEBUG SceneDelegate: Starting sync of tags and groups to shared defaults")
         let defaults = UserDefaults(suiteName: "group.com.mattrighetti.Ulry")
 
-        do {
-            let tags = try await account.fetchAllTags()
-            print("DEBUG SceneDelegate: Fetched \(tags.count) tags")
-            if let data = try? JSONEncoder().encode(tags) {
-                defaults?.set(data, forKey: "availableTags")
-                print("DEBUG SceneDelegate: Saved tags to UserDefaults, size: \(data.count) bytes")
-            }
-        } catch {
-            print("DEBUG SceneDelegate: Error fetching tags: \(error)")
+        if let tags = try? await account.fetchAllTags(),
+           let data = try? JSONEncoder().encode(tags) {
+            defaults?.set(data, forKey: "availableTags")
         }
 
-        do {
-            let groups = try await account.fetchAllGroups()
-            print("DEBUG SceneDelegate: Fetched \(groups.count) groups")
-            if let data = try? JSONEncoder().encode(groups) {
-                defaults?.set(data, forKey: "availableGroups")
-                print("DEBUG SceneDelegate: Saved groups to UserDefaults, size: \(data.count) bytes")
-            }
-        } catch {
-            print("DEBUG SceneDelegate: Error fetching groups: \(error)")
+        if let groups = try? await account.fetchAllGroups(),
+           let data = try? JSONEncoder().encode(groups) {
+            defaults?.set(data, forKey: "availableGroups")
         }
     }
 }

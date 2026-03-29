@@ -352,28 +352,14 @@ struct ShareCardView: View {
     private func loadAvailableTagsAndGroups() {
         let defaults = UserDefaults(suiteName: "group.com.mattrighetti.Ulry")
 
-        if let tagData = defaults?.data(forKey: "availableTags") {
-            print("DEBUG: Found tag data in UserDefaults, size: \(tagData.count) bytes")
-            if let tags = try? JSONDecoder().decode([SimpleTag].self, from: tagData) {
-                print("DEBUG: Decoded \(tags.count) tags")
-                self.availableTags = tags.sorted { $0.name < $1.name }
-            } else {
-                print("DEBUG: Failed to decode tags")
-            }
-        } else {
-            print("DEBUG: No tag data found in UserDefaults")
+        if let tagData = defaults?.data(forKey: "availableTags"),
+           let tags = try? JSONDecoder().decode([SimpleTag].self, from: tagData) {
+            self.availableTags = tags.sorted { $0.name < $1.name }
         }
 
-        if let groupData = defaults?.data(forKey: "availableGroups") {
-            print("DEBUG: Found group data in UserDefaults, size: \(groupData.count) bytes")
-            if let groups = try? JSONDecoder().decode([SimpleGroup].self, from: groupData) {
-                print("DEBUG: Decoded \(groups.count) groups")
-                self.availableGroups = groups.sorted { $0.name < $1.name }
-            } else {
-                print("DEBUG: Failed to decode groups")
-            }
-        } else {
-            print("DEBUG: No group data found in UserDefaults")
+        if let groupData = defaults?.data(forKey: "availableGroups"),
+           let groups = try? JSONDecoder().decode([SimpleGroup].self, from: groupData) {
+            self.availableGroups = groups.sorted { $0.name < $1.name }
         }
     }
 
