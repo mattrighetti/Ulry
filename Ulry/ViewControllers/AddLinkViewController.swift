@@ -60,7 +60,10 @@ class AddLinkViewController: UIViewController {
     private lazy var noteTextView: UITextView = {
         let textView = UITextView()
         textView.font = UIFont.rounded(ofSize: 17, weight: .regular)
-        let accessoryView = UrlTextFieldAccessoryView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth, height: 50), withConfiguration: .plain())
+        let screenWidth = UIApplication.shared.connectedScenes
+            .compactMap { $0.windows.first?.bounds.width }
+            .first ?? UIScreen.main.bounds.width
+        let accessoryView = UrlTextFieldAccessoryView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: 50), withConfiguration: .plain())
         accessoryView.httpsButton.isHidden = true
         accessoryView.wwwButton.isHidden = true
         accessoryView.pasteButton.isHidden = true
