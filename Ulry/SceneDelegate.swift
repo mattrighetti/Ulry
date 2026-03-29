@@ -82,16 +82,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     @objc private func processExternalLinks() {
-        let pending = addLinkRequestManger.pendingLinks
-        guard !pending.isEmpty else { return }
-        os_log(.info, "moving \(pending.count) links from external file")
+        let pendingLinks = addLinkRequestManger.pendingLinks
+        guard !pendingLinks.isEmpty else { return }
+        os_log(.info, "moving \(pendingLinks.count) links from external file")
 
         var links = [Link]()
-        for pending in pending {
-            var link = Link(url: pending.url, note: pending.note)
+        for pendingLink in pendingLinks {
+            var link = Link(url: pendingLink.url, note: pendingLink.note)
 
             // Attach tags if provided
-            if let tagIds = pending.tagIds {
+            if let tagIds = pendingLink.tagIds {
                 var tags = Set<Tag>()
                 for tagIdStr in tagIds {
                     if let uuid = UUID(uuidString: tagIdStr),
@@ -105,7 +105,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
 
             // Attach group if provided
-            if let groupIdStr = pending.groupId,
+            if let groupIdStr = pendingLink.groupId,
                let uuid = UUID(uuidString: groupIdStr),
                let group = try? account.fetchGroup(with: uuid.uuidString) {
                 link.group = group
