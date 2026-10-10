@@ -66,7 +66,11 @@ struct AppReviewManager: Logging {
         }
 
         if let windowScene = await view.window?.windowScene {
-            await SKStoreReviewController.requestReview(in: windowScene)
+            if #available(iOS 18.0, *) {
+                await AppStore.requestReview(in: windowScene)
+            } else {
+                await SKStoreReviewController.requestReview(in: windowScene)
+            }
         }
 
         UserDefaultsWrapper().set(0, forKey: .reviewWorthyActionCount)

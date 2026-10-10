@@ -10,6 +10,9 @@ import os
 import Links
 import Foundation
 
+/// A bounded first-frame snapshot, with counts for the complete active library.
+public typealias HomeOverview = (links: [Link], groups: [Group], allCount: Int, unreadCount: Int, starredCount: Int, groupCounts: [UUID: Int])
+
 public final class LinksDatabase {
     private let queue: DatabaseQueue
     private let linksTable: LinksTable
@@ -26,6 +29,14 @@ public final class LinksDatabase {
     }
 
     // MARK: - APIs
+
+    public func fetchHomeOverview() throws -> HomeOverview {
+        try linksTable.fetchHomeOverview()
+    }
+
+    public func fetchActiveLinksAsync() async throws -> [Link] {
+        try await linksTable.fetchActiveLinksAsync()
+    }
 
     // MARK: Links in Group
 

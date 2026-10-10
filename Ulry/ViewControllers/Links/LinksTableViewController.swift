@@ -308,20 +308,17 @@ class LinksTableViewController: UIViewController {
     }
 
     private func presentFloatingInfoViewController(for link: Links.Link) {
-        let lv = LinkDetailView(link: link)
-
         if let searchIsActive = navigationItem.searchController?.isActive, searchIsActive {
             self.dismiss(animated: true)
         }
 
-        let hc = UIHostingController(rootView: lv)
-        hc.modalPresentationStyle = .overFullScreen
-        hc.view.backgroundColor = .clear
-        present(hc, animated: true, completion: {
-            UIView.animate(withDuration: 0.1) {
-                hc.view.backgroundColor = UIColor.black.withAlphaComponent(UITraitCollection.current.userInterfaceStyle == .dark ? 0.5 : 0.1)
-            }
-        })
+        let hc = UIHostingController(rootView: LinkDetailView(link: link))
+        if let sheet = hc.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]
+            sheet.prefersGrabberVisible = true
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = true
+        }
+        present(hc, animated: true)
     }
     
     private func open(_ link: Links.Link) {

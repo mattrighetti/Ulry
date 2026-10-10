@@ -10,7 +10,7 @@ import UIKit
 
 class UICollectionViewCellCustomBackground: UICollectionViewListCell {
     override func updateConfiguration(using state: UICellConfigurationState) {
-        var back = UIBackgroundConfiguration.listPlainCell().updated(for: state)
+        var back = UIBackgroundConfiguration.listCell().updated(for: state)
         if state.isSelected || state.isHighlighted {
             back.backgroundColor = UIColor(named: "list-cell-selected-bg-color")
         } else {

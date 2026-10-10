@@ -43,7 +43,10 @@ public class AddURLIntentHandler: NSObject, AddURLIntentHandling {
             return
         }
 
-        file.add(urlString, note: nil)
+        guard file.add(urlString, note: nil) else {
+            completion(AddURLIntentResponse(code: .cannotSaveToExternalFile, userActivity: nil))
+            return
+        }
         completion(AddURLIntentResponse(code: .success, userActivity: nil))
     }
     

@@ -9,7 +9,10 @@
 import UIKit
 
 extension UIScreen {
+    @available(iOS, deprecated: 26.0, message: "Use a UIScreen instance found through context instead")
     static let screenWidth = UIScreen.main.bounds.size.width
+    @available(iOS, deprecated: 26.0, message: "Use a UIScreen instance found through context instead")
     static let screenHeight = UIScreen.main.bounds.size.height
+    @available(iOS, deprecated: 26.0, message: "Use a UIScreen instance found through context instead")
     static let screenSize = UIScreen.main.bounds.size
 }

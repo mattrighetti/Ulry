@@ -77,8 +77,8 @@ struct AddLinkView: View {
                             .keyboardType(.URL)
                             .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()
-                            .onChange(of: urlText) { newValue in
-                                fetchPreviewDebounced(for: newValue)
+                            .onChange(of: urlText) {
+                                fetchPreviewDebounced(for: urlText)
                             }
                     }
                 }
@@ -240,16 +240,6 @@ struct AddLinkView: View {
             selectedGroup = link.group
             if let tags = link.tags {
                 selectedTags = tags
-            }
-        } else {
-            if UIPasteboard.general.hasURLs {
-                if let url = UIPasteboard.general.url {
-                    urlText = url.absoluteString
-                }
-            } else if UIPasteboard.general.hasStrings {
-                if let text = UIPasteboard.general.string {
-                    urlText = text
-                }
             }
         }
     }

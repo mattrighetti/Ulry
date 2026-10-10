@@ -40,13 +40,19 @@ class ActionViewController: UIViewController {
         
         navigationItem.title = "Action"
         
-        let extensionItem = extensionContext?.inputItems.first as! NSExtensionItem
-        let itemProvider = (extensionItem.attachments?.first)! as NSItemProvider
-        
+        guard
+            let extensionItem = extensionContext?.inputItems.first as? NSExtensionItem,
+            let itemProvider = extensionItem.attachments?.first
+        else {
+            os_log(.error, "Encountered error while trying to insert link from action: missing extension item")
+            extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+            return
+        }
+
         let propertyList = String(describing: UTType.propertyList)
         if itemProvider.hasItemConformingToTypeIdentifier(propertyList) {
             itemProvider.loadItem(forTypeIdentifier: propertyList, options: nil) { item, error in
-                let dictionary = item as! NSDictionary
+                guard let dictionary = item as? NSDictionary else { return }
                 OperationQueue.main.addOperation { [weak self] in
                     if let results = dictionary[NSExtensionJavaScriptPreprocessingResultsKey] as? NSDictionary {
                         self?.handleData(dict: results)
@@ -75,8 +81,7 @@ class ActionViewController: UIViewController {
         if file.canSaveMoreLinks {
             let urlString = dict["url"] as! String
             guard let _ = URL(string: urlString) else { return }
-            file.add(urlString, note: nil)
-            titleLabel.text = "Saved correctly"
+            titleLabel.text = file.add(urlString, note: nil) ? "Saved correctly" : "Couldn’t save link"
         } else {
             let conf = UIImage.SymbolConfiguration(paletteColors: [.yellow])
             image.image = UIImage(systemName: "exclamationmark.triangle.fill", withConfiguration: conf)

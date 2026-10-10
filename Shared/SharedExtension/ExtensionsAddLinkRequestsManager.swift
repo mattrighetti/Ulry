@@ -1,108 +1,106 @@
-//
-//  LinkAddRequestFile.swift
-//  Ulry
-//
-//  Created by Matt on 27/11/2022.
-//  Copyright © 2022 Mattia Righetti. All rights reserved.
-//
-
 import Foundation
+import Darwin
+import os
 
-final class ExtensionsAddLinkRequestsManager: NSObject, Logging {
+/// The app and every extension share one queue and one cross-process lock.
+final class ExtensionsAddLinkRequestsManager {
+    private static let suite = "group.com.mattrighetti.Ulry"
+    private static let legacyKey = "pendingLinks"
 
-    private static var filePathUrl: URL = {
-        URL.storeURL(for: "group.com.mattrighetti.Ulry", filename: "external_links.plist")
-    }()
+    private let defaults: UserDefaults?
+    private let directory: URL?
+
+    init(
+        defaults: UserDefaults? = UserDefaults(suiteName: suite),
+        directory: URL? = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: suite)
+    ) {
+        self.defaults = defaults
+        self.directory = directory
+    }
 
     var canSaveMoreLinks: Bool {
-        externalCache.count < 15
+        pendingLinks.count < 15
     }
 
-    override init() {
-        super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(remove(_:)), name: NSNotification.Name("UserDidAddLink"), object: nil)
-    }
-
-    @objc func remove(_ notification: Notification) {
-        guard let url = notification.userInfo?["toRemoveFromCache"] as? String else { return }
-        externalCache.removeValue(forKey: url)
-    }
-
-    lazy var externalCache: [String:ExtensionsAddLinkRequests] = {
-        getCache()
-    }()
-
-    func getCache() -> [String:ExtensionsAddLinkRequests] {
-        let decoder = PropertyListDecoder()
-        var cache = [String:ExtensionsAddLinkRequests]()
-        if let data = try? Data(contentsOf: Self.filePathUrl),
-           let requests = try? decoder.decode([ExtensionsAddLinkRequests].self, from: data) {
-            for req in requests {
-                cache[req.url] = req
-            }
-        }
-        return cache
-    }
-
-    func dropCache() {
-        externalCache = [String:ExtensionsAddLinkRequests]()
-    }
-
-    func persistCache() {
-        let encoder = PropertyListEncoder()
-        encoder.outputFormat = .binary
-
-        coordinateFileWrite { url in
-            do {
-                let data = try encoder.encode(externalCache)
-                try data.write(to: url)
-            } catch {
-                logger.error("Save to disk failed: \(error.localizedDescription, privacy: .public)")
-            }
+    var pendingLinks: [ExtensionsAddLinkRequests] {
+        do {
+            return try withQueue { $0 }
+        } catch {
+            os_log(.error, "Could not read extension queue: %{public}@", String(describing: error))
+            return []
         }
     }
 
-    /// Coordinates file access
-    private func coordinateFileWrite(run accessor: (URL) throws -> Void) {
-        let errorPointer: NSErrorPointer = nil
-        let fileCoordinator = NSFileCoordinator()
-        let fileUrl = ExtensionsAddLinkRequestsManager.filePathUrl
-
-        fileCoordinator.coordinate(writingItemAt: fileUrl, options: [.forMerging], error: errorPointer, byAccessor: { url in
-            do {
-                try accessor(url)
-            } catch {
-                logger.error("Save to disk failed: \(error.localizedDescription, privacy: .public)")
+    @discardableResult
+    func add(_ urlString: String, note: String?, tagIds: [String]? = nil, groupId: String? = nil) -> Bool {
+        do {
+            return try withQueue { links in
+                guard links.count < 15 else { return false }
+                links.append(ExtensionsAddLinkRequests(url: urlString, note: note, tagIds: tagIds, groupId: groupId))
+                return true
             }
-        })
-
-        if let error = errorPointer?.pointee {
-            logger.error("Save to disk coordination failed: \(error.localizedDescription, privacy: .public)")
+        } catch {
+            os_log(.error, "Could not save extension request: %{public}@", String(describing: error))
+            return false
         }
     }
 
-    /// Stores given `urlString` and `note` to external file
-    func add(_ urlString: String, note: String?) {
-        logger.info("saving \(urlString) with note \(note ?? "")")
-        let decoder = PropertyListDecoder()
-        let encoder = PropertyListEncoder()
-        encoder.outputFormat = .binary
-
-        coordinateFileWrite { url in
-            var requests: [ExtensionsAddLinkRequests]
-            if
-                let fileData = try? Data(contentsOf: url),
-                let decodedRequests = try? decoder.decode([ExtensionsAddLinkRequests].self, from: fileData)
-            {
-                requests = decodedRequests
-            } else {
-                requests = [ExtensionsAddLinkRequests]()
-            }
-
-            requests.append(ExtensionsAddLinkRequests(url: urlString, note: note))
-
-            let data = try encoder.encode(requests)
-            try data.write(to: url)
+    func clearAll() {
+        do {
+            try withQueue { $0.removeAll() }
+        } catch {
+            os_log(.error, "Could not clear extension queue: %{public}@", String(describing: error))
         }
+    }
+
+    /// Acknowledge only saved requests, preserving requests added during import.
+    func remove(_ requests: [ExtensionsAddLinkRequests]) {
+        guard !requests.isEmpty else { return }
+        do {
+            try withQueue { remaining in
+                for request in requests {
+                    if let index = remaining.firstIndex(of: request) {
+                        remaining.remove(at: index)
+                    }
+                }
+            }
+        } catch {
+            os_log(.error, "Could not acknowledge extension requests: %{public}@", String(describing: error))
+        }
+    }
+
+    private func withQueue<T>(_ operation: (inout [ExtensionsAddLinkRequests]) -> T) throws -> T {
+        guard let directory else { throw CocoaError(.fileNoSuchFile) }
+        // Lock a separate file: atomic replacement changes the queue file's inode.
+        let descriptor = open(directory.appendingPathComponent("pendingLinks.lock").path, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR)
+        guard descriptor >= 0 else { throw POSIXError(POSIXErrorCode(rawValue: errno) ?? .EIO) }
+        defer { close(descriptor) }
+        while flock(descriptor, LOCK_EX) != 0 {
+            guard errno == EINTR else { throw POSIXError(POSIXErrorCode(rawValue: errno) ?? .EIO) }
+        }
+        defer { flock(descriptor, LOCK_UN) }
+
+        let queueURL = directory.appendingPathComponent("pendingLinks.json")
+        let exists = FileManager.default.fileExists(atPath: queueURL.path)
+        var links: [ExtensionsAddLinkRequests]
+        if exists {
+            links = try JSONDecoder().decode([ExtensionsAddLinkRequests].self, from: Data(contentsOf: queueURL))
+        } else {
+            // Refresh the legacy suite once, then use the file as the source of truth.
+            defaults?.synchronize()
+            links = try defaults?.data(forKey: Self.legacyKey).map {
+                try JSONDecoder().decode([ExtensionsAddLinkRequests].self, from: $0)
+            } ?? []
+        }
+        let original = links
+        let result = operation(&links)
+        if !exists || links != original {
+            try JSONEncoder().encode(links).write(to: queueURL, options: .atomic)
+        }
+        if !exists {
+            defaults?.removeObject(forKey: Self.legacyKey)
+            defaults?.synchronize()
+        }
+        return result
     }
 }

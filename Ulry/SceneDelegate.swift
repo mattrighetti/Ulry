@@ -21,6 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }()
 
     let addLinkRequestManger = ExtensionsAddLinkRequestsManager()
+    private static var externalLinkImport = ExternalLinkImportState()
 
     var window: UIWindow?
     let themeController = ThemeController()
@@ -36,7 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }, completion: .none)
         }
         
-        let navigationController = UINavigationController(rootViewController: HomeCollectionView())
+        let navigationController = UINavigationController(rootViewController: ReadingHomeViewController(account: account))
         window.rootViewController = navigationController
         
         window.makeKeyAndVisible()
@@ -44,6 +45,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(processExternalLinks), name: UIApplication.willEnterForegroundNotification, object: nil)
 
         self.window = window
+
+        processExternalLinks()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -56,6 +59,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        Task {
+            await syncTagsAndGroupsToSharedDefaults()
+        }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
@@ -77,14 +83,93 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     @objc private func processExternalLinks() {
-        guard addLinkRequestManger.getCache().count > 0 else { return }
-        os_log(.info, "moving \(self.addLinkRequestManger.externalCache.count) links from external file")
-        let links = addLinkRequestManger.externalCache.values.map { Link(url: $0.url, note: $0.note) }
-        
+        guard Self.externalLinkImport.begin() else { return }
+        // Release the guard even when the queue is empty.
+        let pendingLinks = addLinkRequestManger.pendingLinks
+        guard !pendingLinks.isEmpty else {
+            _ = Self.externalLinkImport.finish()
+            return
+        }
+
+        os_log(.info, "moving \(pendingLinks.count) links from external file")
+
+        var links: [Links.Link] = []
+        for pendingLink in pendingLinks {
+            let link = Links.Link(url: pendingLink.url, note: pendingLink.note)
+
+            // Attach tags if provided
+            if let tagIds = pendingLink.tagIds {
+                var tags = Set<Tag>()
+                for tagIdStr in tagIds {
+                    if let uuid = UUID(uuidString: tagIdStr),
+                       let tag = try? account.fetchTag(with: uuid.uuidString) {
+                        tags.insert(tag)
+                    }
+                }
+                if !tags.isEmpty {
+                    link.tags = tags
+                }
+            }
+
+            // Attach group if provided
+            if let groupIdStr = pendingLink.groupId,
+               let uuid = UUID(uuidString: groupIdStr),
+               let group = try? account.fetchGroup(with: uuid.uuidString) {
+                link.group = group
+            }
+
+            links.append(link)
+        }
+
         Task {
+            defer {
+                if Self.externalLinkImport.finish() {
+                    processExternalLinks()
+                }
+            }
             await account.insertBatch(links: links)
-            addLinkRequestManger.persistCache()
+            let savedRequests = zip(pendingLinks, links).compactMap { request, link in
+                // insertBatch logs individual failures; retain those requests for retry.
+                (try? account.fetchLink(with: link.id.uuidString)) == nil ? nil : request
+            }
+            addLinkRequestManger.remove(savedRequests)
+        }
+    }
+
+    private func syncTagsAndGroupsToSharedDefaults() async {
+        let defaults = UserDefaults(suiteName: "group.com.mattrighetti.Ulry")
+
+        if let tags = try? await account.fetchAllTags(),
+           let data = try? JSONEncoder().encode(tags) {
+            defaults?.set(data, forKey: "availableTags")
+        }
+
+        if let groups = try? await account.fetchAllGroups(),
+           let data = try? JSONEncoder().encode(groups) {
+            defaults?.set(data, forKey: "availableGroups")
         }
     }
 }
 
+
+/// Coalesces foreground events received while a batch is awaiting network work.
+struct ExternalLinkImportState {
+    private var isProcessing = false
+    private var needsAnotherPass = false
+
+    mutating func begin() -> Bool {
+        if isProcessing {
+            needsAnotherPass = true
+            return false
+        }
+        isProcessing = true
+        return true
+    }
+
+    mutating func finish() -> Bool {
+        isProcessing = false
+        let retry = needsAnotherPass
+        needsAnotherPass = false
+        return retry
+    }
+}

@@ -28,22 +28,24 @@ class HomeCollectionView: UIViewController {
 
     // MARK: - UI
 
-    lazy var addLinkButton: UIBarButtonItem = {
-        UIBarButtonItem(image: UIImage(systemName: "plus.circle"), primaryAction: UIAction { [unowned self] _ in
-            self.addLinkPressed()
-        })
-    }()
-
-    lazy var addGroupButton: UIBarButtonItem = {
-        UIBarButtonItem(image: UIImage(systemName: "folder.badge.plus"), primaryAction: UIAction { [unowned self] _ in
-            self.addGroupPressed()
-        })
-    }()
-
-    lazy var addTagButton: UIBarButtonItem = {
-        UIBarButtonItem(image: UIImage(systemName: "tag"), primaryAction: UIAction { [unowned self] _ in
-            self.addTagPressed()
-        })
+    lazy var addButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(
+            image: UIImage(systemName: "plus"),
+            primaryAction: nil,
+            menu: UIMenu(children: [
+                UIAction(title: "Add Link", image: UIImage(systemName: "link.badge.plus")) { [unowned self] _ in
+                    self.addLinkPressed()
+                },
+                UIAction(title: "New Group", image: UIImage(systemName: "folder.badge.plus")) { [unowned self] _ in
+                    self.addGroupPressed()
+                },
+                UIAction(title: "New Tag", image: UIImage(systemName: "tag")) { [unowned self] _ in
+                    self.addTagPressed()
+                }
+            ])
+        )
+        button.accessibilityLabel = "Add"
+        return button
     }()
 
     lazy var settingsButton: UIBarButtonItem = {
@@ -79,6 +81,10 @@ class HomeCollectionView: UIViewController {
         let cv = UICollectionViewCustomBackground(frame: .zero, collectionViewLayout: layout)
         cv.delaysContentTouches = false
         cv.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        cv.backgroundColor = .clear
+        cv.backgroundView = HomeCollectionBackgroundView()
+        cv.showsVerticalScrollIndicator = false
+        cv.contentInsetAdjustmentBehavior = .always
         return cv
     }()
 
@@ -98,12 +104,13 @@ class HomeCollectionView: UIViewController {
         }
 
         let headerRegistration = UICollectionView.SupplementaryRegistration<UICollectionViewCell>(elementKind: UICollectionView.elementKindSectionHeader) { supplementaryView, _, indexPath in
-            var config = UIListContentConfiguration.groupedHeader()
+            var config = UIListContentConfiguration.header()
             config.text = "Groups"
-            config.textProperties.font = UIFont.rounded(ofSize: 17, weight: .bold)
+            config.textProperties.font = UIFont.rounded(ofSize: 20, weight: .bold)
             config.textProperties.color = .label
-            config.directionalLayoutMargins = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
+            config.directionalLayoutMargins = .init(top: 10, leading: 0, bottom: 8, trailing: 0)
             supplementaryView.contentConfiguration = config
+            supplementaryView.backgroundConfiguration = .clear()
         }
 
         var datasource = UICollectionViewDiffableDataSource<HomeCollectionViewSection, Category>(collectionView: collectionView) { collectionView, indexPath, category in
@@ -137,8 +144,11 @@ class HomeCollectionView: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.isToolbarHidden = true
         navigationItem.title = "Home"
+        navigationItem.largeTitleDisplayMode = .always
 
-        navigationItem.rightBarButtonItems = [addLinkButton, .fixedSpace(8), addGroupButton, addTagButton]
+        view.backgroundColor = .systemBackground
+
+        navigationItem.rightBarButtonItems = [addButton]
         navigationItem.leftBarButtonItems = [settingsButton, statsButton]
 
         view.addSubview(collectionView)
@@ -188,12 +198,12 @@ class HomeCollectionView: UIViewController {
 
     @objc private func showFetching() {
         activityIndicator.startAnimating()
-        navigationItem.rightBarButtonItems = [addLinkButton, .fixedSpace(8), addGroupButton, addTagButton, UIBarButtonItem(customView: activityIndicator)]
+        navigationItem.rightBarButtonItems = [addButton, UIBarButtonItem(customView: activityIndicator)]
     }
 
     @objc private func stopFetching() {
         activityIndicator.stopAnimating()
-        navigationItem.rightBarButtonItems = [addLinkButton, .fixedSpace(8), addGroupButton, addTagButton]
+        navigationItem.rightBarButtonItems = [addButton]
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -383,4 +393,3 @@ extension HomeCollectionView {
         datasource.apply(snapshot, animatingDifferences: true)
     }
 }
-

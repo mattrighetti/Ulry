@@ -37,21 +37,23 @@ class TipsViewController: UIViewController {
         return view
     }()
     
-    lazy var backgroundViewWidth: CGFloat = {
-        if UIScreen.screenWidth < 400 {
-            return UIScreen.screenWidth - 60
+    var backgroundViewWidth: CGFloat {
+        let screenWidth = view.window?.windowScene?.screen.bounds.width ?? 390
+        if screenWidth < 400 {
+            return screenWidth - 60
         } else {
-            return UIScreen.screenWidth / 4
+            return screenWidth / 4
         }
-    }()
-    
-    lazy var backgroundViewHeight: CGFloat = {
-        if UIScreen.screenWidth < 400 {
-            return UIScreen.screenWidth - 10
+    }
+
+    var backgroundViewHeight: CGFloat {
+        let screenWidth = view.window?.windowScene?.screen.bounds.width ?? 390
+        if screenWidth < 400 {
+            return screenWidth - 10
         } else {
-            return UIScreen.screenWidth / 4
+            return screenWidth / 4
         }
-    }()
+    }
     
     lazy var discoseButton: UIButton = {
         let button = UIButton(type: .close)

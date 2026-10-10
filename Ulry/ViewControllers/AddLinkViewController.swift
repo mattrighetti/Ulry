@@ -60,7 +60,11 @@ class AddLinkViewController: UIViewController {
     private lazy var noteTextView: UITextView = {
         let textView = UITextView()
         textView.font = UIFont.rounded(ofSize: 17, weight: .regular)
-        let accessoryView = UrlTextFieldAccessoryView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth, height: 50), withConfiguration: .plain())
+        let screenWidth = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first?.bounds.width ?? 390
+        let accessoryView = UrlTextFieldAccessoryView(frame: CGRect(x: 0, y: 0, width: screenWidth, height: 50), withConfiguration: .plain())
         accessoryView.httpsButton.isHidden = true
         accessoryView.wwwButton.isHidden = true
         accessoryView.pasteButton.isHidden = true
@@ -318,17 +322,6 @@ class AddLinkViewController: UIViewController {
         }
     }
     
-    private func autoPasteFromClipboard() {
-        guard self.configuration == .new else { return }
-        if UIPasteboard.general.hasURLs {
-            guard let text = UIPasteboard.general.url else { return }
-            self.urlTextField.text = text.absoluteString
-        } else if UIPasteboard.general.hasStrings {
-            guard let text = UIPasteboard.general.string else { return }
-            self.urlTextField.text = text
-        }
-    }
-
     private func checkTextFieldInputValidity() -> Bool {
         urlTextField.text = urlTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         // Both edit and new must have valid input
