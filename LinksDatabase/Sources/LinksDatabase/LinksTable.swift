@@ -134,6 +134,25 @@ final class LinksTable: DatabaseTable {
         return try fetchGenerics { sql_fetchLinks(orderBy: order.orderByClause, $0) }
     }
 
+    /// Loads only the visible Home cards and full-library counts.
+    func fetchHomeOverview() throws -> HomeOverview {
+        // The mapper always returns one overview, including for an empty database.
+        try fetchSingleGeneric { sql_fetchHomeOverview($0) }!
+    }
+
+    /// Loads the active reading library, including collection and tag relationships.
+    func fetchActiveLinksAsync() async throws -> [Link] {
+        try await fetchGenericsAsync { database in
+            let links = sql_fetchLinks(whereClause: "archived = false", orderBy: ("created_at", "desc"), database)
+            for link in links {
+                link.group = sql_fetchGroupOfLink(withUuid: link.id.uuidString, database)
+                let tags = Set(sql_fetchTagsOfLink(withUuid: link.id.uuidString, database))
+                link.tags = tags.isEmpty ? nil : tags
+            }
+            return links
+        }
+    }
+
     func fetchAllLinksAsync(order: OrderBy) async throws -> [Link] {
         return try await fetchGenericsAsync { sql_fetchLinks(orderBy: order.orderByClause, $0) }
     }

@@ -24,6 +24,45 @@ func mapResultToArray<T>(_ resultSet: FMResultSet, _ completion: (_ resultSet: F
 
 // MARK: - SQL
 
+func sql_fetchHomeOverview(_ database: FMDatabase) -> HomeOverview {
+    var links: [Link] = []
+    if let result = database.executeQuery("select * from link where archived = false order by created_at desc limit 4", withArgumentsIn: []) {
+        links = mapResultToArray(result) { Link(from: $0) }
+        result.close()
+    }
+    // The latest unread link can be older than all four recent saves.
+    if let result = database.executeQuery("select * from link where archived = false and unread = true order by created_at desc limit 1", withArgumentsIn: []) {
+        if result.next(), let unread = Link(from: result), !links.contains(where: { $0.id == unread.id }) {
+            links.append(unread)
+        }
+        result.close()
+    }
+    for link in links {
+        link.group = sql_fetchGroupOfLink(withUuid: link.id.uuidString, database)
+        let tags = Set(sql_fetchTagsOfLink(withUuid: link.id.uuidString, database))
+        link.tags = tags.isEmpty ? nil : tags
+    }
+    var allCount = 0
+    var unreadCount = 0
+    var starredCount = 0
+    if let result = database.executeQuery("select count(*) as total, coalesce(sum(unread), 0) as unread, coalesce(sum(starred), 0) as starred from link where archived = false", withArgumentsIn: []), result.next() {
+        allCount = Int(result.int(forColumn: "total"))
+        unreadCount = Int(result.int(forColumn: "unread"))
+        starredCount = Int(result.int(forColumn: "starred"))
+        result.close()
+    }
+    var groupCounts: [UUID: Int] = [:]
+    if let result = database.executeQuery("select category_id, count(*) as total from category_link join link on link.id = category_link.link_id where link.archived = false group by category_id", withArgumentsIn: []) {
+        while result.next() {
+            if let value = result.string(forColumn: "category_id"), let id = UUID(uuidString: value) {
+                groupCounts[id] = Int(result.int(forColumn: "total"))
+            }
+        }
+        result.close()
+    }
+    return (links, sql_fetchAllGroups(database), allCount, unreadCount, starredCount, groupCounts)
+}
+
 /// Fetches all `UUID`s of all the links in the database
 func sql_fetchLinkIDs(whereClause: String? = nil, orderBy: (String, String)? = nil, _ database: FMDatabase) -> [String] {
     let sql = _sql_select("id", from: "link", where: whereClause, orderBy: orderBy)

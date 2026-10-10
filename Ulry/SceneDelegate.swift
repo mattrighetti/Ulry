@@ -37,7 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }, completion: .none)
         }
         
-        let navigationController = UINavigationController(rootViewController: HomeCollectionView())
+        let navigationController = UINavigationController(rootViewController: ReadingHomeViewController(account: account))
         window.rootViewController = navigationController
         
         window.makeKeyAndVisible()

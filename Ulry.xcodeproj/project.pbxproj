@@ -7,9 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F762973A002244449118AE95 /* Account in Frameworks */ = {isa = PBXBuildFile; productRef = F762973A002244449118AE97 /* Account */; };
+		F762973A002244449118AE96 /* Links in Frameworks */ = {isa = PBXBuildFile; productRef = F762973A002244449118AE98 /* Links */; };
+		F762973A002244449118AE93 /* ReadingHomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F762973A002244449118AE94 /* ReadingHomeTests.swift */; };
 		ABED00102ED0000000000004 /* ShareCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABED00102ED0000000000007 /* ShareCardView.swift */; };
 		ABED00102ED0000000000005 /* ShareCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABED00102ED0000000000007 /* ShareCardView.swift */; };
 		ABED00102ED0000000000006 /* ShareSheetPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABED00102ED0000000000008 /* ShareSheetPreviews.swift */; };
+		F762973A002244449118AE91 /* ReadingHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F762973A002244449118AE92 /* ReadingHomeViewController.swift */; };
 		ABED00102ED0000000000003 /* ExtensionsAddLinkRequestsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2508042933BC5100001CD0 /* ExtensionsAddLinkRequestsManager.swift */; };
 		ABED00102ED0000000000001 /* ExtensionsAddLinkRequestsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABED00102ED0000000000002 /* ExtensionsAddLinkRequestsManagerTests.swift */; };
 		3BBAD7949D2309AC19E2EC60 /* AddCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FEBE780B7EB6B220504B77 /* AddCategoryView.swift */; };
@@ -247,8 +251,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F762973A002244449118AE94 /* ReadingHomeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingHomeTests.swift; sourceTree = "<group>"; };
 		ABED00102ED0000000000007 /* ShareCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCardView.swift; sourceTree = "<group>"; };
 		ABED00102ED0000000000008 /* ShareSheetPreviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheetPreviews.swift; sourceTree = "<group>"; };
+		F762973A002244449118AE92 /* ReadingHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingHomeViewController.swift; sourceTree = "<group>"; };
 		ABED00102ED0000000000002 /* ExtensionsAddLinkRequestsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionsAddLinkRequestsManagerTests.swift; sourceTree = "<group>"; };
 		5F05BF5029E4C08F00B59492 /* +ColorsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+ColorsTest.swift"; sourceTree = "<group>"; };
 		5F05BF5229E4C37600B59492 /* AppReviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewManager.swift; sourceTree = "<group>"; };
@@ -414,6 +420,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F762973A002244449118AE95 /* Account in Frameworks */,
+				F762973A002244449118AE96 /* Links in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -485,6 +493,7 @@
 				C9CBCC1A28DF013400D98A13 /* HomeCollectionViewController.swift */,
 				C96AA60E28FCB2DD00AA838E /* Layout.swift */,
 				5F05BF5529E4C37600B59492 /* HomeGlassComponents.swift */,
+				F762973A002244449118AE92 /* ReadingHomeViewController.swift */,
 				5F093AA229ECB5DD007D2245 /* BackgroundSupplementaryView.swift */,
 			);
 			path = Home;
@@ -616,6 +625,7 @@
 		C9D7FE84278AFFA100016B04 /* UlryTests */ = {
 			isa = PBXGroup;
 			children = (
+				F762973A002244449118AE94 /* ReadingHomeTests.swift */,
 				ABED00102ED0000000000002 /* ExtensionsAddLinkRequestsManagerTests.swift */,
 				C93807D328FF775E0072B0E9 /* Shared */,
 				5F05BF5029E4C08F00B59492 /* +ColorsTest.swift */,
@@ -836,6 +846,10 @@
 				C9D7FE88278AFFA100016B04 /* PBXTargetDependency */,
 			);
 			name = UlryTests;
+			packageProductDependencies = (
+				F762973A002244449118AE97 /* Account */,
+				F762973A002244449118AE98 /* Links */,
+			);
 			productName = UlryTests;
 			productReference = C9D7FE83278AFFA100016B04 /* UlryTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -1024,6 +1038,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F762973A002244449118AE93 /* ReadingHomeTests.swift in Sources */,
 				ABED00102ED0000000000001 /* ExtensionsAddLinkRequestsManagerTests.swift in Sources */,
 				C93807D528FF776F0072B0E9 /* URLRedirectorTest.swift in Sources */,
 				5F05BF5129E4C08F00B59492 /* +ColorsTest.swift in Sources */,
@@ -1091,6 +1106,7 @@
 				C9BE6A7028FF356400DC1592 /* SFSymbolsCollectionView.swift in Sources */,
 				5F05BF5329E4C37600B59492 /* AppReviewManager.swift in Sources */,
 				5F05BF5429E4C37600B59492 /* HomeGlassComponents.swift in Sources */,
+				F762973A002244449118AE91 /* ReadingHomeViewController.swift in Sources */,
 				5F5D200029ED8CC0006F0096 /* +UICollectionLayoutListConfiguration.swift in Sources */,
 				5F156A7129EDE4D800FFF1A0 /* +Date.swift in Sources */,
 				5FB0336929CE4C6B0005672A /* +UIButton.swift in Sources */,
@@ -1672,6 +1688,8 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F762973A002244449118AE97 /* Account */ = {isa = XCSwiftPackageProductDependency; productName = Account; };
+		F762973A002244449118AE98 /* Links */ = {isa = XCSwiftPackageProductDependency; productName = Links; };
 		5F7944362930E65A00E49FC8 /* LinksMetadata */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = LinksMetadata;

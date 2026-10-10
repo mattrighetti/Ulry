@@ -114,6 +114,16 @@ public final class Account {
 
     // MARK: - APIs
 
+    @MainActor
+    public func fetchHomeOverview() throws -> HomeOverview {
+        try database.fetchHomeOverview()
+    }
+
+    @MainActor
+    public func fetchActiveLinks() async throws -> [Link] {
+        try await database.fetchActiveLinksAsync()
+    }
+
     public func fetchLinkIDs(in group: Group, order: OrderBy) throws -> [String] {
         return try database.fetchLinkIDs(in: group, order: order)
     }
