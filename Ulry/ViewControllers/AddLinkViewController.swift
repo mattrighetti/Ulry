@@ -322,17 +322,6 @@ class AddLinkViewController: UIViewController {
         }
     }
     
-    private func autoPasteFromClipboard() {
-        guard self.configuration == .new else { return }
-        if UIPasteboard.general.hasURLs {
-            guard let text = UIPasteboard.general.url else { return }
-            self.urlTextField.text = text.absoluteString
-        } else if UIPasteboard.general.hasStrings {
-            guard let text = UIPasteboard.general.string else { return }
-            self.urlTextField.text = text
-        }
-    }
-
     private func checkTextFieldInputValidity() -> Bool {
         urlTextField.text = urlTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         // Both edit and new must have valid input

@@ -241,16 +241,6 @@ struct AddLinkView: View {
             if let tags = link.tags {
                 selectedTags = tags
             }
-        } else {
-            if UIPasteboard.general.hasURLs {
-                if let url = UIPasteboard.general.url {
-                    urlText = url.absoluteString
-                }
-            } else if UIPasteboard.general.hasStrings {
-                if let text = UIPasteboard.general.string {
-                    urlText = text
-                }
-            }
         }
     }
 
