@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ABED00102ED0000000000004 /* ShareCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABED00102ED0000000000007 /* ShareCardView.swift */; };
+		ABED00102ED0000000000005 /* ShareCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABED00102ED0000000000007 /* ShareCardView.swift */; };
+		ABED00102ED0000000000006 /* ShareSheetPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABED00102ED0000000000008 /* ShareSheetPreviews.swift */; };
+		ABED00102ED0000000000003 /* ExtensionsAddLinkRequestsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2508042933BC5100001CD0 /* ExtensionsAddLinkRequestsManager.swift */; };
+		ABED00102ED0000000000001 /* ExtensionsAddLinkRequestsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABED00102ED0000000000002 /* ExtensionsAddLinkRequestsManagerTests.swift */; };
 		3BBAD7949D2309AC19E2EC60 /* AddCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FEBE780B7EB6B220504B77 /* AddCategoryView.swift */; };
 		5F05BF5129E4C08F00B59492 /* +ColorsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F05BF5029E4C08F00B59492 /* +ColorsTest.swift */; };
 		5F05BF5329E4C37600B59492 /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F05BF5229E4C37600B59492 /* AppReviewManager.swift */; };
@@ -242,6 +247,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		ABED00102ED0000000000007 /* ShareCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCardView.swift; sourceTree = "<group>"; };
+		ABED00102ED0000000000008 /* ShareSheetPreviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheetPreviews.swift; sourceTree = "<group>"; };
+		ABED00102ED0000000000002 /* ExtensionsAddLinkRequestsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionsAddLinkRequestsManagerTests.swift; sourceTree = "<group>"; };
 		5F05BF5029E4C08F00B59492 /* +ColorsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+ColorsTest.swift"; sourceTree = "<group>"; };
 		5F05BF5229E4C37600B59492 /* AppReviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewManager.swift; sourceTree = "<group>"; };
 		5F05BF5529E4C37600B59492 /* HomeGlassComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGlassComponents.swift; sourceTree = "<group>"; };
@@ -426,9 +434,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		ABED00102ED0000000000009 /* Previews */ = {
+			isa = PBXGroup;
+			children = (
+				ABED00102ED0000000000008 /* ShareSheetPreviews.swift */,
+			);
+			path = Previews;
+			sourceTree = "<group>";
+		};
 		5F2508012933B96700001CD0 /* SharedExtension */ = {
 			isa = PBXGroup;
 			children = (
+				ABED00102ED0000000000007 /* ShareCardView.swift */,
 				5F2508022933B9A900001CD0 /* ExtensionsAddLinkRequests.swift */,
 				5F2508042933BC5100001CD0 /* ExtensionsAddLinkRequestsManager.swift */,
 			);
@@ -599,6 +616,7 @@
 		C9D7FE84278AFFA100016B04 /* UlryTests */ = {
 			isa = PBXGroup;
 			children = (
+				ABED00102ED0000000000002 /* ExtensionsAddLinkRequestsManagerTests.swift */,
 				C93807D328FF775E0072B0E9 /* Shared */,
 				5F05BF5029E4C08F00B59492 /* +ColorsTest.swift */,
 			);
@@ -637,6 +655,7 @@
 		C9F4F8E02789C28A00887A3E /* Ulry */ = {
 			isa = PBXGroup;
 			children = (
+				ABED00102ED0000000000009 /* Previews */,
 				C99C14DC278C6C0000936D27 /* Ulry.entitlements */,
 				C9F4F8EF2789C28B00887A3E /* LaunchScreen.storyboard */,
 				C9F4F8F82789C2AB00887A3E /* AppDelegate.swift */,
@@ -977,6 +996,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABED00102ED0000000000005 /* ShareCardView.swift in Sources */,
+				ABED00102ED0000000000003 /* ExtensionsAddLinkRequestsManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1003,6 +1024,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABED00102ED0000000000001 /* ExtensionsAddLinkRequestsManagerTests.swift in Sources */,
 				C93807D528FF776F0072B0E9 /* URLRedirectorTest.swift in Sources */,
 				5F05BF5129E4C08F00B59492 /* +ColorsTest.swift in Sources */,
 			);
@@ -1012,6 +1034,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABED00102ED0000000000004 /* ShareCardView.swift in Sources */,
+				ABED00102ED0000000000006 /* ShareSheetPreviews.swift in Sources */,
 				C9179A232797379A008A82DD /* Intents.intentdefinition in Sources */,
 				5F2508092933DF6700001CD0 /* Logging.swift in Sources */,
 				C94A2DD0278B710A007F6FFA /* +UIFont.swift in Sources */,

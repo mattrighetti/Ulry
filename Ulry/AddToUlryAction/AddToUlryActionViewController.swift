@@ -81,8 +81,7 @@ class ActionViewController: UIViewController {
         if file.canSaveMoreLinks {
             let urlString = dict["url"] as! String
             guard let _ = URL(string: urlString) else { return }
-            file.add(urlString, note: nil)
-            titleLabel.text = "Saved correctly"
+            titleLabel.text = file.add(urlString, note: nil) ? "Saved correctly" : "Couldn’t save link"
         } else {
             let conf = UIImage.SymbolConfiguration(paletteColors: [.yellow])
             image.image = UIImage(systemName: "exclamationmark.triangle.fill", withConfiguration: conf)

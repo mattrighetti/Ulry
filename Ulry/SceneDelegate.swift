@@ -21,6 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }()
 
     let addLinkRequestManger = ExtensionsAddLinkRequestsManager()
+    private static var externalLinkImport = ExternalLinkImportState()
 
     var window: UIWindow?
     let themeController = ThemeController()
@@ -82,13 +83,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     @objc private func processExternalLinks() {
+        guard Self.externalLinkImport.begin() else { return }
+        // Release the guard even when the queue is empty.
         let pendingLinks = addLinkRequestManger.pendingLinks
-        guard !pendingLinks.isEmpty else { return }
+        guard !pendingLinks.isEmpty else {
+            _ = Self.externalLinkImport.finish()
+            return
+        }
+
         os_log(.info, "moving \(pendingLinks.count) links from external file")
 
         var links: [Links.Link] = []
         for pendingLink in pendingLinks {
-            var link = Links.Link(url: pendingLink.url, note: pendingLink.note)
+            let link = Links.Link(url: pendingLink.url, note: pendingLink.note)
 
             // Attach tags if provided
             if let tagIds = pendingLink.tagIds {
@@ -115,8 +122,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 
         Task {
+            defer {
+                if Self.externalLinkImport.finish() {
+                    processExternalLinks()
+                }
+            }
             await account.insertBatch(links: links)
-            addLinkRequestManger.clearAll()
+            let savedRequests = zip(pendingLinks, links).compactMap { request, link in
+                // insertBatch logs individual failures; retain those requests for retry.
+                (try? account.fetchLink(with: link.id.uuidString)) == nil ? nil : request
+            }
+            addLinkRequestManger.remove(savedRequests)
         }
     }
 
@@ -135,3 +151,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 }
 
+
+/// Coalesces foreground events received while a batch is awaiting network work.
+struct ExternalLinkImportState {
+    private var isProcessing = false
+    private var needsAnotherPass = false
+
+    mutating func begin() -> Bool {
+        if isProcessing {
+            needsAnotherPass = true
+            return false
+        }
+        isProcessing = true
+        return true
+    }
+
+    mutating func finish() -> Bool {
+        isProcessing = false
+        let retry = needsAnotherPass
+        needsAnotherPass = false
+        return retry
+    }
+}

@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct ExtensionsAddLinkRequests: Codable {
+struct ExtensionsAddLinkRequests: Codable, Equatable {
     let url: String
     let note: String?
     let date: Int
