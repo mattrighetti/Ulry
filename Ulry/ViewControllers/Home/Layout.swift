@@ -13,21 +13,22 @@ extension HomeCollectionView {
         let item = NSCollectionLayoutItem(
             layoutSize: .init(
                 widthDimension: .fractionalWidth(0.5),
-                heightDimension: .fractionalHeight(1.0)
+                heightDimension: .estimated(200)
             )
         )
-        item.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 6, bottom: 0, trailing: 6)
 
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: .init(
                 widthDimension: .fractionalWidth(1),
-                heightDimension: .absolute(130)
+                heightDimension: .estimated(200)
             ),
             subitems: [item]
         )
 
         let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 10, bottom: 16, trailing: 10)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 16, bottom: 30, trailing: 16)
+        section.interGroupSpacing = 12
 
         return section
     }
@@ -36,26 +37,26 @@ extension HomeCollectionView {
         let item = NSCollectionLayoutItem(
             layoutSize: .init(
                 widthDimension: .fractionalWidth(1),
-                heightDimension: .absolute(70)
+                heightDimension: .estimated(86)
             )
         )
-        item.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0)
 
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: .init(
                 widthDimension: .fractionalWidth(1),
-                heightDimension: .estimated(500)
+                heightDimension: .estimated(86)
             ),
             subitems: [item]
         )
 
         let section = NSCollectionLayoutSection(group: group)
         section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 20, trailing: 16)
+        section.interGroupSpacing = 12
         section.boundarySupplementaryItems = [
             .init(
                 layoutSize: .init(
                     widthDimension: .fractionalWidth(1),
-                    heightDimension: .absolute(44)
+                    heightDimension: .absolute(56)
                 ),
                 elementKind: UICollectionView.elementKindSectionHeader,
                 alignment: .topLeading

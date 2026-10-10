@@ -10,6 +10,7 @@
 		3BBAD7949D2309AC19E2EC60 /* AddCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FEBE780B7EB6B220504B77 /* AddCategoryView.swift */; };
 		5F05BF5129E4C08F00B59492 /* +ColorsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F05BF5029E4C08F00B59492 /* +ColorsTest.swift */; };
 		5F05BF5329E4C37600B59492 /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F05BF5229E4C37600B59492 /* AppReviewManager.swift */; };
+		5F05BF5429E4C37600B59492 /* HomeGlassComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F05BF5529E4C37600B59492 /* HomeGlassComponents.swift */; };
 		5F093AA329ECB5DD007D2245 /* BackgroundSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F093AA229ECB5DD007D2245 /* BackgroundSupplementaryView.swift */; };
 		5F093AA529ECB9B1007D2245 /* +UICollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F093AA429ECB9B1007D2245 /* +UICollectionView.swift */; };
 		5F093AA729ECBD67007D2245 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9F4F9502789C4F600887A3E /* Assets.xcassets */; };
@@ -243,6 +244,7 @@
 /* Begin PBXFileReference section */
 		5F05BF5029E4C08F00B59492 /* +ColorsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+ColorsTest.swift"; sourceTree = "<group>"; };
 		5F05BF5229E4C37600B59492 /* AppReviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewManager.swift; sourceTree = "<group>"; };
+		5F05BF5529E4C37600B59492 /* HomeGlassComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGlassComponents.swift; sourceTree = "<group>"; };
 		5F093AA229ECB5DD007D2245 /* BackgroundSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSupplementaryView.swift; sourceTree = "<group>"; };
 		5F093AA429ECB9B1007D2245 /* +UICollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+UICollectionView.swift"; sourceTree = "<group>"; };
 		5F093DED29C672AC00CEC583 /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
@@ -465,6 +467,7 @@
 				C96AA61328FCB7E100AA838E /* Cells */,
 				C9CBCC1A28DF013400D98A13 /* HomeCollectionViewController.swift */,
 				C96AA60E28FCB2DD00AA838E /* Layout.swift */,
+				5F05BF5529E4C37600B59492 /* HomeGlassComponents.swift */,
 				5F093AA229ECB5DD007D2245 /* BackgroundSupplementaryView.swift */,
 			);
 			path = Home;
@@ -1063,6 +1066,7 @@
 				C94496052909D2CA00A6FE0A /* BackupViewController.swift in Sources */,
 				C9BE6A7028FF356400DC1592 /* SFSymbolsCollectionView.swift in Sources */,
 				5F05BF5329E4C37600B59492 /* AppReviewManager.swift in Sources */,
+				5F05BF5429E4C37600B59492 /* HomeGlassComponents.swift in Sources */,
 				5F5D200029ED8CC0006F0096 /* +UICollectionLayoutListConfiguration.swift in Sources */,
 				5F156A7129EDE4D800FFF1A0 /* +Date.swift in Sources */,
 				5FB0336929CE4C6B0005672A /* +UIButton.swift in Sources */,
