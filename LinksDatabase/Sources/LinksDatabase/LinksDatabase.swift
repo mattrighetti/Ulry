@@ -220,6 +220,16 @@ public final class LinksDatabase {
         return try await linksTable.insertAsync(link: link)
     }
 
+    @MainActor
+    public func importLink(_ link: Link) async throws -> Bool {
+        try await linksTable.importLink(link)
+    }
+
+    @MainActor
+    public func enrichImportedLink(_ link: Link) async throws -> Bool {
+        try await linksTable.enrichImportedLink(link)
+    }
+
     // MARK: Insert Group
 
     public func insert(group: Group) throws {

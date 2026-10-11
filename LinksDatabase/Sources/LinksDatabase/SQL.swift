@@ -103,7 +103,11 @@ func sql_fetchSingleLinkID(whereClause: String? = nil, orderBy: (String, String)
 func sql_fetchOptionalSingleLink(whereClause: String, _ database: FMDatabase) -> Link? {
     let link = sql_fetchLinks(whereClause: whereClause, database)
     assert(link.count <= 1)
-    return link.first
+    guard let result = link.first else { return nil }
+    result.group = sql_fetchGroupOfLink(withUuid: result.id.uuidString, database)
+    let tags = Set(sql_fetchTagsOfLink(withUuid: result.id.uuidString, database))
+    result.tags = tags.isEmpty ? nil : tags
+    return result
 }
 
 func sql_fetchSingleLink(whereClause: String, orderBy: (String, String)? = nil, _ database: FMDatabase) -> Link {
@@ -311,8 +315,9 @@ func sql_fetchLinkIDs(matching value: String, _ database: FMDatabase) -> [String
 /// Inserts link into database
 ///
 /// Links have unique `UUID` and `url` in database
-func sql_insert(_ link: Link, _ database: FMDatabase) {
-    database.executeUpdate(
+@discardableResult
+func sql_insert(_ link: Link, _ database: FMDatabase) -> Bool {
+    guard database.executeUpdate(
         _sql_insert(into: "link", fields: ["id", "url", "starred", "archived", "unread", "color", "created_at", "updated_at", "note", "ogTitle", "ogDescription", "ogImageUrl"]),
         withArgumentsIn: [
             link.id, link.url, link.starred, link.archived, link.unread,
@@ -320,21 +325,22 @@ func sql_insert(_ link: Link, _ database: FMDatabase) {
             link.note ?? NSNull(), link.ogTitle ?? NSNull(),
             link.ogDescription ?? NSNull(), link.ogImageUrl ?? NSNull()
         ]
-    )
+    ) else { return false }
 
     if let group = link.group {
-        database.executeUpdate(
+        guard database.executeUpdate(
             _sql_insert(into: "category_link", fields: ["link_id", "category_id"]),
             withArgumentsIn: [link.id, group.id]
-        )
+        ) else { return false }
     }
 
-    link.tags?.forEach {
-        database.executeUpdate(
+    for tag in link.tags ?? [] {
+        guard database.executeUpdate(
             _sql_insert(into: "tag_link", fields: ["link_id", "tag_id"]),
-            withArgumentsIn: [link.id, $0.id]
-        )
+            withArgumentsIn: [link.id, tag.id]
+        ) else { return false }
     }
+    return true
 }
 
 /// Inserts group into database

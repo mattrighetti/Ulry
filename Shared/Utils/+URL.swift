@@ -18,7 +18,7 @@ public extension URL {
         var path: URL = fileContainer
         if let folders = folders {
             for folder in folders {
-                path = path.appendingPathExtension(folder)
+                path = path.appendingPathComponent(folder)
             }
         }
         return path.appendingPathComponent(filename)

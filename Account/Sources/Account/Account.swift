@@ -211,6 +211,37 @@ public final class Account {
         NotificationCenter.default.post(name: .AccountIsNotFetching, object: self, userInfo: nil)
     }
 
+    /// Returns true for a new insertion and false for an already committed request.
+    /// Neither path performs network work; failures are left queued by the caller.
+    @MainActor
+    public func importExternalLink(_ link: Link) async throws -> Bool {
+        let inserted = try await database.importLink(link)
+        if inserted {
+            NotificationCenter.default.post(name: .UserDidAddLink, object: self, userInfo: ["link": link])
+        }
+        return inserted
+    }
+
+    @MainActor
+    public func enrichExternalLink(_ link: Link) async {
+        let preview = Link(url: link.url)
+        preview.id = link.id
+        _ = await dataQueue.process(preview)
+        do {
+            guard try await database.enrichImportedLink(preview),
+                  let current = try database.fetchLink(with: link.id.uuidString) else { return }
+            NotificationCenter.default.post(name: .UserDidUpdateLink, object: self, userInfo: ["link": current])
+            if let data = await dataQueue.imageWorker(current),
+               let latest = try database.fetchLink(with: current.id.uuidString),
+               latest.url == current.url, latest.ogImageUrl == current.ogImageUrl {
+                imageCache.storeImageData(data, with: current.id)
+                NotificationCenter.default.post(name: .UserDidUpdateLink, object: self, userInfo: ["link": latest])
+            }
+        } catch {
+            os_log(.error, "Could not enrich imported link: %{public}@", String(describing: error))
+        }
+    }
+
     @MainActor
     public func insertBatch(links: [Link]) async {
         await fetchBlock {
