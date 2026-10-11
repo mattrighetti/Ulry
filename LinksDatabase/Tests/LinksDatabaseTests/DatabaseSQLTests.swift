@@ -38,6 +38,66 @@ class DatabaseSQLTests: XCTestCase {
         return db
     }
 
+    @MainActor
+    func testImportRollsBackFailedRelationshipsAndRetriesOnce() async throws {
+        let file = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: file) }
+        let queue = DatabaseQueue(databasePath: file.path)
+        try queue.runCreateStatements(statements)
+        let table = LinksTable(name: "link", queue: queue)
+        queue.runInDatabaseSync { result in
+            result.database?.executeStatements("create trigger reject_tag before insert on tag_link begin select raise(abort, 'test failure'); end;")
+        }
+        let link = Link(url: "https://example.com")
+        link.tags = [Tag(colorHex: "123456", name: "Research")]
+        do {
+            _ = try await table.importLink(link)
+            XCTFail("A failed relationship must fail the import")
+        } catch { }
+        XCTAssertNil(try table.fetchSingleLink(with: link.id.uuidString))
+        queue.runInDatabaseSync { result in result.database?.executeStatements("drop trigger reject_tag;") }
+        let inserted = try await table.importLink(link)
+        let retried = try await table.importLink(link)
+        XCTAssertTrue(inserted)
+        XCTAssertFalse(retried)
+        XCTAssertEqual(try table.fetchAllLinks(order: .newest).count, 1)
+    }
+
+    @MainActor
+    func testPreviewUpdatesPreserveEditsAndIgnoreDeletedLinks() async throws {
+        let file = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: file) }
+        let queue = DatabaseQueue(databasePath: file.path)
+        try queue.runCreateStatements(statements)
+        let table = LinksTable(name: "link", queue: queue)
+        let link = Link(url: "https://example.com")
+        _ = try await table.importLink(link)
+        let preview = Link(url: link.url)
+        preview.id = link.id
+        preview.ogTitle = "Fetched title"
+        preview.ogDescription = "Fetched description"
+        link.note = "Edited note"
+        link.starred = true
+        link.ogTitle = "My title"
+        try table.update(link: link)
+
+        let enriched = try await table.enrichImportedLink(preview)
+        XCTAssertTrue(enriched)
+        let current = try XCTUnwrap(table.fetchSingleLink(with: link.id.uuidString))
+        XCTAssertEqual(current.ogTitle, "My title")
+        XCTAssertEqual(current.ogDescription, "Fetched description")
+        XCTAssertEqual(current.note, "Edited note")
+        XCTAssertTrue(current.starred)
+        current.url = "https://example.com/edited"
+        try table.update(link: current)
+        let stale = try await table.enrichImportedLink(preview)
+        XCTAssertFalse(stale)
+        try table.deleteLink(with: link.id.uuidString)
+        let deleted = try await table.enrichImportedLink(preview)
+        XCTAssertFalse(deleted)
+        XCTAssertNil(try table.fetchSingleLink(with: link.id.uuidString))
+    }
+
     func testExistsLink() {
         let db = database
         let url = "https://example.com"

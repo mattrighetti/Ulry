@@ -27,24 +27,27 @@ public class AddURLIntentHandler: NSObject, AddURLIntentHandling {
             completion(.unsupported(forReason: .required))
             return
         }
-        completion(.success(with: url))
+        guard let validated = SharedWebURL.parse(url) else {
+            completion(.unsupported())
+            return
+        }
+        completion(.success(with: validated.absoluteString))
     }
     
     public func handle(intent: AddURLIntent, completion: @escaping (AddURLIntentResponse) -> Void) {
         let file = ExtensionsAddLinkRequestsManager()
         
-        guard let urlString = intent.url, let _ = URL(string: urlString) else {
+        guard let urlString = intent.url else {
             completion(AddURLIntentResponse(code: .isNotValidUrl, userActivity: nil))
             return
         }
-
-        guard file.canSaveMoreLinks else {
-            completion(AddURLIntentResponse(code: .cannotSaveToExternalFile, userActivity: nil))
-            return
+        let code: AddURLIntentResponseCode
+        switch file.save(urlString, note: nil) {
+        case .saved: code = .success
+        case .invalidURL: code = .isNotValidUrl
+        case .full, .storageFailure: code = .cannotSaveToExternalFile
         }
-
-        file.add(urlString, note: nil)
-        completion(AddURLIntentResponse(code: .success, userActivity: nil))
+        completion(AddURLIntentResponse(code: code, userActivity: nil))
     }
     
 }

@@ -143,7 +143,7 @@ final class LinksTable: DatabaseTable {
     }
 
     func fetchSingleLink(with id: String) throws -> Link? {
-        return try fetchSingleGeneric { sql_fetchSingleLink(whereClause: #"id = "\#(id)""#, $0) }
+        return try fetchSingleGeneric { sql_fetchOptionalSingleLink(whereClause: #"id = "\#(id)""#, $0) }
     }
 
     func fetchAllGroups() throws -> [Group] {
@@ -155,7 +155,7 @@ final class LinksTable: DatabaseTable {
     }
 
     func fetchSingleGroup(with id: String) throws -> Group? {
-        return try fetchSingleGeneric { sql_fetchSingleGroup(whereClause: #"id = "\#(id)""#, $0) }
+        return try fetchSingleGeneric { sql_fetchAllGroups(whereClause: #"id = "\#(id)""#, $0).first }
     }
 
     func fetchAllTags() throws -> [Tag] {
@@ -167,7 +167,7 @@ final class LinksTable: DatabaseTable {
     }
 
     func fetchSingleTag(with id: String) throws -> Tag? {
-        return try fetchSingleGeneric { sql_fetchSingleTag(whereClause: #"id = "\#(id)""#, $0) }
+        return try fetchSingleGeneric { sql_fetchAllTags(whereClause: #"id = "\#(id)""#, $0).first }
     }
 
     func deleteTag(with id: String) throws {
@@ -224,6 +224,59 @@ final class LinksTable: DatabaseTable {
 
     func insertAsync(link: Link) async throws {
         return try await execGenericAsync { sql_insert(link, $0) }
+    }
+
+    /// Check identity and insert all relationships in one committed transaction.
+    @MainActor
+    func importLink(_ link: Link) async throws -> Bool {
+        try await withCheckedThrowingContinuation { continuation in
+            queue.runInDatabase { result in
+                do {
+                    let database = try result.get()
+                    guard database.beginTransaction() else { throw database.lastError() }
+                    do {
+                        guard let rows = database.executeQuery("select id from link where id = ?", withArgumentsIn: [link.id.uuidString]) else {
+                            throw database.lastError()
+                        }
+                        let exists = rows.next()
+                        rows.close()
+                        if !exists, !sql_insert(link, database) { throw database.lastError() }
+                        guard database.commit() else { throw database.lastError() }
+                        continuation.resume(returning: !exists)
+                    } catch {
+                        database.rollback()
+                        throw error
+                    }
+                } catch {
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Fill missing preview fields without writing stale note, state, or relationships.
+    @MainActor
+    func enrichImportedLink(_ link: Link) async throws -> Bool {
+        try await withCheckedThrowingContinuation { continuation in
+            queue.runInDatabase { result in
+                do {
+                    let database = try result.get()
+                    let sql = """
+                        update link set ogTitle = coalesce(ogTitle, ?),
+                            ogDescription = coalesce(ogDescription, ?),
+                            ogImageUrl = coalesce(ogImageUrl, ?)
+                        where id = ? and url = ?
+                        """
+                    guard database.executeUpdate(sql, withArgumentsIn: [
+                        link.ogTitle ?? NSNull(), link.ogDescription ?? NSNull(),
+                        link.ogImageUrl ?? NSNull(), link.id.uuidString, link.url
+                    ]) else { throw database.lastError() }
+                    continuation.resume(returning: database.changes > 0)
+                } catch {
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
     }
 
     func insert(group: Group) throws {
